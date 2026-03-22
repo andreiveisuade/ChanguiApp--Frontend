@@ -1,6 +1,6 @@
 # ChanguiApp — Frontend
 
-Aplicacion movil en React Native para Android que permite a consumidores argentinos controlar el total de su compra en tiempo real escaneando productos con la camara del celular.
+Aplicacion movil en React Native para Android e iOS que permite a consumidores argentinos controlar el total de su compra en tiempo real escaneando productos con la camara del celular.
 
 ---
 
@@ -50,7 +50,7 @@ npx react-native doctor
 
 | Capa | Tecnologia | Descripcion |
 |------|-----------|-------------|
-| Framework | React Native | App movil multiplataforma (solo Android para este TP) |
+| Framework | React Native | App movil multiplataforma (Android + iOS) |
 | Patron | MVVM + Repository | Separacion de responsabilidades |
 | Auth | Supabase Auth | Google Sign-In + email/contrasena |
 | Navegacion | React Navigation | Tab navigator + stack navigator |
