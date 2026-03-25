@@ -13,5 +13,8 @@
   "total": "Total",
   "add_to_cart": "Add to cart",
   "empty_cart": "Empty cart",
-  "checkout": "Checkout"
+  "checkout": "Checkout",
+  "lang_es": "Español",
+  "lang_en": "English"
 }
+
