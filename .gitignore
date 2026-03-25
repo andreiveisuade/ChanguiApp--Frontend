@@ -37,7 +37,13 @@ Thumbs.db
 # Metro
 .metro-health-check*
 
+# Coverage
+coverage/
+
 # Debug
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+
+# Claude Code
+CLAUDE.md
