@@ -1,0 +1,17 @@
+{
+  "app_name": "ChanguiApp",
+  "scan": "Escanear producto",
+  "pay": "Pagar",
+  "cart": "Mi carrito",
+  "history": "Historial",
+  "profile": "Perfil",
+  "lists": "Mis listas",
+  "login": "Iniciar sesión",
+  "register": "Crear cuenta",
+  "logout": "Cerrar sesión",
+  "select_store": "Seleccionar supermercado",
+  "total": "Total",
+  "add_to_cart": "Agregar al carrito",
+  "empty_cart": "Carrito vacío",
+  "checkout": "Ir a pagar"
+}
