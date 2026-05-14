@@ -4,9 +4,9 @@ import es from './locales/es.json';
 import en from './locales/en.json';
 
 i18n.use(initReactI18next).init({
-  resources: { 
-    es: { translation: es }, 
-    en: { translation: en } 
+  resources: {
+    es: { translation: es },
+    en: { translation: en }
   },
   lng: 'es',
   fallbackLng: 'es',
