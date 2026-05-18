@@ -15,5 +15,100 @@
   "empty_cart": "Carrito vacío",
   "checkout": "Ir a pagar",
   "lang_es": "Español",
-  "lang_en": "English"
+  "lang_en": "English",
+  "home": {
+    "title": "Inicio",
+    "greeting": "Hola, {{name}}. Tu módulo Scan & Go está listo para continuar.",
+    "placeholder": "Tu módulo Scan & Go está listo para continuar."
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "email": "Email",
+      "password": "Contraseña",
+      "submit": "Iniciar sesión",
+      "noAccount": "¿No tenés cuenta?",
+      "register": "Registrate",
+      "google": "Continuar con Google",
+      "or": "o",
+      "welcomeTitle": "Bienvenido a ChanguiApp",
+      "subtitle": "Accedé para sincronizar tu changuito y aprovechar precios en tiempo real.",
+      "rememberMe": "Recordarme",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "createAccount": "Crear cuenta nueva"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "fullName": "Nombre completo",
+      "email": "Email",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "submit": "Crear cuenta",
+      "hasAccount": "¿Ya tenés cuenta?",
+      "login": "Iniciá sesión",
+      "subtitle": "Completá tus datos para empezar a ahorrar en el super."
+    },
+    "common": {
+      "emailPlaceholder": "nombre@email.com",
+      "showPassword": "Ver",
+      "hidePassword": "Ocultar",
+      "emailLabel": "Correo electrónico"
+    },
+    "passwordStrength": {
+      "weak": "Contraseña débil",
+      "medium": "Contraseña media",
+      "strong": "Contraseña fuerte"
+    },
+    "accessibility": {
+      "dismissError": "Cerrar mensaje de error",
+      "loginHint": "Envía tus credenciales para iniciar sesión",
+      "registerHint": "Crea una cuenta nueva",
+      "googleHint": "Inicia sesión usando Google",
+      "goToRegisterHint": "Ir a la pantalla de registro",
+      "goToLoginHint": "Ir a la pantalla de inicio de sesión",
+      "goToForgotPasswordHint": "Ir a la pantalla para recuperar contraseña",
+      "logoutHint": "Cierra la sesión actual"
+    },
+    "errors": {
+      "invalidEmail": "El email no es válido",
+      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "nameTooShort": "El nombre debe tener al menos 2 caracteres",
+      "emailAlreadyUsed": "Este email ya está registrado",
+      "invalidCredentials": "Email o contraseña incorrectos",
+      "networkError": "Sin conexión. Verificá tu internet.",
+      "googleError": "No se pudo iniciar sesión con Google",
+      "unknown": "Ocurrió un error. Intentá de nuevo."
+    }
+  },
+  "onboarding": {
+    "slide1": {
+      "title": "Escaneá productos",
+      "text": "Usá tu cámara para escanear códigos de barras y agregar productos a tu carrito mientras comprás"
+    },
+    "slide2": {
+      "title": "Controlá tus gastos",
+      "text": "Ve el total de tu compra en tiempo real y mantené tu presupuesto bajo control"
+    },
+    "slide3": {
+      "title": "¡Listo para comenzar!",
+      "text": "Descubrí una nueva forma de hacer tus compras del supermercado"
+    },
+    "splash": {
+      "tagline": "Tu compra más inteligente",
+      "cta": "Comenzar"
+    },
+    "next": "Siguiente",
+    "skip": "Saltar",
+    "finish": "Comenzar"
+  },
+  "forgotPassword": {
+    "title": "¿Olvidaste tu contraseña?",
+    "subtitle": "No te preocupes, te enviaremos instrucciones para restablecerla.",
+    "email": "Correo electrónico",
+    "submit": "Enviar instrucciones",
+    "info": "Recibirás un correo con un enlace para restablecer tu contraseña.",
+    "back": "Volver al inicio de sesión",
+    "comingSoon": "Funcionalidad próximamente disponible"
+  }
 }
