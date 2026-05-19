@@ -2,6 +2,7 @@ import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import ChanguiAppLogo from '@/../assets/logos/changuiapp-logo.svg';
 import { colors, fonts, spacing, touchTarget } from '@/utils/theme';
 
 type AppHeaderProps = {
@@ -24,7 +25,7 @@ export function AppHeader({ onBack }: AppHeaderProps): React.JSX.Element {
         </Pressable>
       ) : null}
       <View style={styles.brand}>
-        <Feather color={colors.primary} name="shopping-cart" size={28} />
+        <ChanguiAppLogo accessible={false} fill={colors.primary} height={28} width={27} />
         <Text style={styles.title}>{t('app_name')}</Text>
       </View>
     </View>
