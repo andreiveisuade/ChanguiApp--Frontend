@@ -107,8 +107,10 @@
     "subtitle": "No te preocupes, te enviaremos instrucciones para restablecerla.",
     "email": "Correo electrónico",
     "submit": "Enviar instrucciones",
+    "sending": "Enviando...",
     "info": "Recibirás un correo con un enlace para restablecer tu contraseña.",
     "back": "Volver al inicio de sesión",
-    "comingSoon": "Funcionalidad próximamente disponible"
+    "sentTitle": "Revisá tu correo",
+    "sentMessage": "Si {{email}} tiene una cuenta, recibirás un link para restablecer tu contraseña en los próximos minutos."
   }
 }

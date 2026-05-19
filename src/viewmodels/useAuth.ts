@@ -19,6 +19,7 @@ type UseAuthReturn = {
   login: (email: string, password: string) => Promise<void>;
   register: (credentials: RegisterCredentials) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
 };
@@ -181,6 +182,22 @@ export const useAuth = (): UseAuthReturn => {
     }
   }, [setSession]);
 
+  const resetPassword = useCallback(async (email: string): Promise<void> => {
+    if (!isValidEmail(email)) {
+      setError({ message: i18n.t('auth.errors.invalidEmail'), field: 'email' });
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      await AuthRepository.resetPassword(email.trim());
+    } catch {
+      // Error silenciado intencionalmente — no revelar si el email existe
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const logout = useCallback(async (): Promise<void> => {
     setIsLoading(true);
     setError(null);
@@ -203,6 +220,7 @@ export const useAuth = (): UseAuthReturn => {
     login,
     register,
     loginWithGoogle,
+    resetPassword,
     logout,
     clearError,
   };

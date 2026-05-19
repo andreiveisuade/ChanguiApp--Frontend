@@ -164,6 +164,13 @@ export const AuthRepository = {
     };
   },
 
+  resetPassword: async (email: string): Promise<void> => {
+    await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'changuiapp://auth/reset-password',
+    });
+    // Supabase no revela si el email existe — siempre resuelve sin error
+  },
+
   logout: async (): Promise<void> => {
     const { error } = await supabase.auth.signOut();
 

@@ -1,22 +1,46 @@
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import FormLabel from '@/components/forms/FormLabel';
 import AppHeader from '@/components/layout/AppHeader';
 import AuthContainer from '@/components/layout/AuthContainer';
+import useAuth from '@/viewmodels/useAuth';
 import { colors, fonts, radii, spacing, touchTarget } from '@/utils/theme';
 
 export function ForgotPasswordScreen(): React.JSX.Element {
   const router = useRouter();
   const { t } = useTranslation();
+  const { resetPassword, isLoading } = useAuth();
   const [email, setEmail] = useState<string>('');
+  const [sent, setSent] = useState<boolean>(false);
 
-  const handleSubmit = (): void => {
-    Alert.alert(t('forgotPassword.comingSoon'));
+  const handleSubmit = async (): Promise<void> => {
+    await resetPassword(email);
+    setSent(true);
   };
+
+  if (sent) {
+    return (
+      <AuthContainer>
+        <AppHeader />
+        <View style={styles.mailCircle}>
+          <Feather color={colors.mailIcon} name="mail" size={42} />
+        </View>
+        <View style={styles.hero}>
+          <Text style={styles.title}>{t('forgotPassword.sentTitle')}</Text>
+          <Text style={styles.subtitle}>{t('forgotPassword.sentMessage', { email })}</Text>
+        </View>
+        <PrimaryButton
+          accessibilityHint={t('forgotPassword.back')}
+          onPress={() => router.replace('/auth/login')}
+          title={t('forgotPassword.back')}
+        />
+      </AuthContainer>
+    );
+  }
 
   return (
     <AuthContainer>
@@ -54,8 +78,9 @@ export function ForgotPasswordScreen(): React.JSX.Element {
       </View>
       <PrimaryButton
         accessibilityHint={t('forgotPassword.submit')}
+        disabled={isLoading}
         onPress={handleSubmit}
-        title={t('forgotPassword.submit')}
+        title={isLoading ? t('forgotPassword.sending') : t('forgotPassword.submit')}
       />
       <Text style={styles.info}>{t('forgotPassword.info')}</Text>
     </AuthContainer>
