@@ -1,8 +1,10 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import ChanguiAppLogo from '@/../assets/logos/changuiapp-logo.svg';
 import GoogleSignInButton from '@/components/buttons/GoogleSignInButton';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import SecondaryButton from '@/components/buttons/SecondaryButton';
@@ -53,7 +55,7 @@ export function LoginScreen(): React.JSX.Element {
         <Text style={styles.subtitle}>{t('auth.login.subtitle')}</Text>
       </View>
       <View style={styles.logo}>
-        <Feather color={colors.white} name="shopping-cart" size={70} />
+        <ChanguiAppLogo accessible={false} fill={colors.white} height={80} width={80} />
       </View>
       <ErrorMessage
         closeAccessibilityHint={t('auth.accessibility.dismissError')}
@@ -117,6 +119,17 @@ export function LoginScreen(): React.JSX.Element {
         onPress={handleGoogleLogin}
         title={t('auth.login.google')}
       />
+      {__DEV__ && (
+        <Pressable
+          onPress={async () => {
+            await AsyncStorage.clear();
+            router.replace('/');
+          }}
+          style={styles.devReset}
+        >
+          <Text style={styles.devResetText}>Reset app (DEV)</Text>
+        </Pressable>
+      )}
     </AuthContainer>
   );
 }
@@ -182,6 +195,17 @@ const styles = StyleSheet.create({
   },
   buttonGap: {
     height: spacing.md,
+  },
+  devReset: {
+    alignItems: 'center',
+    marginTop: spacing.xl,
+    minHeight: touchTarget.minHeight,
+    justifyContent: 'center',
+  },
+  devResetText: {
+    color: colors.textSecondary,
+    fontFamily: fonts.body,
+    fontSize: 13,
   },
 });
 

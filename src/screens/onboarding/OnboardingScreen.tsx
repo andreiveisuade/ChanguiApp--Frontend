@@ -15,7 +15,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import OnboardingFooter from '@/components/onboarding/OnboardingFooter';
 import OnboardingSlide from '@/components/onboarding/OnboardingSlide';
-import SplashSlide from '@/components/onboarding/SplashSlide';
 import { colors, fonts, spacing, touchTarget } from '@/utils/theme';
 
 const ONBOARDING_COMPLETED_KEY = '@changuiapp/onboarding_completed';
@@ -53,7 +52,6 @@ export function OnboardingScreen(): React.JSX.Element {
   const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const listRef = useRef<FlatList<Slide>>(null);
-  const [showSplash, setShowSplash] = useState<boolean>(true);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handleFinish = async (): Promise<void> => {
@@ -80,10 +78,6 @@ export function OnboardingScreen(): React.JSX.Element {
       width={width}
     />
   );
-
-  if (showSplash) {
-    return <SplashSlide onNext={() => setShowSplash(false)} />;
-  }
 
   return (
     <SafeAreaView style={styles.container}>
