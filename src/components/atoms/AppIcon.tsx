@@ -6,6 +6,7 @@ import { colors } from '../../utils/theme';
 
 
 const iconMap: { [key: string]: keyof typeof MaterialCommunityIcons.glyphMap } = {
+  'inicio': 'home-outline',
   'carrito': 'cart-outline',
   'escanear': 'barcode-scan',
   'configuracion': 'cog-outline',
@@ -17,6 +18,8 @@ const iconMap: { [key: string]: keyof typeof MaterialCommunityIcons.glyphMap } =
   'exito': 'check-circle-outline',
   'error': 'close-circle-outline',
   'lista': 'format-list-bulleted',
+  'buscar': 'magnify',
+  'cerrar': 'close-circle-outline',
 };
 
 interface AppIconProps {
@@ -32,8 +35,13 @@ export const AppIcon = ({
   color = colors.primary, 
   style 
 }: AppIconProps) => {
-  // Buscamos el icono en el mapa, si no existe usamos el carrito por defecto
-  const iconName = iconMap[name] || 'cart-outline';
+  const iconName = iconMap[name];
+  if (!iconName) {
+    if (__DEV__) {
+      console.warn(`AppIcon: ícono no encontrado: "${name}"`);
+    }
+    return null;
+  }
 
   return (
     <View style={style}>
