@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ViewStyle } from 'react-native';
 // Importamos MaterialCommunityIcons que suele ser el más completo
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-import { colors } from '../../theme/theme';
+import { colors } from '../../utils/theme';
 
 
 const iconMap: { [key: string]: keyof typeof MaterialCommunityIcons.glyphMap } = {

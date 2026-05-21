@@ -9,21 +9,7 @@ import {
   ScrollView
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors } from '../../theme/theme';
-
-/*import React from 'react';
-import { ScreenWrapper } from '../../components/layout/ScreenWrapper';
-import { AppText } from '../../components/atoms/AppText';
-import { SearchBar } from '../../components/forms/SearchBar';
-
-export const HomeScreen = () => {
-  return (
-    <ScreenWrapper>
-      <AppText variant="H1">Hola, Maximo</AppText>
-      <SearchBar placeholder="Buscar productos..." />
-      {/* Resto de componentes de tu grilla de supermercado */
-    
-
+import { colors } from '../../utils/theme';
 
 interface ScreenWrapperProps {
   children: React.ReactNode;

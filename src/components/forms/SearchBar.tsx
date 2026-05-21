@@ -7,7 +7,7 @@ import {
   TextInputProps, 
   ViewStyle 
 } from 'react-native';
-import { colors } from '../../theme/theme';
+import { colors } from '../../utils/theme';
 import { AppIcon } from '../atoms/AppIcon';
 
 /*<SearchBar 
