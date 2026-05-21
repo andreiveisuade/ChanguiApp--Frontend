@@ -19,7 +19,7 @@ type UseAuthReturn = {
   login: (email: string, password: string) => Promise<void>;
   register: (credentials: RegisterCredentials) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
-  resetPassword: (email: string) => Promise<void>;
+  resetPassword: (email: string) => Promise<boolean>;
   logout: () => Promise<void>;
   clearError: () => void;
 };
@@ -182,10 +182,10 @@ export const useAuth = (): UseAuthReturn => {
     }
   }, [setSession]);
 
-  const resetPassword = useCallback(async (email: string): Promise<void> => {
+  const resetPassword = useCallback(async (email: string): Promise<boolean> => {
     if (!isValidEmail(email)) {
       setError({ message: i18n.t('auth.errors.invalidEmail'), field: 'email' });
-      return;
+      return false;
     }
     setIsLoading(true);
     setError(null);
@@ -196,6 +196,7 @@ export const useAuth = (): UseAuthReturn => {
     } finally {
       setIsLoading(false);
     }
+    return true;
   }, []);
 
   const logout = useCallback(async (): Promise<void> => {

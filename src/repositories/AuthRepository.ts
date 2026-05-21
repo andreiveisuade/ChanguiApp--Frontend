@@ -10,6 +10,7 @@ WebBrowser.maybeCompleteAuthSession();
 const TOKEN_KEY = '@changuiapp/token';
 const USER_KEY = '@changuiapp/user';
 const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://changuiapp-backend.onrender.com';
+const REQUEST_TIMEOUT_MS = 15000;
 
 type ObjectRecord = Record<string, unknown>;
 
@@ -82,27 +83,40 @@ const requestAuth = async (
   endpoint: 'login' | 'register',
   body: ObjectRecord,
 ): Promise<StoredAuthSession> => {
-  const response = await fetch(`${API_URL}/api/auth/${endpoint}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
-  const payload: unknown = await response.json().catch(() => null);
+  try {
+    const response = await fetch(`${API_URL}/api/auth/${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
 
-  if (!response.ok) {
-    const errorMessage =
-      isObjectRecord(payload) && typeof payload.message === 'string'
-        ? payload.message
-        : isObjectRecord(payload) && typeof payload.error === 'string'
-          ? payload.error
-          : 'Authentication request failed';
-    throw new Error(errorMessage);
+    const payload: unknown = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      const errorMessage =
+        isObjectRecord(payload) && typeof payload.message === 'string'
+          ? payload.message
+          : isObjectRecord(payload) && typeof payload.error === 'string'
+            ? payload.error
+            : 'Authentication request failed';
+      throw new Error(errorMessage);
+    }
+
+    return normalizeAuthSession(payload);
+  } catch (err) {
+    if (err instanceof Error && err.name === 'AbortError') {
+      throw new Error('network timeout');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  return normalizeAuthSession(payload);
 };
 
 export const AuthRepository = {
