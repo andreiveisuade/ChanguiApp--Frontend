@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -14,7 +13,7 @@ import PasswordInput from '@/components/forms/PasswordInput';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
 import AuthContainer from '@/components/layout/AuthContainer';
 import useAuth from '@/viewmodels/useAuth';
-import { colors, fonts, radii, spacing, touchTarget } from '@/utils/theme';
+import { colors, fonts, spacing, touchTarget } from '@/utils/theme';
 import { isValidEmail } from '@/utils/validators';
 
 export function LoginScreen(): React.JSX.Element {
@@ -23,7 +22,6 @@ export function LoginScreen(): React.JSX.Element {
   const { error, isLoading, login, loginWithGoogle, clearError } = useAuth();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [rememberMe, setRememberMe] = useState<boolean>(false);
 
   const isSubmitDisabled = useMemo(
     () => !isValidEmail(email) || password.length === 0 || isLoading,
@@ -80,18 +78,7 @@ export function LoginScreen(): React.JSX.Element {
         showPasswordLabel={t('auth.common.showPassword')}
         value={password}
       />
-      <View style={styles.optionsRow}>
-        <Pressable
-          accessibilityHint={t('auth.login.rememberMe')}
-          accessibilityRole="button"
-          onPress={() => setRememberMe((currentValue) => !currentValue)}
-          style={styles.rememberButton}
-        >
-          <View style={[styles.checkbox, rememberMe ? styles.checkboxActive : null]}>
-            {rememberMe ? <Feather color={colors.white} name="check" size={14} /> : null}
-          </View>
-          <Text style={styles.rememberText}>{t('auth.login.rememberMe')}</Text>
-        </Pressable>
+      <View style={styles.forgotRow}>
         <TextLinkButton
           accessibilityHint={t('auth.accessibility.goToForgotPasswordHint')}
           onPress={() => router.push('/auth/forgot-password')}
@@ -162,36 +149,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xxl,
     width: 128,
   },
-  optionsRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  forgotRow: {
+    alignItems: 'flex-end',
     marginBottom: spacing.lg,
-  },
-  rememberButton: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-    minHeight: touchTarget.minHeight,
-    minWidth: touchTarget.minWidth,
-  },
-  checkbox: {
-    alignItems: 'center',
-    borderColor: colors.border,
-    borderRadius: radii.sm,
-    borderWidth: 1,
-    height: 22,
-    justifyContent: 'center',
-    width: 22,
-  },
-  checkboxActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  rememberText: {
-    color: colors.textSecondary,
-    fontFamily: fonts.body,
-    fontSize: 15,
   },
   buttonGap: {
     height: spacing.md,

@@ -18,8 +18,10 @@ export function ForgotPasswordScreen(): React.JSX.Element {
   const [sent, setSent] = useState<boolean>(false);
 
   const handleSubmit = async (): Promise<void> => {
-    await resetPassword(email);
-    setSent(true);
+    const ok = await resetPassword(email);
+    if (ok) {
+      setSent(true);
+    }
   };
 
   if (sent) {
