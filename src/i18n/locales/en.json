@@ -15,6 +15,103 @@
   "empty_cart": "Empty cart",
   "checkout": "Checkout",
   "lang_es": "Español",
-  "lang_en": "English"
+  "lang_en": "English",
+  "home": {
+    "title": "Home",
+    "greeting": "Hi, {{name}}. Your Scan & Go module is ready to continue.",
+    "placeholder": "Your Scan & Go module is ready to continue."
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "register": "Sign up",
+      "google": "Continue with Google",
+      "or": "or",
+      "welcomeTitle": "Welcome to ChanguiApp",
+      "subtitle": "Sign in to sync your cart and use real-time prices.",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot your password?",
+      "createAccount": "Create new account"
+    },
+    "register": {
+      "title": "Create account",
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in",
+      "subtitle": "Fill in your details to start saving at the supermarket."
+    },
+    "common": {
+      "emailPlaceholder": "name@email.com",
+      "showPassword": "Show",
+      "hidePassword": "Hide",
+      "emailLabel": "Email address"
+    },
+    "passwordStrength": {
+      "weak": "Weak password",
+      "medium": "Medium password",
+      "strong": "Strong password"
+    },
+    "accessibility": {
+      "dismissError": "Close error message",
+      "loginHint": "Submit your credentials to sign in",
+      "registerHint": "Create a new account",
+      "googleHint": "Sign in using Google",
+      "goToRegisterHint": "Go to the registration screen",
+      "goToLoginHint": "Go to the sign in screen",
+      "goToForgotPasswordHint": "Go to the password recovery screen",
+      "logoutHint": "Sign out of the current session"
+    },
+    "errors": {
+      "invalidEmail": "The email is not valid",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "passwordMismatch": "Passwords do not match",
+      "nameTooShort": "Name must be at least 2 characters",
+      "emailAlreadyUsed": "This email is already registered",
+      "invalidCredentials": "Email or password is incorrect",
+      "networkError": "No connection. Check your internet.",
+      "googleError": "Could not sign in with Google",
+      "unknown": "Something went wrong. Try again."
+    }
+  },
+  "onboarding": {
+    "slide1": {
+      "title": "Scan products",
+      "text": "Use your camera to scan barcodes and add products to your cart while you shop"
+    },
+    "slide2": {
+      "title": "Control your spending",
+      "text": "See your purchase total in real time and keep your budget under control"
+    },
+    "slide3": {
+      "title": "Ready to get started!",
+      "text": "Discover a new way to do your supermarket shopping"
+    },
+    "splash": {
+      "tagline": "Your smarter shopping trip",
+      "cta": "Get started"
+    },
+    "next": "Next",
+    "skip": "Skip",
+    "finish": "Get started"
+  },
+  "forgotPassword": {
+    "title": "Forgot your password?",
+    "subtitle": "Don't worry, we'll send you instructions to reset it.",
+    "email": "Email address",
+    "submit": "Send instructions",
+    "sending": "Sending...",
+    "info": "You'll receive an email with a link to reset your password.",
+    "back": "Back to sign in",
+    "sentTitle": "Check your inbox",
+    "sentMessage": "If {{email}} has an account, you'll receive a reset link within a few minutes."
+  }
 }
 
