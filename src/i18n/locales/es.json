@@ -21,6 +21,12 @@
     "greeting": "Hola, {{name}}. Tu módulo Scan & Go está listo para continuar.",
     "placeholder": "Tu módulo Scan & Go está listo para continuar."
   },
+  "nav": {
+    "home": "Inicio",
+    "cart": "Carrito",
+    "scanner": "Escanear",
+    "profile": "Perfil"
+  },
   "auth": {
     "login": {
       "title": "Iniciar sesión",
