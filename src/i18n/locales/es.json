@@ -18,14 +18,23 @@
   "lang_en": "English",
   "home": {
     "title": "Inicio",
-    "greeting": "Hola, {{name}}. Tu módulo Scan & Go está listo para continuar.",
+    "greeting": "¡Hola, {{name}}!",
+    "continueShopping": "Continuá con tus compras",
+    "activeCart": "Carrito Activo",
+    "products_one": "{{count}} producto",
+    "products_other": "{{count}} productos",
+    "total": "Total",
+    "emptyCart": "Tu carrito está vacío",
+    "emptyCartSubtitle": "Escaneá un producto para empezar",
+    "errorLoading": "No se pudo cargar el carrito",
     "placeholder": "Tu módulo Scan & Go está listo para continuar."
   },
   "nav": {
     "home": "Inicio",
     "cart": "Carrito",
     "scanner": "Escanear",
-    "profile": "Perfil"
+    "history": "Historial",
+    "settings": "Ajustes"
   },
   "auth": {
     "login": {

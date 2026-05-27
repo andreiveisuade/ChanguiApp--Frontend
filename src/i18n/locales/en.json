@@ -18,14 +18,23 @@
   "lang_en": "English",
   "home": {
     "title": "Home",
-    "greeting": "Hi, {{name}}. Your Scan & Go module is ready to continue.",
+    "greeting": "Hi, {{name}}!",
+    "continueShopping": "Continue with your shopping",
+    "activeCart": "Active Cart",
+    "products_one": "{{count}} product",
+    "products_other": "{{count}} products",
+    "total": "Total",
+    "emptyCart": "Your cart is empty",
+    "emptyCartSubtitle": "Scan a product to get started",
+    "errorLoading": "Could not load the cart",
     "placeholder": "Your Scan & Go module is ready to continue."
   },
   "nav": {
     "home": "Home",
     "cart": "Cart",
     "scanner": "Scan",
-    "profile": "Profile"
+    "history": "History",
+    "settings": "Settings"
   },
   "auth": {
     "login": {

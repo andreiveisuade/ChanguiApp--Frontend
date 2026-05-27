@@ -13,14 +13,16 @@ const ICON_MAP: { [key: string]: string } = {
   Home: 'inicio',
   Cart: 'carrito',
   Scanner: 'escanear',
-  Profile: 'perfil',
+  History: 'historial',
+  Settings: 'configuracion',
 };
 
 const LABEL_KEYS: { [key: string]: string } = {
   Home: 'nav.home',
   Cart: 'nav.cart',
   Scanner: 'nav.scanner',
-  Profile: 'nav.profile',
+  History: 'nav.history',
+  Settings: 'nav.settings',
 };
 
 export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
@@ -28,14 +30,15 @@ export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarPro
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom || 10 }]}>
+    <View style={[styles.container, { paddingBottom: insets.bottom || 8 }]}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const isFocused = state.index === index;
 
-        const labelKey = LABEL_KEYS[route.name];
+        const capitalizedName = route.name.charAt(0).toUpperCase() + route.name.slice(1);
+        const labelKey = LABEL_KEYS[capitalizedName];
         const label = labelKey ? t(labelKey) : route.name;
-        const iconName = ICON_MAP[route.name] || 'carrito';
+        const iconName = ICON_MAP[capitalizedName] || 'inicio';
 
         const onPress = () => {
           const event = navigation.emit({
@@ -50,7 +53,7 @@ export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarPro
         };
 
         // CASO ESPECIAL: El botón central de Escáner destacado
-        if (route.name === 'Scanner') {
+        if (capitalizedName === 'Scanner') {
           return (
             <TouchableOpacity
               key={route.key}
@@ -62,7 +65,7 @@ export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarPro
               accessibilityState={{ selected: isFocused }}
             >
               <View style={styles.scannerButton}>
-                <AppIcon name={iconName} size={28} color="#FFFFFF" />
+                <AppIcon name={iconName} size={26} color="#FFFFFF" />
               </View>
               <AppText variant="Label" style={styles.scannerLabel}>
                 {label}
@@ -71,7 +74,7 @@ export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarPro
           );
         }
 
-        // BOTONES ESTÁNDAR (Home, Carrito, Perfil)
+        // BOTONES ESTÁNDAR (Inicio, Carrito, Historial, Ajustes)
         return (
           <TouchableOpacity
             key={route.key}
@@ -84,7 +87,7 @@ export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarPro
           >
             <AppIcon
               name={iconName}
-              size={24}
+              size={22}
               color={isFocused ? colors.primary : colors.textSecondary}
             />
             <AppText
@@ -107,35 +110,34 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-    minHeight: 70,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
     justifyContent: 'space-around',
-    alignItems: 'center',
-    position: 'relative',
+    alignItems: 'flex-end',
+    paddingTop: 8,
   },
   tabButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100%',
+    paddingVertical: 4,
   },
   tabLabel: {
     fontSize: 10,
-    marginTop: 4,
+    marginTop: 2,
     textTransform: 'none',
     fontFamily: 'Inter-Medium',
   },
   scannerButtonContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     width: width / 5,
-    bottom: 15,
+    marginTop: -20,
   },
   scannerButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
   },
   scannerLabel: {
     fontSize: 10,
-    marginTop: 8,
+    marginTop: 4,
     color: colors.textSecondary,
     fontFamily: 'Inter-Medium',
     textTransform: 'none',
