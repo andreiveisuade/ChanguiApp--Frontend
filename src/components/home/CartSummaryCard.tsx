@@ -4,6 +4,7 @@ import { Feather } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { colors, fonts, spacing } from '@/utils/theme';
 import { AppText } from '@/components/atoms/AppText';
+import { formatARS } from '@/utils/currency';
 
 interface CartSummaryCardProps {
   itemCount: number;
@@ -13,14 +14,6 @@ interface CartSummaryCardProps {
 
 export const CartSummaryCard = ({ itemCount, total, isLoading }: CartSummaryCardProps) => {
   const { t } = useTranslation();
-
-  // Manual currency formatter for ARS to prevent formatting variations across environments
-  const formatCurrency = (value: number) => {
-    const formatted = Math.round(value)
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    return `$${formatted}`;
-  };
 
   const getProductsText = () => {
     if (itemCount === 0) {
@@ -55,7 +48,7 @@ export const CartSummaryCard = ({ itemCount, total, isLoading }: CartSummaryCard
           <ActivityIndicator size="small" color="#D04946" style={styles.spinner} />
         ) : (
           <AppText variant="Price" style={styles.totalValue}>
-            {formatCurrency(total)}
+            {formatARS(total)}
           </AppText>
         )}
       </View>

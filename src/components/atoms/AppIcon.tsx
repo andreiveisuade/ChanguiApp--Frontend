@@ -20,6 +20,7 @@ const iconMap: { [key: string]: keyof typeof MaterialCommunityIcons.glyphMap } =
   'lista': 'format-list-bulleted',
   'buscar': 'magnify',
   'cerrar': 'close-circle-outline',
+  'package': 'package-variant-closed',
 };
 
 interface AppIconProps {

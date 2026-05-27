@@ -25,6 +25,14 @@ const LABEL_KEYS: { [key: string]: string } = {
   Settings: 'nav.settings',
 };
 
+const HINT_KEYS: { [key: string]: string } = {
+  Home: 'nav.hint.home',
+  Cart: 'nav.hint.cart',
+  Scanner: 'nav.hint.scanner',
+  History: 'nav.hint.history',
+  Settings: 'nav.hint.settings',
+};
+
 export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
@@ -39,6 +47,7 @@ export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarPro
         const labelKey = LABEL_KEYS[capitalizedName];
         const label = labelKey ? t(labelKey) : route.name;
         const iconName = ICON_MAP[capitalizedName] || 'inicio';
+        const hintKey = HINT_KEYS[capitalizedName];
 
         const onPress = () => {
           const event = navigation.emit({
@@ -61,6 +70,7 @@ export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarPro
               style={styles.scannerButtonContainer}
               activeOpacity={0.8}
               accessibilityLabel={label}
+              accessibilityHint={hintKey ? t(hintKey) : undefined}
               accessibilityRole="button"
               accessibilityState={{ selected: isFocused }}
             >
@@ -82,6 +92,7 @@ export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarPro
             style={styles.tabButton}
             activeOpacity={0.7}
             accessibilityLabel={label}
+            accessibilityHint={hintKey ? t(hintKey) : undefined}
             accessibilityRole="button"
             accessibilityState={{ selected: isFocused }}
           >

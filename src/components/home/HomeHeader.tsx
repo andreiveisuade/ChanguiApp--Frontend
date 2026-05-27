@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Feather } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { colors, fonts, spacing } from '@/utils/theme';
 import { AppText } from '@/components/atoms/AppText';
+import { AppIcon } from '@/components/atoms/AppIcon';
 
 interface HomeHeaderProps {
   userName: string;
@@ -29,10 +29,11 @@ export const HomeHeader = ({ userName, onProfilePress }: HomeHeaderProps) => {
         <Pressable
           onPress={onProfilePress}
           style={styles.avatarButton}
-          accessibilityLabel={t('profile')}
+          accessibilityLabel={t('auth.accessibility.goToProfile')}
+          accessibilityHint={t('auth.accessibility.goToProfileHint')}
           accessibilityRole="button"
         >
-          <Feather name="user" size={24} color="#000000" />
+          <AppIcon name="perfil" size={24} color={colors.textPrimary} />
         </Pressable>
       </View>
     </SafeAreaView>

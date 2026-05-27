@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
-import { Feather } from '@expo/vector-icons';
 import { CartItemWithProduct } from '@/types/domain';
 import { colors, fonts, spacing } from '@/utils/theme';
 import { AppText } from '@/components/atoms/AppText';
+import { AppIcon } from '@/components/atoms/AppIcon';
+import { formatARS } from '@/utils/currency';
 
 interface CartItemRowProps {
   item: CartItemWithProduct;
@@ -12,14 +13,6 @@ interface CartItemRowProps {
 
 export const CartItemRow = ({ item, isLast = false }: CartItemRowProps) => {
   const [imageError, setImageError] = useState(false);
-
-  // Manual currency formatter for ARS to prevent formatting variations across environments
-  const formatCurrency = (value: number) => {
-    const formatted = Math.round(value)
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    return `$${formatted}`;
-  };
 
   const itemTotal = item.unit_price * item.quantity;
   const imageUrl = item.product?.image_url;
@@ -35,7 +28,7 @@ export const CartItemRow = ({ item, isLast = false }: CartItemRowProps) => {
             resizeMode="cover"
           />
         ) : (
-          <Feather name="package" size={24} color="#666666" />
+          <AppIcon name="package" size={24} color={colors.textSecondary} />
         )}
       </View>
 
@@ -44,7 +37,7 @@ export const CartItemRow = ({ item, isLast = false }: CartItemRowProps) => {
           {item.product?.name || 'Producto'}
         </AppText>
         <AppText variant="Body" style={styles.productPrice}>
-          {formatCurrency(itemTotal)}
+          {formatARS(itemTotal)}
         </AppText>
       </View>
     </View>
