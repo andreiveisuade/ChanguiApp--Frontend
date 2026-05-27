@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { AppText } from '@/components/atoms/AppText';
 import { colors } from '@/utils/theme';
 
 export default function HistoryScreen() {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
-      <AppText variant="H1">Historial</AppText>
+      <AppText variant="H1">{t('nav.history')}</AppText>
     </View>
   );
 }

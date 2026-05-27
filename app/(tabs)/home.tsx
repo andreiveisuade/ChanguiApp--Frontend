@@ -36,8 +36,8 @@ export default function HomeRoute(): React.JSX.Element {
           <RefreshControl
             refreshing={isLoading}
             onRefresh={refresh}
-            colors={['#D04946']} // Android spinner color
-            tintColor="#D04946" // iOS spinner color
+            colors={[colors.primary]} // Android spinner color
+            tintColor={colors.primary} // iOS spinner color
           />
         }
       >
@@ -46,7 +46,7 @@ export default function HomeRoute(): React.JSX.Element {
             <ErrorMessage
               message={error}
               closeAccessibilityHint={t('auth.accessibility.dismissError')}
-              onClose={() => {}}
+              onClose={refresh}
             />
           </View>
         ) : (

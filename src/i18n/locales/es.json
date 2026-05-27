@@ -34,7 +34,14 @@
     "cart": "Carrito",
     "scanner": "Escanear",
     "history": "Historial",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "hint": {
+      "home": "Ir a la pantalla de inicio",
+      "cart": "Ver el contenido de tu carrito",
+      "scanner": "Escanear un producto",
+      "history": "Ver tu historial de compras",
+      "settings": "Abrir ajustes de la cuenta"
+    }
   },
   "auth": {
     "login": {
@@ -81,7 +88,9 @@
       "goToRegisterHint": "Ir a la pantalla de registro",
       "goToLoginHint": "Ir a la pantalla de inicio de sesión",
       "goToForgotPasswordHint": "Ir a la pantalla para recuperar contraseña",
-      "logoutHint": "Cierra la sesión actual"
+      "logoutHint": "Cierra la sesión actual",
+      "goToProfile": "Ir a mi perfil",
+      "goToProfileHint": "Abre la pantalla de ajustes de tu cuenta"
     },
     "errors": {
       "invalidEmail": "El email no es válido",
