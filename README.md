@@ -15,13 +15,12 @@ npm install
 
 # 2. Configurar variables de entorno
 cp .env.example .env
-# Completar con tus credenciales (ver sección "Variables de Entorno")
+# Completar con tus credenciales (ver seccion "Variables de Entorno")
 
-# 3. Levantar en emulador Android
-npx react-native run-android
-
-# 4. O levantar Metro bundler por separado
-npx react-native start
+# 3. Levantar el dev server de Expo
+npx expo start
+# Escanear el QR con Expo Go (Android/iOS), o presionar:
+#   'a' para emulador Android, 'i' para simulador iOS, 'w' para web
 ```
 
 ---
@@ -50,13 +49,13 @@ npx react-native doctor
 
 | Capa | Tecnologia | Descripcion |
 |------|-----------|-------------|
-| Framework | React Native | App movil multiplataforma (Android + iOS) |
+| Framework | React Native + Expo | App movil multiplataforma (Android + iOS) |
 | Patron | MVVM + Repository | Separacion de responsabilidades |
-| Auth | Supabase Auth | Google Sign-In + email/contrasena |
-| Navegacion | React Navigation | Tab navigator + stack navigator |
-| HTTP | Axios o Fetch | Comunicacion con el backend |
+| Auth | Supabase Auth + AuthContext | Google Sign-In + email/contrasena, estado compartido |
+| Navegacion | Expo Router | File-based routing en `app/` |
+| HTTP | `apiFetch` helper (fetch wrapper) | Auth automatico + manejo de 401 |
 | i18n | react-i18next | Internacionalizacion (espanol + ingles) |
-| Scanner | react-native-camera / expo-barcode-scanner | Escaneo de codigos de barras |
+| Scanner | expo-camera | Escaneo de codigos de barras (DEV-30, pendiente) |
 | Pagos | Mercado Pago (WebView) | Checkout in-app en sandbox |
 
 ---
@@ -66,29 +65,94 @@ npx react-native doctor
 ```
 src/
 ├── screens/              # View — pantallas de la app (solo renderiza UI)
-├── viewmodels/           # ViewModel — hooks (useCart, useLists, useScanner, etc.)
+├── viewmodels/           # ViewModel — hooks (useCart, useAuth, useScanner, etc.)
 ├── repositories/         # Repository — unica capa que habla con el backend (HTTP)
-├── components/           # Componentes reutilizables de UI
-├── navigation/           # Configuracion de React Navigation
-├── i18n/                 # Configuracion de internacionalizacion
-│   ├── index.js          # Setup de i18next
+├── components/           # Componentes reutilizables (atoms en components/atoms/)
+├── context/              # Providers de estado compartido (AuthContext)
+├── config/               # Config de servicios externos (supabase)
+├── i18n/                 # Internacionalizacion
 │   └── locales/
 │       ├── es.json       # Textos en espanol
 │       └── en.json       # Textos en ingles
-└── utils/                # Helpers genericos
+├── navigation/           # Helpers de navegacion
+├── types/                # Tipos de dominio + errores
+└── utils/                # Helpers (apiFetch, authEvents, theme, currency, ...)
 ```
 
 **Regla clave:** la Screen (View) NUNCA llama al Repository directamente. Siempre pasa por el ViewModel (hook).
 
 ```
-Screen → ViewModel (hook) → Repository → Backend API
+Screen → ViewModel (hook) → Repository → apiFetch → Backend API
 ```
 
 ### Reglas de i18n
 
 - NUNCA escribir texto directo en un componente (`<Text>Pagar</Text>`)
-- SIEMPRE usar el hook: `const { t } = useTranslation();` y luego `<Text>{t('pay')}</Text>`
+- SIEMPRE usar el hook: `const { t } = useTranslation();` y luego `<AppText>{t('pay')}</AppText>`
 - Al agregar un texto nuevo, agregarlo a AMBOS archivos: `es.json` y `en.json`
+
+### Reglas de design system
+
+- Usar `<AppText variant="...">` en lugar de `<Text>` (variants: Display, H1, H2, H3, Body, Label, Price).
+- Usar `<AppIcon name="..." />` en lugar de importar Ionicons/Feather/MaterialCommunityIcons directo. Si falta un icono, agregarlo al map de `src/components/atoms/AppIcon.tsx`.
+- Colores: SIEMPRE desde `colors.*` de `@/utils/theme`. Si falta un token, agregarlo al theme (no hardcodear hex literals).
+- Spacing y touch targets: usar `spacing.*` y `touchTarget.*` de `@/utils/theme` (44x44 minimo en botones).
+- Accesibilidad: todo boton interactivo debe tener `accessibilityRole`, `accessibilityLabel` y `accessibilityHint` (este ultimo via i18n).
+
+### Autenticacion — patterns obligatorios
+
+#### `useAuth()` — consumir estado de sesion
+
+```ts
+const { user, isAuthenticated, isLoading, login, logout } = useAuth();
+```
+
+`useAuth` es un wrapper de `useAuthContext`. **El estado de sesion es unico** en toda la app (vive en `<AuthProvider>` montado en `app/_layout.tsx`). No hay duplicacion.
+
+#### `apiFetch()` — todo repository que pegue al backend autenticado lo usa
+
+```ts
+// src/repositories/MyRepository.ts
+import { apiFetch } from '@/utils/apiFetch';
+
+export const MyRepository = {
+  async getStuff() {
+    const response = await apiFetch('/api/stuff');
+    return response.json();
+  },
+};
+```
+
+`apiFetch` se encarga de:
+
+- Leer el token de la sesion guardada e inyectar `Authorization: Bearer <token>`.
+- Si el backend devuelve **401**: limpia la sesion local, emite el evento `sessionExpired` (que el `AuthContext` escucha) y lanza `AuthSessionExpiredError`.
+- Si la respuesta no es OK: lanza un `Error` con el mensaje del backend.
+
+**NO usar `fetch` directo en repositories.** Duplica logica de auth y rompe el manejo automatico de sesion expirada.
+
+#### `AuthSessionExpiredError` — distinguir errores de auth en viewmodels
+
+```ts
+// src/viewmodels/useMyHook.ts
+import { AuthSessionExpiredError } from '@/types/errors';
+
+try {
+  const data = await MyRepository.getStuff();
+  setData(data);
+} catch (err) {
+  // Sesion expirada: NO mostrar mensaje al usuario.
+  // El AuthContext ya limpio el estado y el guard de tabs redirige a login.
+  if (err instanceof AuthSessionExpiredError) {
+    return;
+  }
+  setError(err instanceof Error ? err.message : 'Error');
+}
+```
+
+#### Guard de autenticacion
+
+El `app/(tabs)/_layout.tsx` tiene un guard que redirige a `/auth/login` si `!isAuthenticated`. **No es necesario duplicar el guard en cada pantalla** — basta con que la ruta este dentro de `(tabs)`.
 
 ---
 
@@ -128,11 +192,13 @@ Las credenciales reales se comparten por el grupo de WhatsApp del equipo. Nunca 
 ## Scripts
 
 ```bash
-npx react-native run-android    # Compilar y correr en Android
-npx react-native start          # Levantar Metro bundler
-npm test                        # Correr tests
-npm run test:coverage           # Tests + cobertura
+npx expo start                  # Dev server con QR para Expo Go
+npm run android                 # Expo + emulador Android
+npm run ios                     # Expo + simulador iOS
+npx tsc --noEmit                # Typecheck (correr antes de pushear)
 ```
+
+> Hay archivos de tests en `__tests__/` pero el repo todavia no tiene la infra de Jest configurada (ver DEV-172). Por ahora `npm test` no existe.
 
 ---
 
