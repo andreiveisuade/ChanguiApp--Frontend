@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 import useAuth from '@/viewmodels/useAuth';
 import useCart from '@/viewmodels/useCart';
 import HomeHeader from '@/components/home/HomeHeader';
-import CartSummaryCard from '@/components/home/CartSummaryCard';
-import CartItemRow from '@/components/home/CartItemRow';
-import EmptyCartMessage from '@/components/home/EmptyCartMessage';
+import { CartSummaryBar } from '@/components/cart/CartSummaryBar';
+import { CartItemCard } from '@/components/cart/CartItemCard';
+import { EmptyState } from '@/components/feedback/EmptyState';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
 import { colors, spacing } from '@/utils/theme';
 
@@ -52,7 +52,7 @@ export default function HomeRoute(): React.JSX.Element {
         ) : (
           <View style={styles.mainCard}>
             {/* Top row showing cart active status and total */}
-            <CartSummaryCard
+            <CartSummaryBar
               itemCount={items.length}
               total={total}
               isLoading={isLoading}
@@ -65,7 +65,7 @@ export default function HomeRoute(): React.JSX.Element {
             {items.length > 0 && (
               <View style={styles.listContainer}>
                 {items.map((item, index) => (
-                  <CartItemRow
+                  <CartItemCard
                     key={item.id}
                     item={item}
                     isLast={index === items.length - 1}
@@ -78,7 +78,11 @@ export default function HomeRoute(): React.JSX.Element {
 
         {/* Empty state message, displayed below the card if cart has 0 items */}
         {items.length === 0 && !isLoading && !error && (
-          <EmptyCartMessage />
+          <EmptyState
+            icon="carrito"
+            title={t('home.emptyCart')}
+            subtitle={t('home.emptyCartSubtitle')}
+          />
         )}
       </ScrollView>
     </View>

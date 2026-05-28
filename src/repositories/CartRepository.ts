@@ -1,7 +1,6 @@
 import AuthRepository from '@/repositories/AuthRepository';
 import { CartWithItems, CartItemWithProduct } from '@/types/domain';
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://changuiapp-backend.onrender.com';
+import { API_BASE_URL, API_PATHS } from '@/constants/urls';
 
 interface RawProduct {
   id: string;
@@ -59,7 +58,7 @@ export const CartRepository = {
       throw new Error('No active session found. Please log in again.');
     }
 
-    const response = await fetch(`${API_URL}/api/cart`, {
+    const response = await fetch(`${API_BASE_URL}${API_PATHS.cart}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${session.token}`,

@@ -33,3 +33,39 @@ export interface CartItemWithProduct extends CartItem {
 export interface CartWithItems extends Cart {
   cart_items: CartItemWithProduct[];
 }
+
+export interface ShoppingList {
+  id: string;
+  name: string;
+  total_items: number;
+  done_items: number;
+  created_at?: string;
+}
+
+export interface ShoppingListItem {
+  id: string;
+  list_id: string;
+  name: string;
+  quantity: number;
+  purchased: boolean;
+  created_at?: string;
+}
+
+export interface Purchase {
+  id: string;
+  user_id: string;
+  store_name: string;
+  date: string;
+  total: number;
+  status: string;
+  created_at?: string;
+}
+
+export interface PurchaseItem {
+  id: string;
+  purchase_id: string;
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  unit_price: number;
+}

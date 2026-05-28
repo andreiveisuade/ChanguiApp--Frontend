@@ -4,13 +4,10 @@ import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import supabase from '@/config/supabase';
 import { AuthSession as StoredAuthSession, User } from '@/types/auth';
+import { STORAGE_KEYS } from '@/constants/storage';
+import { API_BASE_URL, API_PATHS, DEEP_LINKS, REQUEST_TIMEOUT_MS } from '@/constants/urls';
 
 WebBrowser.maybeCompleteAuthSession();
-
-const TOKEN_KEY = '@changuiapp/token';
-const USER_KEY = '@changuiapp/user';
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://changuiapp-backend.onrender.com';
-const REQUEST_TIMEOUT_MS = 15000;
 
 type ObjectRecord = Record<string, unknown>;
 
@@ -87,7 +84,7 @@ const requestAuth = async (
   const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
   try {
-    const response = await fetch(`${API_URL}/api/auth/${endpoint}`, {
+    const response = await fetch(`${API_BASE_URL}${API_PATHS.authBase}/${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -180,7 +177,7 @@ export const AuthRepository = {
 
   resetPassword: async (email: string): Promise<void> => {
     await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'changuiapp://auth/reset-password',
+      redirectTo: DEEP_LINKS.resetPassword,
     });
     // Supabase no revela si el email existe — siempre resuelve sin error
   },
@@ -195,8 +192,8 @@ export const AuthRepository = {
 
   getStoredSession: async (): Promise<StoredAuthSession | null> => {
     const [token, userJson] = await Promise.all([
-      AsyncStorage.getItem(TOKEN_KEY),
-      AsyncStorage.getItem(USER_KEY),
+      AsyncStorage.getItem(STORAGE_KEYS.token),
+      AsyncStorage.getItem(STORAGE_KEYS.user),
     ]);
 
     if (!token || !userJson) {
@@ -216,13 +213,16 @@ export const AuthRepository = {
 
   saveSession: async (token: string, user: User): Promise<void> => {
     await Promise.all([
-      AsyncStorage.setItem(TOKEN_KEY, token),
-      AsyncStorage.setItem(USER_KEY, JSON.stringify(user)),
+      AsyncStorage.setItem(STORAGE_KEYS.token, token),
+      AsyncStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user)),
     ]);
   },
 
   clearSession: async (): Promise<void> => {
-    await Promise.all([AsyncStorage.removeItem(TOKEN_KEY), AsyncStorage.removeItem(USER_KEY)]);
+    await Promise.all([
+      AsyncStorage.removeItem(STORAGE_KEYS.token),
+      AsyncStorage.removeItem(STORAGE_KEYS.user),
+    ]);
   },
 };
 

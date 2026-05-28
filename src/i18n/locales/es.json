@@ -127,6 +127,38 @@
     "skip": "Saltar",
     "finish": "Comenzar"
   },
+  "scanner": {
+    "addToCart": "Agregar al carrito",
+    "productNotFound": "Producto no encontrado",
+    "productNotFoundSubtitle": "No encontramos este código en el catálogo",
+    "tryAgain": "Intentar de nuevo",
+    "price": "Precio",
+    "brand": "Marca",
+    "scanHint": "Enfocá el código de barras dentro del recuadro"
+  },
+  "profile": {
+    "edit": "Editar",
+    "editField": "Editar campo"
+  },
+  "common": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "emptyTitle": "Sin datos",
+    "emptySubtitle": "Todavía no hay nada aquí",
+    "close": "Cerrar",
+    "add": "Agregar"
+  },
+  "lists": {
+    "addItemPlaceholder": "Nombre del producto...",
+    "progress": "{{done}} de {{total}} ítems",
+    "addItem": "Agregar ítem"
+  },
+  "purchases": {
+    "total": "Total",
+    "date": "Fecha",
+    "status": "Estado",
+    "quantity": "Cantidad"
+  },
   "forgotPassword": {
     "title": "¿Olvidaste tu contraseña?",
     "subtitle": "No te preocupes, te enviaremos instrucciones para restablecerla.",

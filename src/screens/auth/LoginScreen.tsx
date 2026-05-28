@@ -15,6 +15,7 @@ import AuthContainer from '@/components/layout/AuthContainer';
 import useAuth from '@/viewmodels/useAuth';
 import { colors, fonts, spacing, touchTarget } from '@/utils/theme';
 import { isValidEmail } from '@/utils/validators';
+import { ROUTES } from '@/constants/routes';
 
 export function LoginScreen(): React.JSX.Element {
   const router = useRouter();
@@ -31,7 +32,7 @@ export function LoginScreen(): React.JSX.Element {
   const handleLogin = async (): Promise<void> => {
     try {
       await login(email, password);
-      router.replace('/(tabs)/home');
+      router.replace(ROUTES.home);
     } catch {
       return;
     }
@@ -40,7 +41,7 @@ export function LoginScreen(): React.JSX.Element {
   const handleGoogleLogin = async (): Promise<void> => {
     try {
       await loginWithGoogle();
-      router.replace('/(tabs)/home');
+      router.replace(ROUTES.home);
     } catch {
       return;
     }
@@ -81,7 +82,7 @@ export function LoginScreen(): React.JSX.Element {
       <View style={styles.forgotRow}>
         <TextLinkButton
           accessibilityHint={t('auth.accessibility.goToForgotPasswordHint')}
-          onPress={() => router.push('/auth/forgot-password')}
+          onPress={() => router.push(ROUTES.auth.forgotPassword)}
           title={t('auth.login.forgotPassword')}
         />
       </View>
@@ -96,7 +97,7 @@ export function LoginScreen(): React.JSX.Element {
       <SecondaryButton
         accessibilityHint={t('auth.accessibility.goToRegisterHint')}
         disabled={isLoading}
-        onPress={() => router.push('/auth/register')}
+        onPress={() => router.push(ROUTES.auth.register)}
         title={t('auth.login.createAccount')}
       />
       <View style={styles.buttonGap} />

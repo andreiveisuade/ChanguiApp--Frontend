@@ -75,7 +75,7 @@ export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarPro
               accessibilityState={{ selected: isFocused }}
             >
               <View style={styles.scannerButton}>
-                <AppIcon name={iconName} size={26} color="#FFFFFF" />
+                <AppIcon name={iconName} size={26} color={colors.white} />
               </View>
               <AppText variant="Label" style={styles.scannerLabel}>
                 {label}
@@ -120,9 +120,9 @@ export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarPro
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    borderTopColor: colors.borderLight,
     justifyContent: 'space-around',
     alignItems: 'flex-end',
     paddingTop: 8,
@@ -166,3 +166,5 @@ const styles = StyleSheet.create({
     textTransform: 'none',
   },
 });
+
+export default BottomNavbar;
