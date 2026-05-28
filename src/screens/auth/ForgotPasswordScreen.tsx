@@ -1,14 +1,15 @@
-import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { AppIcon } from '@/components/atoms/AppIcon';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import FormLabel from '@/components/forms/FormLabel';
 import AppHeader from '@/components/layout/AppHeader';
 import AuthContainer from '@/components/layout/AuthContainer';
 import useAuth from '@/viewmodels/useAuth';
-import { colors, fonts, radii, spacing, touchTarget } from '@/utils/theme';
+import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
+import { ROUTES } from '@/constants/routes';
 
 export function ForgotPasswordScreen(): React.JSX.Element {
   const router = useRouter();
@@ -29,7 +30,7 @@ export function ForgotPasswordScreen(): React.JSX.Element {
       <AuthContainer>
         <AppHeader />
         <View style={styles.mailCircle}>
-          <Feather color={colors.mailIcon} name="mail" size={42} />
+          <AppIcon color={colors.mailIcon} name="mail" size={42} />
         </View>
         <View style={styles.hero}>
           <Text style={styles.title}>{t('forgotPassword.sentTitle')}</Text>
@@ -37,7 +38,7 @@ export function ForgotPasswordScreen(): React.JSX.Element {
         </View>
         <PrimaryButton
           accessibilityHint={t('forgotPassword.back')}
-          onPress={() => router.replace('/auth/login')}
+          onPress={() => router.replace(ROUTES.auth.login)}
           title={t('forgotPassword.back')}
         />
       </AuthContainer>
@@ -50,10 +51,10 @@ export function ForgotPasswordScreen(): React.JSX.Element {
       <Pressable
         accessibilityHint={t('forgotPassword.back')}
         accessibilityRole="button"
-        onPress={() => router.replace('/auth/login')}
+        onPress={() => router.replace(ROUTES.auth.login)}
         style={styles.backLink}
       >
-        <Feather color={colors.primary} name="arrow-left" size={18} />
+        <AppIcon color={colors.primary} name="atras" size={18} />
         <Text style={styles.backText}>{t('forgotPassword.back')}</Text>
       </Pressable>
       <View style={styles.hero}>
@@ -61,7 +62,7 @@ export function ForgotPasswordScreen(): React.JSX.Element {
         <Text style={styles.subtitle}>{t('forgotPassword.subtitle')}</Text>
       </View>
       <View style={styles.mailCircle}>
-        <Feather color={colors.mailIcon} name="mail" size={42} />
+        <AppIcon color={colors.mailIcon} name="mail" size={42} />
       </View>
       <View style={styles.inputGroup}>
         <FormLabel>{t('forgotPassword.email')}</FormLabel>

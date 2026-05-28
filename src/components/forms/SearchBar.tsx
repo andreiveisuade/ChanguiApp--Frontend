@@ -7,7 +7,7 @@ import {
   TextInputProps, 
   ViewStyle 
 } from 'react-native';
-import { colors } from '../../utils/theme';
+import { colors } from '@/constants/theme';
 import { AppIcon } from '../atoms/AppIcon';
 
 interface SearchBarProps extends TextInputProps {

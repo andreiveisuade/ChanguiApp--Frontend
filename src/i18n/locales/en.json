@@ -4,8 +4,6 @@
   "pay": "Pay",
   "cart": "My cart",
   "history": "History",
-  "profile": "Profile",
-  "lists": "My lists",
   "login": "Sign in",
   "register": "Create account",
   "logout": "Sign out",
@@ -133,6 +131,44 @@
     "next": "Next",
     "skip": "Skip",
     "finish": "Get started"
+  },
+  "scanner": {
+    "addToCart": "Add to cart",
+    "productNotFound": "Product not found",
+    "productNotFoundSubtitle": "We couldn't find this barcode in the catalog",
+    "tryAgain": "Try again",
+    "price": "Price",
+    "brand": "Brand",
+    "scanHint": "Point the barcode at the frame"
+  },
+  "profile": {
+    "edit": "Edit",
+    "editField": "Edit field",
+    "avatarFallback": "Profile avatar"
+  },
+  "common": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "close": "Close",
+    "add": "Add",
+    "emptyTitle": "Nothing here",
+    "emptySubtitle": "There's nothing here yet",
+    "decrementQuantity": "Decrease quantity",
+    "incrementQuantity": "Increase quantity",
+    "quantityValue": "Quantity: {{value}}"
+  },
+  "lists": {
+    "addItemPlaceholder": "Product name...",
+    "progress": "{{done}} of {{total}} items",
+    "addItem": "Add item",
+    "markPurchased": "Mark as purchased",
+    "markUnpurchased": "Mark as not purchased"
+  },
+  "purchases": {
+    "total": "Total",
+    "date": "Date",
+    "status": "Status",
+    "quantity": "Quantity"
   },
   "forgotPassword": {
     "title": "Forgot your password?",

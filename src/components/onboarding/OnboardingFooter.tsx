@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import OnboardingDots from '@/components/onboarding/OnboardingDots';
-import { spacing } from '@/utils/theme';
+import { spacing } from '@/constants/theme';
 
 type OnboardingFooterProps = {
   isLast: boolean;

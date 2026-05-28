@@ -1,9 +1,9 @@
-import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ChanguiAppLogo from '@/../assets/logos/changuiapp-logo.svg';
-import { colors, fonts, spacing, touchTarget } from '@/utils/theme';
+import { AppIcon } from '@/components/atoms/AppIcon';
+import { colors, fonts, spacing, touchTarget } from '@/constants/theme';
 
 type AppHeaderProps = {
   onBack?: () => void;
@@ -21,7 +21,7 @@ export function AppHeader({ onBack }: AppHeaderProps): React.JSX.Element {
           onPress={onBack}
           style={styles.backButton}
         >
-          <Feather color={colors.textPrimary} name="arrow-left" size={22} />
+          <AppIcon color={colors.textPrimary} name="atras" size={22} />
         </Pressable>
       ) : null}
       <View style={styles.brand}>

@@ -9,7 +9,7 @@ import { CartSummary } from '@/components/cart/CartSummary';
 import EmptyCartMessage from '@/components/home/EmptyCartMessage';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
 import { AppText } from '@/components/atoms/AppText';
-import { colors, spacing } from '@/utils/theme';
+import { colors, spacing } from '@/constants/theme';
 
 export default function CartScreen(): React.JSX.Element {
   const { t } = useTranslation();

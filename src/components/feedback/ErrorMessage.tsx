@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, radii, spacing, touchTarget } from '@/utils/theme';
+import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
 
 type ErrorMessageProps = {
   message?: string | null;

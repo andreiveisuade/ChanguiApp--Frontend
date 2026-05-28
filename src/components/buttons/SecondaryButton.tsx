@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
-import { colors, fonts, radii, touchTarget } from '@/utils/theme';
+import { colors, fonts, radii, touchTarget } from '@/constants/theme';
 
 type SecondaryButtonProps = {
   title: string;

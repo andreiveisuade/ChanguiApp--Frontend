@@ -15,8 +15,7 @@
 import AuthRepository from '@/repositories/AuthRepository';
 import { authEvents } from '@/utils/authEvents';
 import { AuthSessionExpiredError } from '@/types/errors';
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://changuiapp-backend.onrender.com';
+import { API_URL } from '@/constants/api';
 
 export interface ApiFetchOptions extends Omit<RequestInit, 'headers'> {
   headers?: Record<string, string>;

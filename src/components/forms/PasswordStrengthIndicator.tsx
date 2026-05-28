@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, radii, spacing } from '@/utils/theme';
+import { colors, fonts, radii, spacing } from '@/constants/theme';
 
 type Strength = 'weak' | 'medium' | 'strong';
 

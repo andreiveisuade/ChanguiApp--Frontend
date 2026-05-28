@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ChanguiAppLogo from '@/../assets/logos/changuiapp-logo.svg';
-import { colors, fonts, spacing } from '@/utils/theme';
+import { colors, fonts, spacing } from '@/constants/theme';
 
 type SplashSlideProps = {
   onNext: () => void;

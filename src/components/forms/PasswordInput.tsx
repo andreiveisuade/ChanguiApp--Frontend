@@ -1,10 +1,10 @@
-import { Feather } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { AppIcon } from '@/components/atoms/AppIcon';
 import FormLabel from '@/components/forms/FormLabel';
 import InlineError from '@/components/forms/InlineError';
 import PasswordStrengthIndicator from '@/components/forms/PasswordStrengthIndicator';
-import { colors, fonts, radii, spacing, touchTarget } from '@/utils/theme';
+import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
 
 type PasswordInputProps = {
   value: string;
@@ -56,9 +56,9 @@ export function PasswordInput({
           onPress={() => setIsVisible((currentValue) => !currentValue)}
           style={styles.toggle}
         >
-          <Feather
+          <AppIcon
             color={colors.textSecondary}
-            name={isVisible ? 'eye-off' : 'eye'}
+            name={isVisible ? 'ocultar' : 'ver'}
             size={22}
           />
         </Pressable>

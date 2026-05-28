@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { AppText } from '@/components/atoms/AppText';
-import { colors, spacing, touchTarget } from '@/utils/theme';
+import { colors, spacing, touchTarget } from '@/constants/theme';
 import { formatARS } from '@/utils/currency';
 
 interface CartSummaryProps {

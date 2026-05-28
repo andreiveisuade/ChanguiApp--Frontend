@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { CartItemWithProduct } from '@/types/domain';
-import { colors, spacing } from '@/utils/theme';
+import { colors, spacing } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { formatARS } from '@/utils/currency';

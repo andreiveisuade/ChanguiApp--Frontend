@@ -9,7 +9,8 @@ import CartSummaryCard from '@/components/home/CartSummaryCard';
 import CartItemRow from '@/components/home/CartItemRow';
 import EmptyCartMessage from '@/components/home/EmptyCartMessage';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
-import { colors, spacing } from '@/utils/theme';
+import { colors, spacing } from '@/constants/theme';
+import { ROUTES } from '@/constants/routes';
 
 export default function HomeRoute(): React.JSX.Element {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function HomeRoute(): React.JSX.Element {
   const { items, total, isLoading, error, refresh } = useCart();
 
   const handleProfilePress = (): void => {
-    router.push('/(tabs)/settings');
+    router.push(ROUTES.tabs.settings);
   };
 
   const userName = user?.full_name ?? t('home.defaultUser');
