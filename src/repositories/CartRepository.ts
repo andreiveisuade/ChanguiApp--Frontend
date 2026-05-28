@@ -1,7 +1,5 @@
-import AuthRepository from '@/repositories/AuthRepository';
+import { apiFetch } from '@/utils/apiFetch';
 import { CartWithItems, CartItemWithProduct } from '@/types/domain';
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://changuiapp-backend.onrender.com';
 
 interface RawProduct {
   id: string;
@@ -51,37 +49,10 @@ function mapRawItem(item: RawCartItem): CartItemWithProduct {
 export const CartRepository = {
   /**
    * Fetches the current active cart and its items.
-   * Ensures standard bearer authentication using stored session token.
+   * Auth (bearer token) y manejo de 401 lo cubre apiFetch.
    */
   async getCart(): Promise<{ cart: CartWithItems | null; items: CartItemWithProduct[]; total: number }> {
-    const session = await AuthRepository.getStoredSession();
-    if (!session || !session.token) {
-      throw new Error('No active session found. Please log in again.');
-    }
-
-    const response = await fetch(`${API_URL}/api/cart`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${session.token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      let errorMessage = 'Failed to fetch cart';
-      try {
-        const errorData = await response.json();
-        if (errorData && typeof errorData.message === 'string') {
-          errorMessage = errorData.message;
-        } else if (errorData && typeof errorData.error === 'string') {
-          errorMessage = errorData.error;
-        }
-      } catch {
-        // Silent catch: use default message
-      }
-      throw new Error(errorMessage);
-    }
-
+    const response = await apiFetch('/api/cart');
     const data = await response.json();
 
     // Map and normalize product relation name (could be product or products in backend JSON)

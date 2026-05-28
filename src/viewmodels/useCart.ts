@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import CartRepository from '@/repositories/CartRepository';
 import { CartWithItems, CartItemWithProduct } from '@/types/domain';
+import { AuthSessionExpiredError } from '@/types/errors';
 
 export type UseCartReturn = {
   cart: CartWithItems | null;
@@ -27,6 +28,12 @@ export const useCart = (): UseCartReturn => {
       setItems(data.items);
       setTotal(data.total);
     } catch (err: any) {
+      // 401 / sesión inválida: apiFetch ya limpió el storage y emitió el evento.
+      // El AuthContext va a limpiar estado y el guard del tabs layout redirige a login.
+      // No exponemos el error al usuario para evitar flicker visual.
+      if (err instanceof AuthSessionExpiredError) {
+        return;
+      }
       setError(err?.message || 'Error loading cart');
     } finally {
       setIsLoading(false);
