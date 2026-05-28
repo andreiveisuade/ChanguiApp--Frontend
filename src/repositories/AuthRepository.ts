@@ -200,6 +200,10 @@ export const AuthRepository = {
     ]);
 
     if (!token || !userJson) {
+      // Estado inconsistente (solo una de las dos keys): limpiar para evitar zombies.
+      if (token || userJson) {
+        await AuthRepository.clearSession();
+      }
       return null;
     }
 
