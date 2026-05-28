@@ -4,8 +4,6 @@
   "pay": "Pagar",
   "cart": "Mi carrito",
   "history": "Historial",
-  "profile": "Perfil",
-  "lists": "Mis listas",
   "login": "Iniciar sesión",
   "register": "Crear cuenta",
   "logout": "Cerrar sesión",
@@ -133,6 +131,44 @@
     "next": "Siguiente",
     "skip": "Saltar",
     "finish": "Comenzar"
+  },
+  "scanner": {
+    "addToCart": "Agregar al carrito",
+    "productNotFound": "Producto no encontrado",
+    "productNotFoundSubtitle": "No encontramos este código de barras en el catálogo",
+    "tryAgain": "Reintentar",
+    "price": "Precio",
+    "brand": "Marca",
+    "scanHint": "Apuntá el código de barras al marco"
+  },
+  "profile": {
+    "edit": "Editar",
+    "editField": "Editar campo",
+    "avatarFallback": "Avatar de perfil"
+  },
+  "common": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "add": "Agregar",
+    "emptyTitle": "No hay nada acá",
+    "emptySubtitle": "Todavía no hay contenido para mostrar",
+    "decrementQuantity": "Reducir cantidad",
+    "incrementQuantity": "Aumentar cantidad",
+    "quantityValue": "Cantidad: {{value}}"
+  },
+  "lists": {
+    "addItemPlaceholder": "Nombre del producto...",
+    "progress": "{{done}} de {{total}} ítems",
+    "addItem": "Agregar ítem",
+    "markPurchased": "Marcar como comprado",
+    "markUnpurchased": "Marcar como no comprado"
+  },
+  "purchases": {
+    "total": "Total",
+    "date": "Fecha",
+    "status": "Estado",
+    "quantity": "Cantidad"
   },
   "forgotPassword": {
     "title": "¿Olvidaste tu contraseña?",
