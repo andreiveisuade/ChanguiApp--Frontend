@@ -1,10 +1,10 @@
-import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { AppIcon } from '@/components/atoms/AppIcon';
 import { colors, fonts, spacing } from '@/constants/theme';
 
 type OnboardingSlideProps = {
-  icon: keyof typeof Feather.glyphMap;
+  icon: string;
   title: string;
   text: string;
   width: number;
@@ -19,7 +19,7 @@ export function OnboardingSlide({
   return (
     <View style={[styles.container, { width }]}>
       <View style={styles.iconCircle}>
-        <Feather color={colors.white} name={icon} size={42} />
+        <AppIcon color={colors.white} name={icon} size={42} />
       </View>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.text}>{text}</Text>

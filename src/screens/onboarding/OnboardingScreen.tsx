@@ -1,4 +1,3 @@
-import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
@@ -21,7 +20,7 @@ import { ROUTES } from '@/constants/routes';
 
 type Slide = {
   id: string;
-  icon: keyof typeof Feather.glyphMap;
+  icon: string;
   titleKey: string;
   textKey: string;
 };
@@ -29,19 +28,19 @@ type Slide = {
 const SLIDES: Slide[] = [
   {
     id: 'scan',
-    icon: 'maximize',
+    icon: 'expandir',
     titleKey: 'onboarding.slide1.title',
     textKey: 'onboarding.slide1.text',
   },
   {
     id: 'budget',
-    icon: 'trending-down',
+    icon: 'gastos',
     titleKey: 'onboarding.slide2.title',
     textKey: 'onboarding.slide2.text',
   },
   {
     id: 'start',
-    icon: 'shopping-cart',
+    icon: 'carrito',
     titleKey: 'onboarding.slide3.title',
     textKey: 'onboarding.slide3.text',
   },

@@ -25,6 +25,12 @@ const iconMap: { [key: string]: keyof typeof MaterialCommunityIcons.glyphMap } =
   mas: 'plus-circle-outline',
   alerta: 'alert-circle-outline',
   circulo: 'checkbox-blank-circle-outline',
+  mail: 'email-outline',
+  atras: 'arrow-left',
+  ver: 'eye-outline',
+  ocultar: 'eye-off-outline',
+  expandir: 'arrow-expand-all',
+  gastos: 'trending-down',
 };
 
 interface AppIconProps {
