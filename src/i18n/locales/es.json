@@ -45,6 +45,26 @@
       "settings": "Abrir ajustes de la cuenta"
     }
   },
+  "cartScreen": {
+    "detail": "Detalle del carrito",
+    "updatedNow": "Actualizado ahora",
+    "subtotal": "Subtotal",
+    "checkout": "Ir a pagar",
+    "checkoutHint": "Próximamente disponible"
+  },
+  "scanner": {
+    "title": "Escaneá el producto",
+    "aim": "Apuntá la cámara al código de barras.",
+    "scanAgain": "Escanear otro",
+    "backToCart": "Volver al carrito",
+    "lastCode": "Último código: {{code}}",
+    "scannedTitle": "Código escaneado",
+    "scannedMessage": "Código: {{code}}",
+    "permissionTitle": "Permiso de cámara",
+    "permissionText": "Necesitamos acceso a la cámara para escanear productos.",
+    "allowCamera": "Permitir cámara",
+    "allowCameraHint": "Solicita el permiso de cámara al sistema"
+  },
   "auth": {
     "login": {
       "title": "Iniciar sesión",
