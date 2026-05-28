@@ -18,14 +18,32 @@
   "lang_en": "English",
   "home": {
     "title": "Inicio",
-    "greeting": "Hola, {{name}}. Tu módulo Scan & Go está listo para continuar.",
+    "greeting": "¡Hola, {{name}}!",
+    "continueShopping": "Continuá con tus compras",
+    "activeCart": "Carrito Activo",
+    "products_one": "{{count}} producto",
+    "products_other": "{{count}} productos",
+    "total": "Total",
+    "emptyCart": "Tu carrito está vacío",
+    "emptyCartSubtitle": "Escaneá un producto para empezar",
+    "errorLoading": "No se pudo cargar el carrito",
+    "defaultUser": "Usuario",
+    "fallbackProductName": "Producto",
     "placeholder": "Tu módulo Scan & Go está listo para continuar."
   },
   "nav": {
     "home": "Inicio",
     "cart": "Carrito",
     "scanner": "Escanear",
-    "profile": "Perfil"
+    "history": "Historial",
+    "settings": "Ajustes",
+    "hint": {
+      "home": "Ir a la pantalla de inicio",
+      "cart": "Ver el contenido de tu carrito",
+      "scanner": "Escanear un producto",
+      "history": "Ver tu historial de compras",
+      "settings": "Abrir ajustes de la cuenta"
+    }
   },
   "auth": {
     "login": {
@@ -72,7 +90,9 @@
       "goToRegisterHint": "Ir a la pantalla de registro",
       "goToLoginHint": "Ir a la pantalla de inicio de sesión",
       "goToForgotPasswordHint": "Ir a la pantalla para recuperar contraseña",
-      "logoutHint": "Cierra la sesión actual"
+      "logoutHint": "Cierra la sesión actual",
+      "goToProfile": "Ir a mi perfil",
+      "goToProfileHint": "Abre la pantalla de ajustes de tu cuenta"
     },
     "errors": {
       "invalidEmail": "El email no es válido",

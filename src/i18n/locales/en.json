@@ -18,14 +18,32 @@
   "lang_en": "English",
   "home": {
     "title": "Home",
-    "greeting": "Hi, {{name}}. Your Scan & Go module is ready to continue.",
+    "greeting": "Hi, {{name}}!",
+    "continueShopping": "Continue with your shopping",
+    "activeCart": "Active Cart",
+    "products_one": "{{count}} product",
+    "products_other": "{{count}} products",
+    "total": "Total",
+    "emptyCart": "Your cart is empty",
+    "emptyCartSubtitle": "Scan a product to get started",
+    "errorLoading": "Could not load the cart",
+    "defaultUser": "User",
+    "fallbackProductName": "Product",
     "placeholder": "Your Scan & Go module is ready to continue."
   },
   "nav": {
     "home": "Home",
     "cart": "Cart",
     "scanner": "Scan",
-    "profile": "Profile"
+    "history": "History",
+    "settings": "Settings",
+    "hint": {
+      "home": "Go to the home screen",
+      "cart": "View your cart",
+      "scanner": "Scan a product",
+      "history": "View your purchase history",
+      "settings": "Open account settings"
+    }
   },
   "auth": {
     "login": {
@@ -72,7 +90,9 @@
       "goToRegisterHint": "Go to the registration screen",
       "goToLoginHint": "Go to the sign in screen",
       "goToForgotPasswordHint": "Go to the password recovery screen",
-      "logoutHint": "Sign out of the current session"
+      "logoutHint": "Sign out of the current session",
+      "goToProfile": "Go to my profile",
+      "goToProfileHint": "Opens your account settings screen"
     },
     "errors": {
       "invalidEmail": "The email is not valid",
