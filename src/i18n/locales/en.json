@@ -52,19 +52,6 @@
     "checkout": "Checkout",
     "checkoutHint": "Coming soon"
   },
-  "scanner": {
-    "title": "Scan the product",
-    "aim": "Point the camera at the barcode.",
-    "scanAgain": "Scan another",
-    "backToCart": "Back to cart",
-    "lastCode": "Last code: {{code}}",
-    "scannedTitle": "Code scanned",
-    "scannedMessage": "Code: {{code}}",
-    "permissionTitle": "Camera permission",
-    "permissionText": "We need camera access to scan products.",
-    "allowCamera": "Allow camera",
-    "allowCameraHint": "Requests the system camera permission"
-  },
   "auth": {
     "login": {
       "title": "Sign in",
