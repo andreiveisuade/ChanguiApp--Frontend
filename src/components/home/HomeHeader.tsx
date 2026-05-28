@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, spacing } from '@/utils/theme';
+import { colors, fonts, spacing, touchTarget } from '@/utils/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -42,7 +42,7 @@ export const HomeHeader = ({ userName, onProfilePress }: HomeHeaderProps) => {
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#D04946',
+    backgroundColor: colors.primary,
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
   },
@@ -59,26 +59,25 @@ const styles = StyleSheet.create({
     marginRight: spacing.md,
   },
   greeting: {
-    fontFamily: fonts.display, // Poppins from theme tokens
+    fontFamily: fonts.display,
     fontSize: 28,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: colors.white,
     marginBottom: spacing.xs,
   },
   subtitle: {
-    fontFamily: fonts.body, // Inter from theme tokens
+    fontFamily: fonts.body,
     fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)', // White with 80% opacity
+    color: 'rgba(255, 255, 255, 0.8)',
   },
   avatarButton: {
-    width: 44,
-    height: 44,
+    width: touchTarget.minWidth,
+    height: touchTarget.minHeight,
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
-    // Subtle shadow
-    shadowColor: '#000000',
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,

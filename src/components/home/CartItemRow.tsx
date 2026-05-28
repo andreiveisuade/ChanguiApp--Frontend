@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { CartItemWithProduct } from '@/types/domain';
-import { colors, fonts, spacing } from '@/utils/theme';
+import { colors, spacing } from '@/utils/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { formatARS } from '@/utils/currency';
@@ -12,6 +13,7 @@ interface CartItemRowProps {
 }
 
 export const CartItemRow = ({ item, isLast = false }: CartItemRowProps) => {
+  const { t } = useTranslation();
   const [imageError, setImageError] = useState(false);
 
   const itemTotal = item.unit_price * item.quantity;
@@ -34,11 +36,9 @@ export const CartItemRow = ({ item, isLast = false }: CartItemRowProps) => {
 
       <View style={styles.detailsContainer}>
         <AppText variant="H3" style={styles.productName} numberOfLines={2}>
-          {item.product?.name || 'Producto'}
+          {item.product?.name || t('home.fallbackProductName')}
         </AppText>
-        <AppText variant="Body" style={styles.productPrice}>
-          {formatARS(itemTotal)}
-        </AppText>
+        <AppText variant="Body">{formatARS(itemTotal)}</AppText>
       </View>
     </View>
   );
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB', // Subtle light gray separator
+    borderBottomColor: colors.border,
   },
   noBorder: {
     borderBottomWidth: 0,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 12,
-    backgroundColor: '#F3F4F6', // Light gray backdrop for placeholder
+    backgroundColor: colors.muted,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: spacing.md,
@@ -74,16 +74,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   productName: {
-    fontFamily: fonts.body, // Inter
     fontSize: 15,
-    color: '#000000', // textPrimary
     fontWeight: '500',
     marginBottom: 4,
-  },
-  productPrice: {
-    fontFamily: fonts.body,
-    fontSize: 14,
-    color: '#666666', // textSecondary
   },
 });
 

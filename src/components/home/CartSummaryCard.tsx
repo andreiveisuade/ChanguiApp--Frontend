@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { Feather } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, spacing } from '@/utils/theme';
+import { colors, spacing } from '@/utils/theme';
 import { AppText } from '@/components/atoms/AppText';
+import { AppIcon } from '@/components/atoms/AppIcon';
 import { formatARS } from '@/utils/currency';
 
 interface CartSummaryCardProps {
@@ -28,12 +28,12 @@ export const CartSummaryCard = ({ itemCount, total, isLoading }: CartSummaryCard
     <View style={styles.container}>
       <View style={styles.leftSection}>
         <View style={styles.iconContainer}>
-          <Feather name="shopping-cart" size={24} color="#FFFFFF" />
+          <AppIcon name="carrito" size={24} color={colors.white} />
         </View>
         <View style={styles.infoContainer}>
-          <AppText variant="Label" style={styles.titleLabel}>{t('home.activeCart')}</AppText>
+          <AppText variant="Label">{t('home.activeCart')}</AppText>
           {isLoading ? (
-            <ActivityIndicator size="small" color="#D04946" style={styles.spinner} />
+            <ActivityIndicator size="small" color={colors.primary} style={styles.spinner} />
           ) : (
             <AppText variant="H2" style={styles.productsCount}>
               {getProductsText()}
@@ -43,9 +43,9 @@ export const CartSummaryCard = ({ itemCount, total, isLoading }: CartSummaryCard
       </View>
 
       <View style={styles.rightSection}>
-        <AppText variant="Label" style={styles.totalLabel}>{t('home.total')}</AppText>
+        <AppText variant="Label">{t('home.total')}</AppText>
         {isLoading ? (
-          <ActivityIndicator size="small" color="#D04946" style={styles.spinner} />
+          <ActivityIndicator size="small" color={colors.primary} style={styles.spinner} />
         ) : (
           <AppText variant="Price" style={styles.totalValue}>
             {formatARS(total)}
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 12,
-    backgroundColor: '#D04946', // Primary brand red
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: spacing.md,
@@ -80,34 +80,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  titleLabel: {
-    fontFamily: fonts.body,
-    fontSize: 14,
-    color: '#666666',
-    marginBottom: 2,
-  },
   productsCount: {
-    fontFamily: fonts.body,
     fontSize: 16,
     fontWeight: '700',
-    color: '#000000',
   },
   rightSection: {
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
-  totalLabel: {
-    fontFamily: fonts.body,
-    fontSize: 12,
-    color: '#666666',
-    textTransform: 'uppercase',
-    marginBottom: 2,
-  },
   totalValue: {
-    fontFamily: fonts.body,
     fontSize: 20,
-    fontWeight: '700',
-    color: '#D04946', // Brand red
   },
   spinner: {
     alignSelf: 'flex-start',

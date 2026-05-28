@@ -27,6 +27,8 @@
     "emptyCart": "Tu carrito está vacío",
     "emptyCartSubtitle": "Escaneá un producto para empezar",
     "errorLoading": "No se pudo cargar el carrito",
+    "defaultUser": "Usuario",
+    "fallbackProductName": "Producto",
     "placeholder": "Tu módulo Scan & Go está listo para continuar."
   },
   "nav": {

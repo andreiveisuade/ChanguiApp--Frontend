@@ -9,7 +9,7 @@ import CartSummaryCard from '@/components/home/CartSummaryCard';
 import CartItemRow from '@/components/home/CartItemRow';
 import EmptyCartMessage from '@/components/home/EmptyCartMessage';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
-import { colors, fonts, spacing } from '@/utils/theme';
+import { colors, spacing } from '@/utils/theme';
 
 export default function HomeRoute(): React.JSX.Element {
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function HomeRoute(): React.JSX.Element {
     router.push('/(tabs)/settings');
   };
 
-  const userName = user?.full_name ?? 'Usuario';
+  const userName = user?.full_name ?? t('home.defaultUser');
 
   return (
     <View style={styles.container}>
@@ -88,19 +88,19 @@ export default function HomeRoute(): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
   },
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 100,
   },
   mainCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     borderRadius: 24,
-    marginHorizontal: 24,
-    marginTop: 20,
+    marginHorizontal: spacing.xl,
+    marginTop: spacing.lg,
     padding: spacing.lg,
-    shadowColor: '#000000',
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: colors.border,
     marginVertical: spacing.md,
   },
   listContainer: {

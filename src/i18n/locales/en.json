@@ -27,6 +27,8 @@
     "emptyCart": "Your cart is empty",
     "emptyCartSubtitle": "Scan a product to get started",
     "errorLoading": "Could not load the cart",
+    "defaultUser": "User",
+    "fallbackProductName": "Product",
     "placeholder": "Your Scan & Go module is ready to continue."
   },
   "nav": {

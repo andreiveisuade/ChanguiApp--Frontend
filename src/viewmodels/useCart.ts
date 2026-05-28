@@ -18,10 +18,8 @@ export const useCart = (): UseCartReturn => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchCart = useCallback(async (showLoadingIndicator = true) => {
-    if (showLoadingIndicator) {
-      setIsLoading(true);
-    }
+  const fetchCart = useCallback(async () => {
+    setIsLoading(true);
     setError(null);
     try {
       const data = await CartRepository.getCart();
@@ -31,18 +29,16 @@ export const useCart = (): UseCartReturn => {
     } catch (err: any) {
       setError(err?.message || 'Error loading cart');
     } finally {
-      if (showLoadingIndicator) {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchCart(true);
+    fetchCart();
   }, [fetchCart]);
 
   const refresh = useCallback(async () => {
-    await fetchCart(true); // Set to true so pull-to-refresh spinner shows loading
+    await fetchCart();
   }, [fetchCart]);
 
   return {
