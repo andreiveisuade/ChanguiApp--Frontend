@@ -3,10 +3,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import AuthRepository from '@/repositories/AuthRepository';
 import { colors } from '@/utils/theme';
 
 const ONBOARDING_COMPLETED_KEY = '@changuiapp/onboarding_completed';
-const AUTH_TOKEN_KEY = '@changuiapp/token';
 const SPLASH_DURATION_MS = 3000;
 
 export default function IndexRoute(): React.JSX.Element {
@@ -27,9 +27,9 @@ export default function IndexRoute(): React.JSX.Element {
     let stillMounted = true;
 
     const redirect = async (): Promise<void> => {
-      const [hasCompletedOnboarding, token] = await Promise.all([
+      const [hasCompletedOnboarding, session] = await Promise.all([
         AsyncStorage.getItem(ONBOARDING_COMPLETED_KEY),
-        AsyncStorage.getItem(AUTH_TOKEN_KEY),
+        AuthRepository.getStoredSession(),
       ]);
 
       if (!stillMounted) return;
@@ -39,7 +39,7 @@ export default function IndexRoute(): React.JSX.Element {
       if (!hasCompletedOnboarding) {
         router.replace('/onboarding');
       } else {
-        router.replace(token ? '/(tabs)/home' : '/auth/login');
+        router.replace(session ? '/(tabs)/home' : '/auth/login');
       }
     };
 
