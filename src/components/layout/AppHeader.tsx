@@ -3,7 +3,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ChanguiAppLogo from '@/../assets/logos/changuiapp-logo.svg';
-import { colors, fonts, spacing, touchTarget } from '@/utils/theme';
+import { colors, fonts, spacing, touchTarget } from '@/constants/theme';
 
 type AppHeaderProps = {
   onBack?: () => void;

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, spacing, touchTarget } from '@/utils/theme';
+import { colors, fonts, spacing, touchTarget } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 

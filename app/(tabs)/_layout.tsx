@@ -4,7 +4,8 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import useAuth from '@/viewmodels/useAuth';
 import { BottomNavbar } from '@/components/layout/BottomNavbar';
-import { colors, fonts } from '@/utils/theme';
+import { colors, fonts } from '@/constants/theme';
+import { ROUTES } from '@/constants/routes';
 
 export default function TabsLayout(): React.JSX.Element {
   const { t } = useTranslation();
@@ -13,7 +14,7 @@ export default function TabsLayout(): React.JSX.Element {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.replace('/auth/login');
+      router.replace(ROUTES.auth.login);
     }
   }, [isLoading, isAuthenticated, router]);
 

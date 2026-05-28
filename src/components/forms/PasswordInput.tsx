@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import FormLabel from '@/components/forms/FormLabel';
 import InlineError from '@/components/forms/InlineError';
 import PasswordStrengthIndicator from '@/components/forms/PasswordStrengthIndicator';
-import { colors, fonts, radii, spacing, touchTarget } from '@/utils/theme';
+import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
 
 type PasswordInputProps = {
   value: string;

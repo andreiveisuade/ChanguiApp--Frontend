@@ -4,9 +4,10 @@ import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import AuthRepository from '@/repositories/AuthRepository';
-import { colors } from '@/utils/theme';
+import { colors } from '@/constants/theme';
+import { STORAGE_KEYS } from '@/constants/storage';
+import { ROUTES } from '@/constants/routes';
 
-const ONBOARDING_COMPLETED_KEY = '@changuiapp/onboarding_completed';
 const SPLASH_DURATION_MS = 3000;
 
 export default function IndexRoute(): React.JSX.Element {
@@ -28,7 +29,7 @@ export default function IndexRoute(): React.JSX.Element {
 
     const redirect = async (): Promise<void> => {
       const [hasCompletedOnboarding, session] = await Promise.all([
-        AsyncStorage.getItem(ONBOARDING_COMPLETED_KEY),
+        AsyncStorage.getItem(STORAGE_KEYS.onboardingCompleted),
         AuthRepository.getStoredSession(),
       ]);
 
@@ -37,9 +38,9 @@ export default function IndexRoute(): React.JSX.Element {
       hasNavigated.current = true;
 
       if (!hasCompletedOnboarding) {
-        router.replace('/onboarding');
+        router.replace(ROUTES.onboarding);
       } else {
-        router.replace(session ? '/(tabs)/home' : '/auth/login');
+        router.replace(session ? ROUTES.tabs.home : ROUTES.auth.login);
       }
     };
 

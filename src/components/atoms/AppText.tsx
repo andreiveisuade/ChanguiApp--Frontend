@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, StyleProp, TextStyle, TextProps } from 'react-native';
-import { colors } from '../../utils/theme';
+import { colors } from '@/constants/theme';
 
 // Definimos las variantes según tu escala tipográfica de branding
 type TextVariant = 'Display' | 'H1' | 'H2' | 'H3' | 'Body' | 'Label' | 'Price';

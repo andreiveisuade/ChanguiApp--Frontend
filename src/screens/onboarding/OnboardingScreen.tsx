@@ -15,9 +15,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import OnboardingFooter from '@/components/onboarding/OnboardingFooter';
 import OnboardingSlide from '@/components/onboarding/OnboardingSlide';
-import { colors, fonts, spacing, touchTarget } from '@/utils/theme';
-
-const ONBOARDING_COMPLETED_KEY = '@changuiapp/onboarding_completed';
+import { colors, fonts, spacing, touchTarget } from '@/constants/theme';
+import { STORAGE_KEYS } from '@/constants/storage';
+import { ROUTES } from '@/constants/routes';
 
 type Slide = {
   id: string;
@@ -55,8 +55,8 @@ export function OnboardingScreen(): React.JSX.Element {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handleFinish = async (): Promise<void> => {
-    await AsyncStorage.setItem(ONBOARDING_COMPLETED_KEY, 'true');
-    router.replace('/auth/login');
+    await AsyncStorage.setItem(STORAGE_KEYS.onboardingCompleted, 'true');
+    router.replace(ROUTES.auth.login);
   };
 
   const handleNext = (): void => {

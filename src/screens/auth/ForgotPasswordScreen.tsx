@@ -8,7 +8,8 @@ import FormLabel from '@/components/forms/FormLabel';
 import AppHeader from '@/components/layout/AppHeader';
 import AuthContainer from '@/components/layout/AuthContainer';
 import useAuth from '@/viewmodels/useAuth';
-import { colors, fonts, radii, spacing, touchTarget } from '@/utils/theme';
+import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
+import { ROUTES } from '@/constants/routes';
 
 export function ForgotPasswordScreen(): React.JSX.Element {
   const router = useRouter();
@@ -37,7 +38,7 @@ export function ForgotPasswordScreen(): React.JSX.Element {
         </View>
         <PrimaryButton
           accessibilityHint={t('forgotPassword.back')}
-          onPress={() => router.replace('/auth/login')}
+          onPress={() => router.replace(ROUTES.auth.login)}
           title={t('forgotPassword.back')}
         />
       </AuthContainer>
@@ -50,7 +51,7 @@ export function ForgotPasswordScreen(): React.JSX.Element {
       <Pressable
         accessibilityHint={t('forgotPassword.back')}
         accessibilityRole="button"
-        onPress={() => router.replace('/auth/login')}
+        onPress={() => router.replace(ROUTES.auth.login)}
         style={styles.backLink}
       >
         <Feather color={colors.primary} name="arrow-left" size={18} />

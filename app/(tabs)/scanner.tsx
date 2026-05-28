@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { AppText } from '@/components/atoms/AppText';
-import { colors } from '@/utils/theme';
+import { colors } from '@/constants/theme';
 
 export default function ScannerScreen() {
   const { t } = useTranslation();

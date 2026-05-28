@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
-import { colors } from '../../utils/theme';
+import { colors } from '@/constants/theme';
 import { AppIcon } from '../atoms/AppIcon';
 import { AppText } from '../atoms/AppText';
 

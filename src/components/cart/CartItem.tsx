@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing } from '@/utils/theme';
+import { colors, spacing } from '@/constants/theme';
 import { formatARS } from '@/utils/currency';
 
 interface CartItemProps {

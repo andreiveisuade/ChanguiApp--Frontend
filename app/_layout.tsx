@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider } from '@/context/AuthContext';
 import i18n from '@/i18n';
-import { colors } from '@/utils/theme';
+import { colors } from '@/constants/theme';
 
 WebBrowser.maybeCompleteAuthSession();
 

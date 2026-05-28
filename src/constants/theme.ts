@@ -23,6 +23,7 @@ export const colors = {
   onboardingDotInactive: '#D1D5DB',
   mailSurface: '#E6E8FF',
   mailIcon: '#4F46E5',
+  shadow: '#000000',
 } as const;
 
 export const fonts = {
@@ -45,7 +46,24 @@ export const radii = {
   lg: 18,
 } as const;
 
+export const fontSize = {
+  display: 32,
+  h1: 24,
+  h2: 18,
+  h3: 16,
+  body: 14,
+  label: 12,
+  price: 18,
+  button: 18,
+  input: 16,
+} as const;
+
 export const touchTarget = {
   minHeight: 44,
   minWidth: 44,
+} as const;
+
+export const opacity = {
+  disabled: 0.5,
+  pressed: 0.86,
 } as const;

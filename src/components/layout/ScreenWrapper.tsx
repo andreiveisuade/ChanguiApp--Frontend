@@ -9,7 +9,7 @@ import {
   ScrollView
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors } from '../../utils/theme';
+import { colors } from '@/constants/theme';
 
 interface ScreenWrapperProps {
   children: React.ReactNode;

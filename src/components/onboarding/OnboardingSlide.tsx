@@ -1,7 +1,7 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, spacing } from '@/utils/theme';
+import { colors, fonts, spacing } from '@/constants/theme';
 
 type OnboardingSlideProps = {
   icon: keyof typeof Feather.glyphMap;

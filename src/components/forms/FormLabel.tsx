@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { colors, fonts, spacing } from '@/utils/theme';
+import { colors, fonts, spacing } from '@/constants/theme';
 
 type FormLabelProps = {
   children: string;

@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing, touchTarget } from '@/utils/theme';
+import { colors, spacing, touchTarget } from '@/constants/theme';
 
 interface CartHeaderProps {
   userName: string;
