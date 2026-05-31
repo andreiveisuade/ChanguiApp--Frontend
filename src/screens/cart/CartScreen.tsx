@@ -1,6 +1,7 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, RefreshControl } from 'react-native';
+import { ScrollView, StyleSheet, View, RefreshControl, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'expo-router';
 import useAuth from '@/viewmodels/useAuth';
 import useCart from '@/viewmodels/useCart';
 import { CartHeader } from '@/components/cart/CartHeader';
@@ -10,17 +11,27 @@ import EmptyCartMessage from '@/components/home/EmptyCartMessage';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
 import { AppText } from '@/components/atoms/AppText';
 import { colors, spacing } from '@/constants/theme';
+import { ROUTES } from '@/constants/routes';
 
 export default function CartScreen(): React.JSX.Element {
+  const router = useRouter();
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { items, total, isLoading, error, refresh } = useCart();
+  const { items, total, isLoading, error, refresh, updateQuantity, removeItem } = useCart();
 
   const userName = user?.full_name ?? t('home.defaultUser');
 
+  const handlePay = () => {
+    Alert.alert(t('cartScreen.checkout'), t('cartScreen.checkoutHint'));
+  };
+
+  const handleProfilePress = () => {
+    router.push(ROUTES.tabs.settings);
+  };
+
   return (
     <View style={styles.screen}>
-      <CartHeader userName={userName} />
+      <CartHeader userName={userName} onProfilePress={handleProfilePress} />
 
       <View style={styles.divider} />
 
@@ -57,10 +68,12 @@ export default function CartScreen(): React.JSX.Element {
                 price={item.unit_price}
                 quantity={item.quantity}
                 imageUrl={item.product?.image_url ?? null}
+                onUpdateQuantity={(quantity) => updateQuantity(item.id, quantity)}
+                onDelete={() => removeItem(item.id)}
               />
             ))}
 
-            <CartSummary subtotal={total} />
+            <CartSummary subtotal={total} onPay={handlePay} />
           </>
         )}
       </ScrollView>
