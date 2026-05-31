@@ -10,6 +10,8 @@ export type UseCartReturn = {
   isLoading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
+  updateQuantity: (itemId: string, quantity: number) => Promise<void>;
+  removeItem: (itemId: string) => Promise<void>;
 };
 
 export const useCart = (): UseCartReturn => {
@@ -48,6 +50,30 @@ export const useCart = (): UseCartReturn => {
     await fetchCart();
   }, [fetchCart]);
 
+  const updateQuantity = useCallback(async (itemId: string, quantity: number) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await CartRepository.updateItemQuantity(itemId, quantity);
+      await fetchCart();
+    } catch (err: any) {
+      setError(err?.message || 'Error updating quantity');
+      setIsLoading(false);
+    }
+  }, [fetchCart]);
+
+  const removeItem = useCallback(async (itemId: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await CartRepository.deleteItem(itemId);
+      await fetchCart();
+    } catch (err: any) {
+      setError(err?.message || 'Error removing item');
+      setIsLoading(false);
+    }
+  }, [fetchCart]);
+
   return {
     cart,
     items,
@@ -55,6 +81,8 @@ export const useCart = (): UseCartReturn => {
     isLoading,
     error,
     refresh,
+    updateQuantity,
+    removeItem,
   };
 };
 
