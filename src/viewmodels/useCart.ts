@@ -36,7 +36,11 @@ export const useCart = (): UseCartReturn => {
       if (err instanceof AuthSessionExpiredError) {
         return;
       }
-      setError(err?.message || 'Error loading cart');
+      // El manejo de errores de red y HTTP se implementa en DEV-180
+      // (rama feat/DEV-35-DEV-180-error-handling, PR abierta en paralelo).
+      // Cuando DEV-180 se mergee, esta línea se reemplaza por:
+      // setError(ErrorTranslationService.translate(err));
+      console.error('[useCart] fetchCart:', err);
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +61,11 @@ export const useCart = (): UseCartReturn => {
       await CartRepository.updateItemQuantity(itemId, quantity);
       await fetchCart();
     } catch (err: any) {
-      setError(err?.message || 'Error updating quantity');
+      // El manejo de errores de red y HTTP se implementa en DEV-180
+      // (rama feat/DEV-35-DEV-180-error-handling, PR abierta en paralelo).
+      // Cuando DEV-180 se mergee, esta línea se reemplaza por:
+      // setError(ErrorTranslationService.translate(err));
+      console.error('[useCart] updateQuantity:', err);
       setIsLoading(false);
     }
   }, [fetchCart]);
@@ -69,7 +77,11 @@ export const useCart = (): UseCartReturn => {
       await CartRepository.deleteItem(itemId);
       await fetchCart();
     } catch (err: any) {
-      setError(err?.message || 'Error removing item');
+      // El manejo de errores de red y HTTP se implementa en DEV-180
+      // (rama feat/DEV-35-DEV-180-error-handling, PR abierta en paralelo).
+      // Cuando DEV-180 se mergee, esta línea se reemplaza por:
+      // setError(ErrorTranslationService.translate(err));
+      console.error('[useCart] removeItem:', err);
       setIsLoading(false);
     }
   }, [fetchCart]);
