@@ -134,12 +134,30 @@
   },
   "scanner": {
     "addToCart": "Agregar al carrito",
+    "addToCartHint": "Agrega el producto al carrito de compras",
     "productNotFound": "Producto no encontrado",
     "productNotFoundSubtitle": "No encontramos este código de barras en el catálogo",
     "tryAgain": "Reintentar",
     "price": "Precio",
     "brand": "Marca",
-    "scanHint": "Apuntá el código de barras al marco"
+    "scanHint": "Apuntá el código de barras al marco",
+    "permission": {
+      "title": "Permiso de cámara",
+      "message": "Necesitamos acceder a la cámara para escanear códigos de barras.",
+      "allow": "Permitir cámara",
+      "allowHint": "Abre el diálogo de permisos de cámara"
+    },
+    "consulting": "Consultando catálogo...",
+    "scanAgain": "Escanear nuevamente",
+    "scanAgainHint": "Reinicia el escáner para leer otro código",
+    "productFound": "Producto encontrado",
+    "quantity": "Cantidad",
+    "subtotal": "Subtotal",
+    "scanAnother": "Escanear otro",
+    "scanAnotherHint": "Volvé al escáner para leer otro código",
+    "backHint": "Volver al escáner",
+    "barcodeNotInCatalog": "El código {{barcode}} no está en nuestro catálogo todavía.",
+    "dismissError": "Cerrar mensaje"
   },
   "profile": {
     "edit": "Editar",

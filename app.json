@@ -31,7 +31,13 @@
     },
     "plugins": [
       "expo-router",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permitir a $(PRODUCT_NAME) acceder a tu camara para escanear codigos de barras."
+        }
+      ]
     ]
   }
 }
