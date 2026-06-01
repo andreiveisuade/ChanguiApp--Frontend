@@ -345,4 +345,22 @@ En **Settings → Branches** del repositorio:
 
 ---
 
+## Correr tests (Frontend)
+
+```bash
+npm test               # corre todos los tests
+npm run test:watch     # modo watch
+npm run test:coverage  # reporte de cobertura
+```
+
+Los tests están en `__tests__/` y siguen el patrón MVVM:
+- `unit/repositories/` — tests de repositorios (mockean fetch/axios)
+- `unit/viewmodels/` — tests de hooks (mockean repositorios)
+- `unit/utils/` — tests de helpers puros
+
+Cada feature nueva debe incluir su suite de tests en el mismo PR.
+
+---
+
 *Documento mantenido por el Scrum Master. Última actualización: 21 Marzo 2026.*
+
