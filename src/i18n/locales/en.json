@@ -144,13 +144,27 @@
   "profile": {
     "edit": "Edit",
     "editField": "Edit field",
-    "avatarFallback": "Profile avatar"
+    "avatarFallback": "Profile avatar",
+    "name": "Name",
+    "email": "Email",
+    "avatarUrl": "Avatar URL",
+    "namePlaceholder": "Your full name",
+    "avatarUrlPlaceholder": "https://...",
+    "deleteAccount": "Delete account",
+    "deleteConfirmTitle": "Delete your account?",
+    "deleteConfirmBody": "This action cannot be undone. You'll lose all your data.",
+    "deleteFinalTitle": "Final confirmation",
+    "deleteFinalBody": "Are you completely sure? This action is permanent.",
+    "deleteConfirmBtn": "Delete permanently"
   },
   "common": {
     "confirm": "Confirm",
     "cancel": "Cancel",
     "close": "Close",
     "add": "Add",
+    "save": "Save",
+    "continue": "Continue",
+    "dismissError": "Close error message",
     "emptyTitle": "Nothing here",
     "emptySubtitle": "There's nothing here yet",
     "decrementQuantity": "Decrease quantity",

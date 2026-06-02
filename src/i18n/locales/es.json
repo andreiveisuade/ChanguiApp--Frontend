@@ -144,13 +144,27 @@
   "profile": {
     "edit": "Editar",
     "editField": "Editar campo",
-    "avatarFallback": "Avatar de perfil"
+    "avatarFallback": "Avatar de perfil",
+    "name": "Nombre",
+    "email": "Email",
+    "avatarUrl": "URL del avatar",
+    "namePlaceholder": "Tu nombre completo",
+    "avatarUrlPlaceholder": "https://...",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteConfirmTitle": "¿Eliminar tu cuenta?",
+    "deleteConfirmBody": "Esta acción no se puede deshacer. Vas a perder todos tus datos.",
+    "deleteFinalTitle": "Confirmación final",
+    "deleteFinalBody": "¿Estás completamente seguro? Esta acción es definitiva.",
+    "deleteConfirmBtn": "Eliminar definitivamente"
   },
   "common": {
     "confirm": "Confirmar",
     "cancel": "Cancelar",
     "close": "Cerrar",
     "add": "Agregar",
+    "save": "Guardar",
+    "continue": "Continuar",
+    "dismissError": "Cerrar mensaje de error",
     "emptyTitle": "No hay nada acá",
     "emptySubtitle": "Todavía no hay contenido para mostrar",
     "decrementQuantity": "Reducir cantidad",
