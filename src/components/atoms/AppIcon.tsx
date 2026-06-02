@@ -31,6 +31,17 @@ const iconMap: { [key: string]: keyof typeof MaterialCommunityIcons.glyphMap } =
   ocultar: 'eye-off-outline',
   expandir: 'arrow-expand-all',
   gastos: 'trending-down',
+  salir: 'logout',
+  camara: 'camera',
+  idioma: 'earth',
+  fuente: 'format-size',
+  telefono: 'phone',
+  direccion: 'map-marker-outline',
+  calendario: 'calendar',
+  enlace: 'link-variant',
+  bombilla: 'lightbulb-on-outline',
+  check: 'check',
+  'check-circulo': 'check-circle',
 };
 
 interface AppIconProps {
