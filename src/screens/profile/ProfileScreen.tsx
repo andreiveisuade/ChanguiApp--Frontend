@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
 import LoadingOverlay from '@/components/feedback/LoadingOverlay';
@@ -15,11 +7,14 @@ import PrimaryButton from '@/components/buttons/PrimaryButton';
 import SecondaryButton from '@/components/buttons/SecondaryButton';
 import { AvatarImage } from '@/components/profile/AvatarImage';
 import { ProfileField } from '@/components/profile/ProfileField';
+import { AppText } from '@/components/atoms/AppText';
+import FormLabel from '@/components/forms/FormLabel';
+import TextInput from '@/components/forms/TextInput';
 import useAuth from '@/viewmodels/useAuth';
 import useProfile from '@/viewmodels/useProfile';
-import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, radii, spacing, touchTarget } from '@/constants/theme';
 
-export function ProfileScreen(): React.JSX.Element {
+export default function ProfileScreen(): React.JSX.Element {
   const { t } = useTranslation();
   const { logout } = useAuth();
 
@@ -101,36 +96,32 @@ export function ProfileScreen(): React.JSX.Element {
               />
             </>
           ) : (
-            <>
-              <Text style={styles.label}>{t('profile.name')}</Text>
+            <View style={styles.editFields}>
               <TextInput
+                label={t('profile.name')}
                 autoCapitalize="words"
                 autoFocus
                 onChangeText={setEditName}
                 placeholder={t('profile.namePlaceholder')}
-                placeholderTextColor={colors.textSecondary}
-                style={styles.input}
                 value={editName}
               />
 
-              <View style={styles.separator} />
+              <View>
+                <FormLabel>{t('profile.email')}</FormLabel>
+                <AppText variant="Body" style={styles.emailValue}>
+                  {profile?.email ?? '—'}
+                </AppText>
+              </View>
 
-              <Text style={styles.label}>{t('profile.email')}</Text>
-              <Text style={styles.value}>{profile?.email ?? '—'}</Text>
-
-              <View style={styles.separator} />
-
-              <Text style={styles.label}>{t('profile.avatarUrl')}</Text>
               <TextInput
+                label={t('profile.avatarUrl')}
                 autoCapitalize="none"
                 keyboardType="url"
                 onChangeText={setEditAvatarUrl}
                 placeholder={t('profile.avatarUrlPlaceholder')}
-                placeholderTextColor={colors.textSecondary}
-                style={styles.input}
                 value={editAvatarUrl}
               />
-            </>
+            </View>
           )}
         </View>
 
@@ -174,7 +165,9 @@ export function ProfileScreen(): React.JSX.Element {
             onPress={() => setDeleteStep(1)}
             style={({ pressed }) => [styles.deleteBtn, pressed && styles.deleteBtnPressed]}
           >
-            <Text style={styles.deleteBtnText}>{t('profile.deleteAccount')}</Text>
+            <AppText variant="Body" style={styles.deleteBtnText}>
+              {t('profile.deleteAccount')}
+            </AppText>
           </Pressable>
         )}
       </ScrollView>
@@ -189,8 +182,12 @@ export function ProfileScreen(): React.JSX.Element {
           <View style={styles.modalCard}>
             {deleteStep === 1 && (
               <>
-                <Text style={styles.modalTitle}>{t('profile.deleteConfirmTitle')}</Text>
-                <Text style={styles.modalBody}>{t('profile.deleteConfirmBody')}</Text>
+                <AppText variant="H2" style={styles.modalTitle}>
+                  {t('profile.deleteConfirmTitle')}
+                </AppText>
+                <AppText variant="Body" style={styles.modalBody}>
+                  {t('profile.deleteConfirmBody')}
+                </AppText>
                 <View style={styles.row}>
                   <View style={styles.flex}>
                     <SecondaryButton
@@ -213,8 +210,12 @@ export function ProfileScreen(): React.JSX.Element {
 
             {deleteStep === 2 && (
               <>
-                <Text style={styles.modalTitle}>{t('profile.deleteFinalTitle')}</Text>
-                <Text style={styles.modalBody}>{t('profile.deleteFinalBody')}</Text>
+                <AppText variant="H2" style={styles.modalTitle}>
+                  {t('profile.deleteFinalTitle')}
+                </AppText>
+                <AppText variant="Body" style={styles.modalBody}>
+                  {t('profile.deleteFinalBody')}
+                </AppText>
                 <View style={styles.row}>
                   <View style={styles.flex}>
                     <SecondaryButton
@@ -262,34 +263,12 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl,
     padding: spacing.lg,
   },
-  label: {
-    color: colors.textSecondary,
-    fontFamily: fonts.body,
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 0.5,
-    marginBottom: spacing.xs,
-    textTransform: 'uppercase',
+  editFields: {
+    gap: spacing.lg,
   },
-  value: {
+  emailValue: {
     color: colors.textPrimary,
-    fontFamily: fonts.body,
-    fontSize: 16,
-    marginBottom: spacing.sm,
-  },
-  separator: {
-    backgroundColor: colors.border,
-    height: 1,
-    marginVertical: spacing.md,
-  },
-  input: {
-    borderBottomColor: colors.primary,
-    borderBottomWidth: 1.5,
-    color: colors.textPrimary,
-    fontFamily: fonts.body,
-    fontSize: 16,
-    marginBottom: spacing.sm,
-    paddingVertical: spacing.xs,
+    marginTop: spacing.xs,
   },
   row: {
     flexDirection: 'row',
@@ -312,8 +291,6 @@ const styles = StyleSheet.create({
   },
   deleteBtnText: {
     color: colors.error,
-    fontFamily: fonts.body,
-    fontSize: 15,
     fontWeight: '600',
   },
   overlay: {
@@ -328,21 +305,11 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
   },
   modalTitle: {
-    color: colors.textPrimary,
-    fontFamily: fonts.display,
-    fontSize: 18,
-    fontWeight: '700',
     marginBottom: spacing.md,
     textAlign: 'center',
   },
   modalBody: {
-    color: colors.textSecondary,
-    fontFamily: fonts.body,
-    fontSize: 14,
-    lineHeight: 20,
     marginBottom: spacing.xl,
     textAlign: 'center',
   },
 });
-
-export default ProfileScreen;

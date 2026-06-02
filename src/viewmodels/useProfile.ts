@@ -48,6 +48,9 @@ export const useProfile = (): UseProfileReturn => {
     void fetchProfile();
   }, [fetchProfile]);
 
+  // Nota: el deps array [] es intencional. Los setters de useState son estables
+  // entre renders, y ProfileRepository es un modulo importado a nivel top-level.
+  // No hay valores que cambien entre renders que necesiten estar en el array.
   const updateProfile = useCallback(
     async (payload: UpdateProfilePayload): Promise<void> => {
       setIsSaving(true);

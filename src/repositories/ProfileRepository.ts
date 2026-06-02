@@ -6,7 +6,7 @@ export type UpdateProfilePayload = {
   avatar_url?: string | null;
 };
 
-export const ProfileRepository = {
+const ProfileRepository = {
   /**
    * Obtiene el perfil del usuario autenticado.
    * Auth (bearer token) y manejo de 401 lo cubre apiFetch.
