@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import AppHeader from '@/components/layout/AppHeader';
 import SuccessMessage from '@/components/feedback/SuccessMessage';
@@ -10,25 +9,21 @@ import SecondaryButton from '@/components/buttons/SecondaryButton';
 import { ProductCard } from '@/components/scanner/ProductCard';
 import { ProductNotFound } from '@/components/scanner/ProductNotFound';
 import { AppText } from '@/components/atoms/AppText';
-import { Product } from '@/types/domain';
+import useProductFound from '@/viewmodels/useProductFound';
 import { colors, radii, spacing } from '@/constants/theme';
 import { formatARS } from '@/utils/currency';
 
-export function ProductFoundScreen(): React.JSX.Element {
-  const router = useRouter();
+export default function ProductFoundScreen(): React.JSX.Element {
   const { t } = useTranslation();
-  const params = useLocalSearchParams<{ product: string; barcode: string }>();
-  const product: Product | null = params.product ? JSON.parse(params.product) : null;
-  const [quantity, setQuantity] = useState<number>(1);
-
-  const goToScanner = (): void => router.replace('/(tabs)/scanner');
-  const goToCart = (): void => router.replace('/(tabs)/cart');
-
-  const decrementQuantity = (): void => {
-    if (quantity > 1) setQuantity(quantity - 1);
-  };
-
-  const incrementQuantity = (): void => setQuantity(quantity + 1);
+  const {
+    product,
+    quantity,
+    subtotal,
+    incrementQuantity,
+    decrementQuantity,
+    goToScanner,
+    goToCart,
+  } = useProductFound();
 
   if (!product) {
     return (
@@ -77,7 +72,7 @@ export function ProductFoundScreen(): React.JSX.Element {
             <AppText variant="Body" style={styles.subtotalLabel}>
               {t('scanner.subtotal')}
             </AppText>
-            <AppText variant="H2">{formatARS(product.price * quantity)}</AppText>
+            <AppText variant="H2">{formatARS(subtotal)}</AppText>
           </View>
 
           <View style={styles.actions}>
@@ -140,5 +135,3 @@ const styles = StyleSheet.create({
     marginTop: spacing.xl,
   },
 });
-
-export default ProductFoundScreen;

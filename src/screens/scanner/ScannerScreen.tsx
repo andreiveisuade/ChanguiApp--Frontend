@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useScanner } from '@/viewmodels/useScanner';
 import AppHeader from '@/components/layout/AppHeader';
 import LoadingOverlay from '@/components/feedback/LoadingOverlay';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import { BarcodeFrame } from '@/components/scanner/BarcodeFrame';
 import { AppText } from '@/components/atoms/AppText';
@@ -13,10 +14,17 @@ import { colors, spacing } from '@/constants/theme';
 
 const CAMERA_BACKGROUND = '#101827';
 
-export function ScannerScreen(): React.JSX.Element {
+export default function ScannerScreen(): React.JSX.Element {
   const { t } = useTranslation();
   const [permission, requestPermission] = useCameraPermissions();
-  const { scanned, loading, handleBarcodeScanned, resetScanner } = useScanner();
+  const {
+    scanned,
+    loading,
+    errorMessage,
+    handleBarcodeScanned,
+    resetScanner,
+    clearError,
+  } = useScanner();
 
   if (!permission) {
     return <View />;
@@ -56,14 +64,26 @@ export function ScannerScreen(): React.JSX.Element {
           <BarcodeFrame />
         </View>
 
-        <View style={styles.actions}>
-          <PrimaryButton
-            title={t('scanner.scanAgain')}
-            accessibilityHint={t('scanner.scanAgainHint')}
-            onPress={resetScanner}
-            disabled={loading}
-          />
-        </View>
+        {errorMessage ? (
+          <View style={styles.errorBanner}>
+            <ErrorMessage
+              message={errorMessage}
+              closeAccessibilityHint={t('scanner.dismissError')}
+              onClose={clearError}
+            />
+          </View>
+        ) : null}
+
+        {scanned ? (
+          <View style={styles.actions}>
+            <PrimaryButton
+              title={t('scanner.scanAgain')}
+              accessibilityHint={t('scanner.scanAgainHint')}
+              onPress={resetScanner}
+              disabled={loading}
+            />
+          </View>
+        ) : null}
 
         <LoadingOverlay visible={loading} />
       </SafeAreaView>
@@ -100,9 +120,11 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   },
+  errorBanner: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
+  },
   actions: {
     padding: spacing.xl,
   },
 });
-
-export default ScannerScreen;

@@ -35,7 +35,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Permitir a $(PRODUCT_NAME) acceder a tu camara para escanear codigos de barras."
+          "cameraPermission": "Permitir a $(PRODUCT_NAME) acceder a tu cámara para escanear códigos de barras."
         }
       ]
     ]
