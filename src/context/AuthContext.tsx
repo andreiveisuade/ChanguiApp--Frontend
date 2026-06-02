@@ -19,6 +19,8 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { STORAGE_KEYS } from '@/constants/storage';
 import i18n from '@/i18n';
 import supabase from '@/config/supabase';
 import AuthRepository from '@/repositories/AuthRepository';
@@ -43,6 +45,7 @@ export type AuthContextValue = {
   resetPassword: (email: string) => Promise<boolean>;
   logout: () => Promise<void>;
   clearError: () => void;
+  updateUser: (updatedUser: User) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -254,6 +257,14 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
     }
   }, [clearLocalSession]);
 
+  const updateUser = useCallback(async (updatedUser: User): Promise<void> => {
+    setUser(updatedUser);
+    const token = await AsyncStorage.getItem(STORAGE_KEYS.token);
+    if (token) {
+      await AuthRepository.saveSession(token, updatedUser);
+    }
+  }, []);
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
@@ -266,6 +277,7 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
       resetPassword,
       logout,
       clearError,
+      updateUser,
     }),
     [
       user,
@@ -278,6 +290,7 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
       resetPassword,
       logout,
       clearError,
+      updateUser,
     ],
   );
 

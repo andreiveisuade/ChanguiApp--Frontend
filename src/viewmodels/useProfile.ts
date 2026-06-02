@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import ProfileRepository, { UpdateProfilePayload } from '@/repositories/ProfileRepository';
 import { AuthSessionExpiredError } from '@/types/errors';
 import { User } from '@/types/auth';
+import useAuth from '@/viewmodels/useAuth';
 
 export type ProfileError = {
   message: string;
@@ -19,6 +20,7 @@ export type UseProfileReturn = {
 };
 
 export const useProfile = (): UseProfileReturn => {
+  const { updateUser } = useAuth();
   const [profile, setProfile] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -48,9 +50,6 @@ export const useProfile = (): UseProfileReturn => {
     void fetchProfile();
   }, [fetchProfile]);
 
-  // Nota: el deps array [] es intencional. Los setters de useState son estables
-  // entre renders, y ProfileRepository es un modulo importado a nivel top-level.
-  // No hay valores que cambien entre renders que necesiten estar en el array.
   const updateProfile = useCallback(
     async (payload: UpdateProfilePayload): Promise<void> => {
       setIsSaving(true);
@@ -58,6 +57,7 @@ export const useProfile = (): UseProfileReturn => {
       try {
         const data = await ProfileRepository.updateProfile(payload);
         setProfile(data);
+        await updateUser(data);
       } catch (err) {
         if (err instanceof AuthSessionExpiredError) return;
         const message = err instanceof Error ? err.message : 'Unknown error';
@@ -67,7 +67,7 @@ export const useProfile = (): UseProfileReturn => {
         setIsSaving(false);
       }
     },
-    [],
+    [updateUser],
   );
 
   const deleteProfile = useCallback(async (): Promise<void> => {
