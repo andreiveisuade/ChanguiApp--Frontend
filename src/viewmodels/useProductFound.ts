@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Product } from '@/types/domain';
+import CartRepository from '@/repositories/CartRepository';
 
 export type UseProductFoundReturn = {
   product: Product | null;
@@ -10,7 +11,10 @@ export type UseProductFoundReturn = {
   incrementQuantity: () => void;
   decrementQuantity: () => void;
   goToScanner: () => void;
-  goToCart: () => void;
+  goToCart: () => Promise<void>;
+  isLoading: boolean;
+  errorMessage: string | null;
+  clearError: () => void;
 };
 
 const parseProduct = (raw: string | undefined): Product | null => {
@@ -30,6 +34,8 @@ export const useProductFound = (): UseProductFoundReturn => {
   const barcode = params.barcode ?? '';
 
   const [quantity, setQuantity] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const subtotal = product ? product.price * quantity : 0;
 
@@ -40,7 +46,24 @@ export const useProductFound = (): UseProductFoundReturn => {
   };
 
   const goToScanner = (): void => router.replace('/(tabs)/scanner');
-  const goToCart = (): void => router.replace('/(tabs)/cart');
+
+  const goToCart = async (): Promise<void> => {
+    if (!product) return;
+    setIsLoading(true);
+    setErrorMessage(null);
+    try {
+      await CartRepository.addItem(product.id, quantity, product.price);
+      router.replace('/(tabs)/cart');
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'Error al agregar al carrito');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const clearError = (): void => {
+    setErrorMessage(null);
+  };
 
   return {
     product,
@@ -51,6 +74,9 @@ export const useProductFound = (): UseProductFoundReturn => {
     decrementQuantity,
     goToScanner,
     goToCart,
+    isLoading,
+    errorMessage,
+    clearError,
   };
 };
 

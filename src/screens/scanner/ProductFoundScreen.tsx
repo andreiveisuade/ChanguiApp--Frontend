@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import AppHeader from '@/components/layout/AppHeader';
 import SuccessMessage from '@/components/feedback/SuccessMessage';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import SecondaryButton from '@/components/buttons/SecondaryButton';
 import { ProductCard } from '@/components/scanner/ProductCard';
@@ -23,6 +24,9 @@ export default function ProductFoundScreen(): React.JSX.Element {
     decrementQuantity,
     goToScanner,
     goToCart,
+    isLoading,
+    errorMessage,
+    clearError,
   } = useProductFound();
 
   if (!product) {
@@ -41,11 +45,19 @@ export default function ProductFoundScreen(): React.JSX.Element {
     <View style={styles.root}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       <SafeAreaView style={styles.safeArea}>
-        <AppHeader onBack={goToScanner} />
+        <AppHeader onBack={isLoading ? undefined : goToScanner} />
 
         <SuccessMessage message={t('scanner.productFound')} />
 
         <View style={styles.content}>
+          {errorMessage ? (
+            <ErrorMessage
+              message={errorMessage}
+              closeAccessibilityHint={t('scanner.dismissError')}
+              onClose={clearError}
+            />
+          ) : null}
+
           <ProductCard product={product} showBarcode />
 
           <AppText variant="Body" style={styles.quantityLabel}>
@@ -56,7 +68,7 @@ export default function ProductFoundScreen(): React.JSX.Element {
               title="-"
               accessibilityHint={t('common.decrementQuantity')}
               onPress={decrementQuantity}
-              disabled={quantity <= 1}
+              disabled={quantity <= 1 || isLoading}
             />
             <AppText variant="H2" style={styles.quantityValue}>
               {quantity}
@@ -65,6 +77,7 @@ export default function ProductFoundScreen(): React.JSX.Element {
               title="+"
               accessibilityHint={t('common.incrementQuantity')}
               onPress={incrementQuantity}
+              disabled={isLoading}
             />
           </View>
 
@@ -80,11 +93,13 @@ export default function ProductFoundScreen(): React.JSX.Element {
               title={t('scanner.addToCart')}
               accessibilityHint={t('scanner.addToCartHint')}
               onPress={goToCart}
+              isLoading={isLoading}
             />
             <SecondaryButton
               title={t('scanner.scanAnother')}
               accessibilityHint={t('scanner.scanAnotherHint')}
               onPress={goToScanner}
+              disabled={isLoading}
             />
           </View>
         </View>

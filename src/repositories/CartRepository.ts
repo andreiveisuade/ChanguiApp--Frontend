@@ -104,6 +104,37 @@ export const CartRepository = {
       method: 'DELETE',
     });
   },
+
+  /**
+   * Adds an item to the active cart. If no active cart exists,
+   * it retrieves the available stores and associates the new cart with the first store.
+   */
+  async addItem(productId: string, quantity: number, unitPrice: number): Promise<void> {
+    const { cart } = await this.getCart();
+
+    let storeId: string | undefined = undefined;
+    if (!cart) {
+      const storesResponse = await apiFetch('/api/stores');
+      const stores = await storesResponse.json();
+      if (stores && stores.length > 0) {
+        storeId = stores[0].id;
+      }
+    }
+
+    const body: Record<string, any> = {
+      product_id: productId,
+      quantity,
+      unit_price: unitPrice,
+    };
+    if (storeId) {
+      body.store_id = storeId;
+    }
+
+    await apiFetch('/api/cart/items', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  },
 };
 
 export default CartRepository;
