@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, StyleProp, TextStyle, TextProps } from 'react-native';
 import { colors } from '@/constants/theme';
+import { useAccessibility } from '@/context/AccessibilityContext';
 
 // Definimos las variantes según tu escala tipográfica de branding
 type TextVariant = 'Display' | 'H1' | 'H2' | 'H3' | 'Body' | 'Label' | 'Price';
@@ -17,10 +18,22 @@ export const AppText = ({
   style, 
   ...props 
 }: AppTextProps) => {
-  
+  const { fontScale } = useAccessibility();
+
+  const baseStyle = styles[variant] as TextStyle;
+  const flatStyle = StyleSheet.flatten(style) || {};
+
+  const baseFontSize = flatStyle.fontSize ?? baseStyle.fontSize;
+  const baseLineHeight = flatStyle.lineHeight ?? baseStyle.lineHeight;
+
+  const scaledStyle: TextStyle = {
+    fontSize: baseFontSize ? baseFontSize * fontScale : undefined,
+    lineHeight: baseLineHeight ? baseLineHeight * fontScale : undefined,
+  };
+
   return (
     <Text 
-      style={[styles[variant], style]} 
+      style={[baseStyle, style, scaledStyle]} 
       {...props}
     >
       {children}
