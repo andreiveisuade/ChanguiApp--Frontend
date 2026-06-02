@@ -173,7 +173,57 @@
     "deleteConfirmBody": "This action cannot be undone. You'll lose all your data.",
     "deleteFinalTitle": "Final confirmation",
     "deleteFinalBody": "Are you completely sure? This action is permanent.",
-    "deleteConfirmBtn": "Delete permanently"
+    "deleteConfirmBtn": "Delete permanently",
+    "editTitle": "Edit personal info",
+    "changePhoto": "Change photo",
+    "infoBoxBold": "Important: ",
+    "infoBoxText": "Make sure your information is correct. Some changes may require verification.",
+    "sections": {
+      "personalInfo": "PERSONAL INFORMATION",
+      "preferences": "PREFERENCES",
+      "account": "ACCOUNT"
+    },
+    "menu": {
+      "editData": "Edit profile details",
+      "editDataDesc": "Name, email, phone number",
+      "config": "Settings",
+      "configDesc": "Language, font size",
+      "logout": "Log out",
+      "logoutDesc": "Sign out of your account",
+      "deleteAccount": "Delete account",
+      "deleteAccountDesc": "Permanently delete account"
+    },
+    "configTitle": "Settings",
+    "configSubtitle": "Customize the app appearance and language",
+    "languageSection": "Language",
+    "fontSizeSection": "Font size",
+    "fontSizes": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "xlarge": "Extra Large"
+    },
+    "preview": "Preview",
+    "previewText": "This is a sample text to visualize the selected font size.",
+    "logoutConfirmTitle": "Log out?",
+    "logoutConfirmSubtitle": "You can sign back in at any time",
+    "logoutBoxBold": "Important: ",
+    "logoutBoxText": "Make sure you have saved all your changes before logging out.",
+    "deleteConfirmSubtitle": "This action is permanent and cannot be undone",
+    "deleteBoxBold": "Warning! This action is irreversible. ",
+    "deleteBoxText": "Deleting your account will permanently remove:",
+    "willBeDeleted": "The following will be deleted:",
+    "deleteItems": {
+      "history": "All your purchase history",
+      "info": "Your personal info and preferences",
+      "payment": "Saved payment methods"
+    },
+    "needABreakTitle": "Need a break?",
+    "needABreakText": "Instead of deleting your account, you can simply log out and return whenever you want.",
+    "needABreakLink": "Log out instead →",
+    "confirmDeletePrompt": "To confirm, type: ",
+    "confirmDeletePlaceholder": "Type the exact phrase",
+    "deleteCancelBtn": "Cancel and return"
   },
   "common": {
     "confirm": "Confirm",

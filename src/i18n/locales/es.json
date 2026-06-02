@@ -173,7 +173,57 @@
     "deleteConfirmBody": "Esta acción no se puede deshacer. Vas a perder todos tus datos.",
     "deleteFinalTitle": "Confirmación final",
     "deleteFinalBody": "¿Estás completamente seguro? Esta acción es definitiva.",
-    "deleteConfirmBtn": "Eliminar definitivamente"
+    "deleteConfirmBtn": "Eliminar definitivamente",
+    "editTitle": "Editar datos personales",
+    "changePhoto": "Cambiar foto",
+    "infoBoxBold": "Importante: ",
+    "infoBoxText": "Asegúrate de que tus datos sean correctos. Algunos cambios pueden requerir verificación.",
+    "sections": {
+      "personalInfo": "INFORMACIÓN PERSONAL",
+      "preferences": "PREFERENCIAS",
+      "account": "CUENTA"
+    },
+    "menu": {
+      "editData": "Editar datos",
+      "editDataDesc": "Nombre, email, teléfono",
+      "config": "Configuración",
+      "configDesc": "Idioma, tamaño de fuente",
+      "logout": "Cerrar sesión",
+      "logoutDesc": "Salir de tu cuenta",
+      "deleteAccount": "Eliminar cuenta",
+      "deleteAccountDesc": "Borrar permanentemente"
+    },
+    "configTitle": "Configuración",
+    "configSubtitle": "Personaliza la apariencia y el idioma de la aplicación",
+    "languageSection": "Idioma",
+    "fontSizeSection": "Tamaño de fuente",
+    "fontSizes": {
+      "small": "Pequeño",
+      "medium": "Mediano",
+      "large": "Grande",
+      "xlarge": "Muy grande"
+    },
+    "preview": "Vista previa",
+    "previewText": "Este es un texto de ejemplo para visualizar el tamaño de fuente seleccionado.",
+    "logoutConfirmTitle": "¿Cerrar sesión?",
+    "logoutConfirmSubtitle": "Podrás volver a iniciar sesión en cualquier momento",
+    "logoutBoxBold": "Importante: ",
+    "logoutBoxText": "Asegúrate de haber guardado todos tus cambios antes de cerrar sesión.",
+    "deleteConfirmSubtitle": "Esta acción es permanente y no se puede deshacer",
+    "deleteBoxBold": "¡Atención! Esta acción es irreversible. ",
+    "deleteBoxText": "Al eliminar tu cuenta perderás permanentemente:",
+    "willBeDeleted": "Se eliminará:",
+    "deleteItems": {
+      "history": "Todo tu historial de compras",
+      "info": "Tu información personal y preferencias",
+      "payment": "Métodos de pago guardados"
+    },
+    "needABreakTitle": "¿Necesitas un descanso?",
+    "needABreakText": "En lugar de eliminar tu cuenta, puedes simplemente cerrar sesión y volver cuando quieras.",
+    "needABreakLink": "Cerrar sesión en su lugar →",
+    "confirmDeletePrompt": "Para confirmar, escribe: ",
+    "confirmDeletePlaceholder": "Escribe la frase exacta",
+    "deleteCancelBtn": "Cancelar y volver"
   },
   "common": {
     "confirm": "Confirmar",
