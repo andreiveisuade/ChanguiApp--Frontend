@@ -83,6 +83,27 @@ export const CartRepository = {
       total: typeof data.total === 'number' ? data.total : 0,
     };
   },
+
+  /**
+   * Modifies the quantity of an item in the cart.
+   * PUT /api/cart/items/{id}
+   */
+  async updateItemQuantity(itemId: string, quantity: number): Promise<void> {
+    await apiFetch(`/api/cart/items/${itemId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ quantity }),
+    });
+  },
+
+  /**
+   * Deletes an item from the cart.
+   * DELETE /api/cart/items/{id}
+   */
+  async deleteItem(itemId: string): Promise<void> {
+    await apiFetch(`/api/cart/items/${itemId}`, {
+      method: 'DELETE',
+    });
+  },
 };
 
 export default CartRepository;

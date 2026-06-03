@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing } from '@/constants/theme';
+import { QuantitySelector } from '@/components/buttons/QuantitySelector';
+import { colors, radii, spacing } from '@/constants/theme';
 import { formatARS } from '@/utils/currency';
 
 interface CartItemProps {
@@ -10,9 +11,18 @@ interface CartItemProps {
   price: number;
   quantity: number;
   imageUrl: string | null;
+  onUpdateQuantity: (quantity: number) => void;
+  onDelete: () => void;
 }
 
-export function CartItem({ name, price, quantity, imageUrl }: CartItemProps): React.JSX.Element {
+export function CartItem({
+  name,
+  price,
+  quantity,
+  imageUrl,
+  onUpdateQuantity,
+  onDelete,
+}: CartItemProps): React.JSX.Element {
   const [imageError, setImageError] = useState(false);
   const showImage = imageUrl && !imageError;
 
@@ -27,21 +37,35 @@ export function CartItem({ name, price, quantity, imageUrl }: CartItemProps): Re
             resizeMode="cover"
           />
         ) : (
-          <AppIcon name="package" size={24} color={colors.textSecondary} />
+          <AppIcon name="package" size={28} color={colors.textSecondary} />
         )}
       </View>
 
       <View style={styles.info}>
-        <AppText variant="H3" numberOfLines={2}>
+        <AppText variant="H3" numberOfLines={2} style={styles.name}>
           {name}
         </AppText>
-        <AppText variant="Body">{formatARS(price)}</AppText>
+        <AppText variant="Body" style={styles.price}>
+          {formatARS(price)}
+        </AppText>
       </View>
 
-      <View style={styles.quantityBadge}>
-        <AppText variant="Label" style={styles.quantityText}>
-          {quantity}
-        </AppText>
+      <View style={styles.actionsContainer}>
+        <QuantitySelector
+          value={quantity}
+          onIncrement={() => onUpdateQuantity(quantity + 1)}
+          onDecrement={() => onUpdateQuantity(quantity - 1)}
+          min={1}
+        />
+
+        <Pressable
+          onPress={onDelete}
+          style={styles.deleteButton}
+          accessibilityRole="button"
+          accessibilityLabel="Eliminar producto del carrito"
+        >
+          <AppIcon name="eliminar" size={24} color={colors.primary} />
+        </Pressable>
       </View>
     </View>
   );
@@ -51,12 +75,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: spacing.md,
+    marginBottom: spacing.lg,
   },
   imageContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 9,
+    width: 60,
+    height: 60,
+    borderRadius: radii.md,
     marginRight: spacing.md,
     backgroundColor: colors.muted,
     alignItems: 'center',
@@ -64,23 +88,30 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   image: {
-    width: 48,
-    height: 48,
+    width: 60,
+    height: 60,
   },
   info: {
     flex: 1,
-  },
-  quantityBadge: {
-    minWidth: 28,
-    height: 28,
-    borderRadius: 14,
-    paddingHorizontal: spacing.sm,
-    backgroundColor: colors.muted,
-    alignItems: 'center',
+    paddingRight: spacing.sm,
     justifyContent: 'center',
   },
-  quantityText: {
-    color: colors.textPrimary,
+  name: {
+    textTransform: 'none',
+  },
+  price: {
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  deleteButton: {
+    padding: spacing.xs,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

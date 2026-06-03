@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
@@ -15,33 +16,38 @@ export function CartHeader({ userName, onProfilePress }: CartHeaderProps): React
   const firstName = userName ? userName.trim().split(' ')[0] : '';
 
   return (
-    <View style={styles.header}>
-      <View style={styles.left}>
-        <AppIcon name="carrito" size={24} color={colors.textPrimary} />
-        <AppText variant="H2">{t('home.greeting', { name: firstName })}</AppText>
-      </View>
+    <SafeAreaView edges={['top']} style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.left}>
+          <AppIcon name="carrito" size={24} color={colors.textPrimary} />
+          <AppText variant="H1">{t('cartScreen.greeting', { name: firstName })}</AppText>
+        </View>
 
-      <Pressable
-        style={styles.profileButton}
-        onPress={onProfilePress}
-        accessibilityRole="button"
-        accessibilityLabel={t('auth.accessibility.goToProfile')}
-        accessibilityHint={t('auth.accessibility.goToProfileHint')}
-      >
-        <AppIcon name="perfil" size={24} color={colors.white} />
-      </Pressable>
-    </View>
+        <Pressable
+          style={styles.profileButton}
+          onPress={onProfilePress}
+          accessibilityRole="button"
+          accessibilityLabel={t('auth.accessibility.goToProfile')}
+          accessibilityHint={t('auth.accessibility.goToProfileHint')}
+        >
+          <AppIcon name="perfil" size={24} color={colors.textPrimary} />
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    paddingTop: 55,
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.xl,
+  safeArea: {
+    backgroundColor: colors.white,
+  },
+  container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xl,
+    paddingBottom: 48,
   },
   left: {
     flexDirection: 'row',

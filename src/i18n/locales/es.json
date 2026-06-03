@@ -48,7 +48,8 @@
     "updatedNow": "Actualizado ahora",
     "subtotal": "Subtotal",
     "checkout": "Ir a pagar",
-    "checkoutHint": "Próximamente disponible"
+    "checkoutHint": "Próximamente disponible",
+    "greeting": "Hola, {{name}}"
   },
   "auth": {
     "login": {
