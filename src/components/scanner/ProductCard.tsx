@@ -1,24 +1,19 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { Product } from '@/types/domain';
 import { colors, radii, spacing } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
-import PrimaryButton from '@/components/buttons/PrimaryButton';
 import { formatARS } from '@/utils/currency';
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart: () => void;
-  isLoading?: boolean;
+  showBarcode?: boolean;
 }
 
 export function ProductCard({
   product,
-  onAddToCart,
-  isLoading = false,
+  showBarcode = false,
 }: ProductCardProps): React.JSX.Element {
-  const { t } = useTranslation();
   const [imageError, setImageError] = useState(false);
 
   return (
@@ -41,15 +36,11 @@ export function ProductCard({
         {product.brand ? (
           <AppText variant="Body">{product.brand}</AppText>
         ) : null}
+        {showBarcode ? (
+          <AppText variant="Body" style={styles.barcode}>{product.barcode}</AppText>
+        ) : null}
         <AppText variant="Price" style={styles.price}>{formatARS(product.price)}</AppText>
       </View>
-
-      <PrimaryButton
-        title={t('scanner.addToCart')}
-        accessibilityHint={t('scanner.addToCart')}
-        onPress={onAddToCart}
-        isLoading={isLoading}
-      />
     </View>
   );
 }
@@ -80,6 +71,9 @@ const styles = StyleSheet.create({
   },
   info: {
     gap: spacing.xs,
+  },
+  barcode: {
+    color: colors.textSecondary,
   },
   price: {
     marginTop: spacing.xs,
