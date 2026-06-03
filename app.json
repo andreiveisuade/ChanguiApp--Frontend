@@ -37,7 +37,8 @@
         {
           "cameraPermission": "Permitir a ChanguiApp acceder a tu cámara para escanear códigos de barras."
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }
