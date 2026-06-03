@@ -25,7 +25,7 @@ export function AvatarImage({
     .join('');
 
   const borderRadius = size / 2;
-  const initialsSize = Math.round(size * 0.35);
+  const initialsSize = Math.round(size * 0.38);
   const a11yLabel = fullName || t('profile.avatarFallback');
 
   if (uri) {
@@ -63,8 +63,7 @@ const styles = StyleSheet.create({
   },
   initials: {
     color: colors.white,
-    fontFamily: fonts.display,
-    fontWeight: '700',
+    fontFamily: 'Poppins-Bold',
   },
 });
 
