@@ -1,5 +1,7 @@
 import { apiFetch } from '@/utils/apiFetch';
-import { CartWithItems, CartItemWithProduct } from '@/types/domain';
+import { CartWithItems, CartItemWithProduct, TaxSummary } from '@/types/domain';
+
+const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
 
 interface RawProduct {
   id: string;
@@ -51,7 +53,12 @@ export const CartRepository = {
    * Fetches the current active cart and its items.
    * Auth (bearer token) y manejo de 401 lo cubre apiFetch.
    */
-  async getCart(): Promise<{ cart: CartWithItems | null; items: CartItemWithProduct[]; total: number }> {
+  async getCart(): Promise<{
+    cart: CartWithItems | null;
+    items: CartItemWithProduct[];
+    total: number;
+    summary: TaxSummary;
+  }> {
     const response = await apiFetch('/api/cart');
     const data = await response.json();
 
@@ -81,6 +88,7 @@ export const CartRepository = {
       cart: mappedCart,
       items: mappedItems,
       total: typeof data.total === 'number' ? data.total : 0,
+      summary: (data.summary as TaxSummary) ?? EMPTY_SUMMARY,
     };
   },
 

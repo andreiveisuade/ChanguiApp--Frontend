@@ -17,7 +17,7 @@ export default function CartScreen(): React.JSX.Element {
   const router = useRouter();
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { items, total, isLoading, error, refresh, updateQuantity, removeItem } = useCart();
+  const { items, summary, isLoading, error, refresh, updateQuantity, removeItem } = useCart();
 
   const userName = user?.full_name ?? t('home.defaultUser');
 
@@ -73,7 +73,7 @@ export default function CartScreen(): React.JSX.Element {
               />
             ))}
 
-            <CartSummary subtotal={total} onPay={handlePay} />
+            <CartSummary summary={summary} onPay={handlePay} />
           </>
         )}
       </ScrollView>

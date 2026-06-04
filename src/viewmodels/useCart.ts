@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import CartRepository from '@/repositories/CartRepository';
-import { CartWithItems, CartItemWithProduct } from '@/types/domain';
+import { CartWithItems, CartItemWithProduct, TaxSummary } from '@/types/domain';
+
+const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
 import { AuthSessionExpiredError } from '@/types/errors';
 import { ErrorTranslationService } from '@/services/ErrorTranslationService';
 import { UserFriendlyError } from '@/types/errors';
@@ -9,6 +11,7 @@ export type UseCartReturn = {
   cart: CartWithItems | null;
   items: CartItemWithProduct[];
   total: number;
+  summary: TaxSummary;
   isLoading: boolean;
   error: UserFriendlyError | null;
   refresh: () => Promise<void>;
@@ -20,6 +23,7 @@ export const useCart = (): UseCartReturn => {
   const [cart, setCart] = useState<CartWithItems | null>(null);
   const [items, setItems] = useState<CartItemWithProduct[]>([]);
   const [total, setTotal] = useState<number>(0);
+  const [summary, setSummary] = useState<TaxSummary>(EMPTY_SUMMARY);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<UserFriendlyError | null>(null);
 
@@ -31,6 +35,7 @@ export const useCart = (): UseCartReturn => {
       setCart(data.cart);
       setItems(data.items);
       setTotal(data.total);
+      setSummary(data.summary);
     } catch (err: any) {
       // 401 / sesión inválida: apiFetch ya limpió el storage y emitió el evento.
       // El AuthContext va a limpiar estado y el guard del tabs layout redirige a login.
@@ -80,6 +85,7 @@ export const useCart = (): UseCartReturn => {
     cart,
     items,
     total,
+    summary,
     isLoading,
     error,
     refresh,

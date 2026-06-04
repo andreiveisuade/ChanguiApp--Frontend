@@ -134,4 +134,31 @@ describe('CartRepository.getCart', () => {
 
     await expect(CartRepository.getCart()).rejects.toThrow('Cart not found');
   });
+
+  it('maps the IVA summary from the backend', async () => {
+    mockFetchOk({
+      cart: RAW_CART,
+      items: [RAW_ITEM_WITH_PRODUCT],
+      total: 1700,
+      summary: {
+        subtotal_net: 1404.96,
+        taxes: [{ rate: 21, label: 'IVA 21%', base: 1404.96, amount: 295.04 }],
+        total: 1700,
+      },
+    });
+
+    const result = await CartRepository.getCart();
+
+    expect(result.summary.total).toBe(1700);
+    expect(result.summary.taxes).toHaveLength(1);
+    expect(result.summary.taxes[0].rate).toBe(21);
+  });
+
+  it('falls back to an empty summary when the backend omits it', async () => {
+    mockFetchOk({ cart: null, items: [], total: 0 });
+
+    const result = await CartRepository.getCart();
+
+    expect(result.summary).toEqual({ subtotal_net: 0, taxes: [], total: 0 });
+  });
 });
