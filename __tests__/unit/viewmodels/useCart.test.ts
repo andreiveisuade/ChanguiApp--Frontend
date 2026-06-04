@@ -17,15 +17,6 @@ import CartRepository from '@/repositories/CartRepository';
 import { useCart } from '@/viewmodels/useCart';
 import type { UserFriendlyError } from '@/types/errors';
 
-declare module '@/types/errors' {
-  export type UserFriendlyError = {
-    title: string;
-    message: string;
-    actionLabel?: string;
-    code: string;
-  };
-}
-
 const mockGetCart = CartRepository.getCart as jest.Mock;
 
 const MOCK_PRODUCT = {
