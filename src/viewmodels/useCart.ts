@@ -2,13 +2,15 @@ import { useState, useEffect, useCallback } from 'react';
 import CartRepository from '@/repositories/CartRepository';
 import { CartWithItems, CartItemWithProduct } from '@/types/domain';
 import { AuthSessionExpiredError } from '@/types/errors';
+import { ErrorTranslationService } from '@/services/ErrorTranslationService';
+import { UserFriendlyError } from '@/types/errors';
 
 export type UseCartReturn = {
   cart: CartWithItems | null;
   items: CartItemWithProduct[];
   total: number;
   isLoading: boolean;
-  error: string | null;
+  error: UserFriendlyError | null;
   refresh: () => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
@@ -19,7 +21,7 @@ export const useCart = (): UseCartReturn => {
   const [items, setItems] = useState<CartItemWithProduct[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<UserFriendlyError | null>(null);
 
   const fetchCart = useCallback(async () => {
     setIsLoading(true);
@@ -36,11 +38,7 @@ export const useCart = (): UseCartReturn => {
       if (err instanceof AuthSessionExpiredError) {
         return;
       }
-      // El manejo de errores de red y HTTP se implementa en DEV-180
-      // (rama feat/DEV-35-DEV-180-error-handling, PR abierta en paralelo).
-      // Cuando DEV-180 se mergee, esta línea se reemplaza por:
-      // setError(ErrorTranslationService.translate(err));
-      console.error('[useCart] fetchCart:', err);
+      setError(ErrorTranslationService.translate(err));
     } finally {
       setIsLoading(false);
     }
@@ -61,11 +59,7 @@ export const useCart = (): UseCartReturn => {
       await CartRepository.updateItemQuantity(itemId, quantity);
       await fetchCart();
     } catch (err: any) {
-      // El manejo de errores de red y HTTP se implementa en DEV-180
-      // (rama feat/DEV-35-DEV-180-error-handling, PR abierta en paralelo).
-      // Cuando DEV-180 se mergee, esta línea se reemplaza por:
-      // setError(ErrorTranslationService.translate(err));
-      console.error('[useCart] updateQuantity:', err);
+      setError(ErrorTranslationService.translate(err));
       setIsLoading(false);
     }
   }, [fetchCart]);
@@ -77,11 +71,7 @@ export const useCart = (): UseCartReturn => {
       await CartRepository.deleteItem(itemId);
       await fetchCart();
     } catch (err: any) {
-      // El manejo de errores de red y HTTP se implementa en DEV-180
-      // (rama feat/DEV-35-DEV-180-error-handling, PR abierta en paralelo).
-      // Cuando DEV-180 se mergee, esta línea se reemplaza por:
-      // setError(ErrorTranslationService.translate(err));
-      console.error('[useCart] removeItem:', err);
+      setError(ErrorTranslationService.translate(err));
       setIsLoading(false);
     }
   }, [fetchCart]);

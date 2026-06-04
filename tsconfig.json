@@ -13,8 +13,5 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.d.ts"
-  ],
-  "exclude": [
-    "__tests__"
   ]
 }

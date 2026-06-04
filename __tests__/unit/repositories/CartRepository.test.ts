@@ -10,11 +10,13 @@ jest.mock('@/repositories/AuthRepository', () => ({
   __esModule: true,
   default: {
     getStoredSession: jest.fn(),
+    clearSession: jest.fn(),
   },
 }));
 
 import AuthRepository from '@/repositories/AuthRepository';
 import { CartRepository } from '@/repositories/CartRepository';
+import { AuthSessionExpiredError } from '@/types/errors';
 
 const mockGetStoredSession = AuthRepository.getStoredSession as jest.Mock;
 
@@ -124,9 +126,7 @@ describe('CartRepository.getCart', () => {
   it('throws with the expected message when there is no active session', async () => {
     mockGetStoredSession.mockResolvedValue(null);
 
-    await expect(CartRepository.getCart()).rejects.toThrow(
-      'No active session found. Please log in again.'
-    );
+    await expect(CartRepository.getCart()).rejects.toThrow(AuthSessionExpiredError);
   });
 
   it('throws with the backend error message on non-ok HTTP response', async () => {
