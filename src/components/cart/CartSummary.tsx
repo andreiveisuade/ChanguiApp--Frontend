@@ -2,26 +2,30 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { AppText } from '@/components/atoms/AppText';
+import { PriceBreakdown } from '@/components/pricing/PriceBreakdown';
 import { colors, spacing, touchTarget } from '@/constants/theme';
-import { formatARS } from '@/utils/currency';
+import { formatRate } from '@/utils/currency';
+import { TaxSummary } from '@/types/domain';
 
 interface CartSummaryProps {
-  subtotal: number;
+  summary: TaxSummary;
   onPay?: () => void;
 }
 
-export function CartSummary({ subtotal, onPay }: CartSummaryProps): React.JSX.Element {
+export function CartSummary({ summary, onPay }: CartSummaryProps): React.JSX.Element {
   const { t } = useTranslation();
   const disabled = !onPay;
+
+  const taxLines = summary.taxes.map((tax) => ({
+    label: t('pricing.iva', { rate: formatRate(tax.rate) }),
+    amount: tax.amount,
+  }));
 
   return (
     <View style={styles.container}>
       <View style={styles.line} />
 
-      <View style={styles.row}>
-        <AppText variant="H2">{t('cartScreen.subtotal')}</AppText>
-        <AppText variant="H2">{formatARS(subtotal)}</AppText>
-      </View>
+      <PriceBreakdown subtotalNet={summary.subtotal_net} taxLines={taxLines} total={summary.total} />
 
       <Pressable
         style={[styles.payButton, disabled && styles.payButtonDisabled]}
@@ -48,11 +52,6 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: colors.border,
     marginBottom: spacing.md,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
   payButton: {
     marginTop: spacing.xl,

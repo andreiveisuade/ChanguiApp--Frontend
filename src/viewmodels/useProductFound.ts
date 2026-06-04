@@ -8,6 +8,9 @@ export type UseProductFoundReturn = {
   barcode: string;
   quantity: number;
   subtotal: number;
+  netSubtotal: number;
+  ivaSubtotal: number;
+  taxRate: number;
   incrementQuantity: () => void;
   decrementQuantity: () => void;
   goToScanner: () => void;
@@ -38,6 +41,11 @@ export const useProductFound = (): UseProductFoundReturn => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const subtotal = product ? product.price * quantity : 0;
+  // El backend ya devuelve el desglose unitario; acá sólo se multiplica por
+  // la cantidad (no se recalcula la alícuota en el cliente).
+  const netSubtotal = product?.tax ? product.tax.net_price * quantity : subtotal;
+  const ivaSubtotal = product?.tax ? product.tax.tax_amount * quantity : 0;
+  const taxRate = product?.tax?.rate ?? 0;
 
   const incrementQuantity = (): void => setQuantity((q) => q + 1);
 
@@ -70,6 +78,9 @@ export const useProductFound = (): UseProductFoundReturn => {
     barcode,
     quantity,
     subtotal,
+    netSubtotal,
+    ivaSubtotal,
+    taxRate,
     incrementQuantity,
     decrementQuantity,
     goToScanner,

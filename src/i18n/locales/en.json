@@ -253,6 +253,11 @@
     "status": "Status",
     "quantity": "Quantity"
   },
+  "pricing": {
+    "priceWithoutTax": "Price without tax",
+    "iva": "VAT ({{rate}})",
+    "total": "Total"
+  },
   "forgotPassword": {
     "title": "Forgot your password?",
     "subtitle": "Don't worry, we'll send you instructions to reset it.",

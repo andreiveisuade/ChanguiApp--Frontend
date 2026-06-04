@@ -1,3 +1,10 @@
+export interface TaxBreakdown {
+  category: string;
+  rate: number;
+  net_price: number;
+  tax_amount: number;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -5,6 +12,20 @@ export interface Product {
   brand: string | null;
   image_url: string | null;
   price: number;
+  tax?: TaxBreakdown;
+}
+
+export interface TaxLine {
+  rate: number;
+  label: string;
+  base: number;
+  amount: number;
+}
+
+export interface TaxSummary {
+  subtotal_net: number;
+  taxes: TaxLine[];
+  total: number;
 }
 
 export interface CartItem {
@@ -68,4 +89,10 @@ export interface PurchaseItem {
   product_name: string;
   quantity: number;
   unit_price: number;
+  tax_rate?: number;
+}
+
+export interface PurchaseDetail extends Purchase {
+  items: PurchaseItem[];
+  summary?: TaxSummary;
 }

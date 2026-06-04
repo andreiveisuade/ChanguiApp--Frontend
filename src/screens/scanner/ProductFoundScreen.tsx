@@ -10,9 +10,10 @@ import SecondaryButton from '@/components/buttons/SecondaryButton';
 import { ProductCard } from '@/components/scanner/ProductCard';
 import { ProductNotFound } from '@/components/scanner/ProductNotFound';
 import { AppText } from '@/components/atoms/AppText';
+import { PriceBreakdown } from '@/components/pricing/PriceBreakdown';
 import useProductFound from '@/viewmodels/useProductFound';
 import { colors, radii, spacing } from '@/constants/theme';
-import { formatARS } from '@/utils/currency';
+import { formatRate } from '@/utils/currency';
 
 export default function ProductFoundScreen(): React.JSX.Element {
   const { t } = useTranslation();
@@ -20,6 +21,9 @@ export default function ProductFoundScreen(): React.JSX.Element {
     product,
     quantity,
     subtotal,
+    netSubtotal,
+    ivaSubtotal,
+    taxRate,
     incrementQuantity,
     decrementQuantity,
     goToScanner,
@@ -81,11 +85,14 @@ export default function ProductFoundScreen(): React.JSX.Element {
             />
           </View>
 
-          <View style={styles.subtotalRow}>
-            <AppText variant="Body" style={styles.subtotalLabel}>
-              {t('scanner.subtotal')}
-            </AppText>
-            <AppText variant="H2">{formatARS(subtotal)}</AppText>
+          <View style={styles.breakdownBox}>
+            <PriceBreakdown
+              subtotalNet={netSubtotal}
+              taxLines={[
+                { label: t('pricing.iva', { rate: formatRate(taxRate) }), amount: ivaSubtotal },
+              ]}
+              total={subtotal}
+            />
           </View>
 
           <View style={styles.actions}>
@@ -132,18 +139,12 @@ const styles = StyleSheet.create({
   quantityValue: {
     marginHorizontal: spacing.xxl,
   },
-  subtotalRow: {
-    alignItems: 'center',
+  breakdownBox: {
     backgroundColor: colors.muted,
     borderRadius: radii.md,
-    flexDirection: 'row',
-    height: 64,
-    justifyContent: 'space-between',
     marginTop: spacing.xl,
     paddingHorizontal: spacing.lg,
-  },
-  subtotalLabel: {
-    color: colors.textSecondary,
+    paddingVertical: spacing.md,
   },
   actions: {
     gap: spacing.lg,

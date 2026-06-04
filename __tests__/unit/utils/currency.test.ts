@@ -1,4 +1,4 @@
-import { formatARS } from '@/utils/currency';
+import { formatARS, formatRate } from '@/utils/currency';
 
 describe('formatARS', () => {
   it('formats a whole integer correctly', () => {
@@ -20,5 +20,16 @@ describe('formatARS', () => {
 
   it('formats a small integer without separator', () => {
     expect(formatARS(99)).toBe('$99');
+  });
+});
+
+describe('formatRate', () => {
+  it('formats an integer rate', () => {
+    expect(formatRate(21)).toBe('21%');
+    expect(formatRate(0)).toBe('0%');
+  });
+
+  it('formats a decimal rate with comma', () => {
+    expect(formatRate(10.5)).toBe('10,5%');
   });
 });

@@ -253,6 +253,11 @@
     "status": "Estado",
     "quantity": "Cantidad"
   },
+  "pricing": {
+    "priceWithoutTax": "Precio sin IVA",
+    "iva": "IVA ({{rate}})",
+    "total": "Total"
+  },
   "forgotPassword": {
     "title": "¿Olvidaste tu contraseña?",
     "subtitle": "No te preocupes, te enviaremos instrucciones para restablecerla.",
