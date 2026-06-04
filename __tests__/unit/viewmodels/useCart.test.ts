@@ -2,7 +2,7 @@
  * Unit tests for useCart viewmodel.
  *
  * CartRepository is mocked so tests run without network access or Supabase auth.
- * Uses @testing-library/react-hooks (renderHook) as per TESTING.md patterns.
+ * Uses @testing-library/react-native (renderHook) as per TESTING.md patterns.
  */
 
 jest.mock('@/repositories/CartRepository', () => ({
@@ -15,7 +15,7 @@ jest.mock('@/repositories/CartRepository', () => ({
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 import CartRepository from '@/repositories/CartRepository';
 import { useCart } from '@/viewmodels/useCart';
-import type { UserFriendlyError } from '@/types/errors';
+import { ErrorTranslationService } from '@/services/ErrorTranslationService';
 
 const mockGetCart = CartRepository.getCart as jest.Mock;
 
@@ -44,24 +44,6 @@ const MOCK_CART = {
   status: 'active',
   cart_items: [MOCK_ITEM],
 };
-
-beforeAll(() => {
-  Object.defineProperty(String.prototype, 'code', {
-    value: 'ERR_TEST',
-    configurable: true,
-    writable: true,
-  });
-  Object.defineProperty(String.prototype, 'title', {
-    value: 'Error',
-    configurable: true,
-    writable: true,
-  });
-});
-
-afterAll(() => {
-  delete (String.prototype as any).code;
-  delete (String.prototype as any).title;
-});
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -98,14 +80,19 @@ describe('useCart', () => {
 
   it('sets error and clears loading on fetch failure', async () => {
     mockGetCart.mockRejectedValue(new Error('Network request failed'));
+    jest.spyOn(ErrorTranslationService, 'translate').mockReturnValue({
+      title: 'Error',
+      message: 'algo salió mal',
+      code: 'ERR_TEST',
+      actionLabel: 'Reintentar',
+    });
 
     const { result } = renderHook(() => useCart());
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     expect(result.current.error).not.toBeNull();
-    const err = result.current.error as unknown as UserFriendlyError;
-    expect(err.code).toBeDefined();
-    expect(err.title).toBeDefined();
+    expect(result.current.error?.code).toBe('ERR_TEST');
+    expect(result.current.error?.title).toBe('Error');
     expect(result.current.cart).toBeNull();
     expect(result.current.items).toEqual([]);
   });
