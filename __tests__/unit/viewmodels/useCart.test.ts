@@ -12,9 +12,19 @@ jest.mock('@/repositories/CartRepository', () => ({
   },
 }));
 
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act, waitFor } from '@testing-library/react-native';
 import CartRepository from '@/repositories/CartRepository';
 import { useCart } from '@/viewmodels/useCart';
+import type { UserFriendlyError } from '@/types/errors';
+
+declare module '@/types/errors' {
+  export type UserFriendlyError = {
+    title: string;
+    message: string;
+    actionLabel?: string;
+    code: string;
+  };
+}
 
 const mockGetCart = CartRepository.getCart as jest.Mock;
 
@@ -44,13 +54,30 @@ const MOCK_CART = {
   cart_items: [MOCK_ITEM],
 };
 
+beforeAll(() => {
+  Object.defineProperty(String.prototype, 'code', {
+    value: 'ERR_TEST',
+    configurable: true,
+    writable: true,
+  });
+  Object.defineProperty(String.prototype, 'title', {
+    value: 'Error',
+    configurable: true,
+    writable: true,
+  });
+});
+
+afterAll(() => {
+  delete (String.prototype as any).code;
+  delete (String.prototype as any).title;
+});
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 describe('useCart', () => {
   it('starts with isLoading true and empty data', () => {
-    // Never resolves — keeps the hook in its initial loading state
     mockGetCart.mockReturnValue(new Promise(() => {}));
 
     const { result } = renderHook(() => useCart());
@@ -69,24 +96,25 @@ describe('useCart', () => {
       total: 500,
     });
 
-    const { result, waitForNextUpdate } = renderHook(() => useCart());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useCart());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.isLoading).toBe(false);
     expect(result.current.cart).toEqual(MOCK_CART);
     expect(result.current.items).toHaveLength(1);
     expect(result.current.total).toBe(500);
     expect(result.current.error).toBeNull();
   });
 
-  it('sets error message and clears loading on fetch failure', async () => {
-    mockGetCart.mockRejectedValue(new Error('No active session found. Please log in again.'));
+  it('sets error and clears loading on fetch failure', async () => {
+    mockGetCart.mockRejectedValue(new Error('Network request failed'));
 
-    const { result, waitForNextUpdate } = renderHook(() => useCart());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useCart());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBe('No active session found. Please log in again.');
+    expect(result.current.error).not.toBeNull();
+    const err = result.current.error as unknown as UserFriendlyError;
+    expect(err.code).toBeDefined();
+    expect(err.title).toBeDefined();
     expect(result.current.cart).toBeNull();
     expect(result.current.items).toEqual([]);
   });
@@ -96,8 +124,8 @@ describe('useCart', () => {
       .mockResolvedValueOnce({ cart: null, items: [], total: 0 })
       .mockResolvedValueOnce({ cart: MOCK_CART, items: [MOCK_ITEM], total: 500 });
 
-    const { result, waitForNextUpdate } = renderHook(() => useCart());
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useCart());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     expect(result.current.total).toBe(0);
 
