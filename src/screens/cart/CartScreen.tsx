@@ -29,7 +29,7 @@ export default function CartScreen(): React.JSX.Element {
     if (result) {
       router.push({
         pathname: ROUTES.checkout.confirmation,
-        params: { prevTopId: result.prevTopId },
+        params: { preferenceId: result.preferenceId },
       });
     }
   };

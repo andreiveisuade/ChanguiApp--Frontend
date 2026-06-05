@@ -20,8 +20,8 @@ const ICON_BY_STATUS: Record<Exclude<CheckoutStatus, 'checking'>, { name: string
 export default function CheckoutConfirmationScreen(): React.JSX.Element {
   const { t } = useTranslation();
   const router = useRouter();
-  const { prevTopId } = useLocalSearchParams<{ prevTopId?: string }>();
-  const { status, retry } = useCheckoutStatus(prevTopId ?? '');
+  const { preferenceId } = useLocalSearchParams<{ preferenceId?: string }>();
+  const { status, retry } = useCheckoutStatus(preferenceId ?? '');
 
   const goHistory = () => router.replace(ROUTES.tabs.history);
   const goHome = () => router.replace(ROUTES.tabs.home);

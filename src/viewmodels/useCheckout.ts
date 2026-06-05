@@ -1,10 +1,11 @@
 import { useState, useCallback } from 'react';
 import * as WebBrowser from 'expo-web-browser';
+import * as AuthSession from 'expo-auth-session';
 import CheckoutRepository from '@/repositories/CheckoutRepository';
 import { AuthSessionExpiredError, UserFriendlyError } from '@/types/errors';
 import { ErrorTranslationService } from '@/services/ErrorTranslationService';
 
-export type StartCheckoutResult = { prevTopId: string };
+export type StartCheckoutResult = { preferenceId: string };
 
 export type UseCheckoutReturn = {
   isStarting: boolean;
@@ -14,15 +15,15 @@ export type UseCheckoutReturn = {
 };
 
 /**
- * Orquesta el inicio del checkout de Mercado Pago:
- * 1. Toma el id de la compra más reciente (para detectar la nueva al volver).
- * 2. Crea la preferencia en el backend.
- * 3. Abre el init_point de Checkout Pro en el browser in-app.
+ * Orquesta el checkout de Mercado Pago:
+ * 1. Crea la preferencia en el backend, pasando el deep link de retorno.
+ * 2. Abre el init_point de Checkout Pro con openAuthSessionAsync. MP redirige a
+ *    la página de retorno del backend (auto_return) que reenvía al deep link, y
+ *    expo-web-browser cierra el browser solo y devuelve el control a la app.
  *
- * Devuelve { prevTopId } cuando el browser se cerró, para que la pantalla
- * navegue a la confirmación. Devuelve null si la sesión expiró o hubo error.
- * El backend no usa back_urls: la compra la crea el webhook de forma
- * asíncrona, así que la confirmación se resuelve por polling (useCheckoutStatus).
+ * Devuelve { preferenceId } para que la pantalla navegue a la confirmación, que
+ * consulta el estado de forma determinista. Devuelve null si la sesión expiró o
+ * hubo error.
  */
 export const useCheckout = (): UseCheckoutReturn => {
   const [isStarting, setIsStarting] = useState<boolean>(false);
@@ -32,13 +33,16 @@ export const useCheckout = (): UseCheckoutReturn => {
     setIsStarting(true);
     setError(null);
     try {
-      const before = await CheckoutRepository.listPurchaseStatuses();
-      const prevTopId = before[0]?.id ?? '';
+      const returnUrl = AuthSession.makeRedirectUri({ path: 'checkout/return' });
 
-      const { init_point } = await CheckoutRepository.createPreference();
-      await WebBrowser.openBrowserAsync(init_point);
+      const { init_point, preference_id } = await CheckoutRepository.createPreference(returnUrl);
 
-      return { prevTopId };
+      // openAuthSessionAsync intercepta el redirect al deep link y cierra el
+      // browser solo. El resultado (success/cancel/dismiss) no cambia el flujo:
+      // la confirmación se resuelve por estado, no por el tipo de cierre.
+      await WebBrowser.openAuthSessionAsync(init_point, returnUrl);
+
+      return { preferenceId: preference_id };
     } catch (err) {
       if (err instanceof AuthSessionExpiredError) {
         return null;

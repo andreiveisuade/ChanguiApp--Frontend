@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { AppState } from 'react-native';
-import CheckoutRepository from '@/repositories/CheckoutRepository';
+import CheckoutRepository, { CheckoutPaymentStatus } from '@/repositories/CheckoutRepository';
 
 export type CheckoutStatus = 'checking' | 'success' | 'pending' | 'timeout';
 
@@ -13,28 +13,28 @@ export type UseCheckoutStatusReturn = {
 };
 
 /**
- * Resuelve el resultado del pago tras volver del checkout de Mercado Pago.
- *
- * La compra la crea el webhook de forma asíncrona, así que polleamos
- * GET /api/purchases comparando el top id contra el que había antes de pagar
- * (prevTopId). Si aparece una compra nueva:
+ * Resuelve el resultado del pago consultando el estado de forma determinista:
+ * GET /api/checkout/status?preference_id=. La compra la crea el webhook de
+ * forma asíncrona, así que polleamos hasta que pase a 'completed'.
  *   - completed → success
- *   - aún no completed al agotar los intentos → pending
- * Si no aparece ninguna → timeout.
+ *   - aún pending al agotar los intentos → pending
+ *   - nunca aparece (not_found) → timeout
  *
- * Re-pollea al volver la app a foreground (AppState) para cubrir el cierre
- * del Custom Tab en Android.
+ * Re-pollea al volver la app a foreground (AppState) para cubrir el cierre del
+ * Custom Tab en Android.
  */
-export const useCheckoutStatus = (prevTopId: string): UseCheckoutStatusReturn => {
+export const useCheckoutStatus = (preferenceId: string): UseCheckoutStatusReturn => {
   const [status, setStatus] = useState<CheckoutStatus>('checking');
   const [retryKey, setRetryKey] = useState<number>(0);
   const attemptsRef = useRef<number>(0);
+  const lastStatusRef = useRef<CheckoutPaymentStatus>('not_found');
 
   const checkOnce = useCallback(async (): Promise<boolean> => {
+    if (!preferenceId) return false;
     try {
-      const list = await CheckoutRepository.listPurchaseStatuses();
-      const top = list[0];
-      if (top && top.id !== prevTopId && top.payment_status === 'completed') {
+      const { status: paymentStatus } = await CheckoutRepository.getStatus(preferenceId);
+      lastStatusRef.current = paymentStatus;
+      if (paymentStatus === 'completed') {
         setStatus('success');
         return true;
       }
@@ -42,7 +42,7 @@ export const useCheckoutStatus = (prevTopId: string): UseCheckoutStatusReturn =>
       // Error transitorio de red: ignoramos y seguimos polleando.
     }
     return false;
-  }, [prevTopId]);
+  }, [preferenceId]);
 
   const retry = useCallback(() => {
     attemptsRef.current = 0;
@@ -61,10 +61,8 @@ export const useCheckoutStatus = (prevTopId: string): UseCheckoutStatusReturn =>
 
       attemptsRef.current += 1;
       if (attemptsRef.current >= MAX_ATTEMPTS) {
-        const list = await CheckoutRepository.listPurchaseStatuses().catch(() => []);
-        const top = list[0];
         if (active) {
-          setStatus(top && top.id !== prevTopId ? 'pending' : 'timeout');
+          setStatus(lastStatusRef.current === 'pending' ? 'pending' : 'timeout');
         }
         return;
       }
@@ -74,7 +72,7 @@ export const useCheckoutStatus = (prevTopId: string): UseCheckoutStatusReturn =>
     void tick();
 
     // Al volver del browser (foreground) reiniciamos la ventana de intentos:
-    // en Android openBrowserAsync puede resolver al abrir, no al cerrar.
+    // en Android openAuthSessionAsync puede resolver al abrir, no al cerrar.
     const sub = AppState.addEventListener('change', (next) => {
       if (next === 'active') {
         attemptsRef.current = 0;
@@ -87,7 +85,7 @@ export const useCheckoutStatus = (prevTopId: string): UseCheckoutStatusReturn =>
       clearTimeout(timer);
       sub.remove();
     };
-  }, [checkOnce, prevTopId, retryKey]);
+  }, [checkOnce, retryKey]);
 
   return { status, retry };
 };
