@@ -3,7 +3,13 @@ export const ROUTES = {
   onboarding: '/onboarding',
   tabs: {
     home: '/(tabs)/home',
+    cart: '/(tabs)/cart',
+    scanner: '/(tabs)/scanner',
+    history: '/(tabs)/history',
     settings: '/(tabs)/settings',
+  },
+  checkout: {
+    confirmation: '/checkout/confirmation',
   },
   auth: {
     login: '/auth/login',
