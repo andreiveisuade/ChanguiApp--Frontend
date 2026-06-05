@@ -33,9 +33,12 @@ export const useCheckout = (): UseCheckoutReturn => {
     setIsStarting(true);
     setError(null);
     try {
+      // Deep link de retorno: openAuthSessionAsync cierra el browser cuando MP
+      // (vía la página /return del backend) navega a esta URL. El backend usa su
+      // propio deep link constante; acá solo lo necesitamos para detectar el cierre.
       const returnUrl = AuthSession.makeRedirectUri({ path: 'checkout/return' });
 
-      const { init_point, preference_id } = await CheckoutRepository.createPreference(returnUrl);
+      const { init_point, preference_id } = await CheckoutRepository.createPreference();
 
       // openAuthSessionAsync intercepta el redirect al deep link y cierra el
       // browser solo. El resultado (success/cancel/dismiss) no cambia el flujo:

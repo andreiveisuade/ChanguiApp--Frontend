@@ -15,15 +15,11 @@ export const CheckoutRepository = {
   /**
    * Crea la preferencia de pago de Mercado Pago para el carrito activo.
    * POST /api/checkout — devuelve el init_point (URL hosted de Checkout Pro) y
-   * el preference_id que identifica este checkout. returnUrl es el deep link al
-   * que MP debe reenviar la app tras el pago.
+   * el preference_id que identifica este checkout.
    * Auth (bearer) y 401 los cubre apiFetch.
    */
-  async createPreference(returnUrl: string): Promise<CheckoutPreference> {
-    const response = await apiFetch('/api/checkout', {
-      method: 'POST',
-      body: JSON.stringify({ returnUrl }),
-    });
+  async createPreference(): Promise<CheckoutPreference> {
+    const response = await apiFetch('/api/checkout', { method: 'POST' });
     return response.json();
   },
 
