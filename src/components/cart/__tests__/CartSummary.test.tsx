@@ -29,7 +29,7 @@ describe('CartSummary Component', () => {
     subtotal_net: 1000,
     total: 1210,
     taxes: [
-      { rate: 21, amount: 210 },
+      { rate: 21, amount: 210, label: 'IVA (21%)', base: 1000 },
     ],
   };
 

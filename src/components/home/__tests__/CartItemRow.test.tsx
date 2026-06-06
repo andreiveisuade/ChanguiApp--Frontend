@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { CartItemRow } from '../CartItemRow';
-import { CartItemWithProduct } from '@/types/domain';
+import { CartItemWithProduct, Product } from '@/types/domain';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -18,6 +18,15 @@ jest.mock('@/components/atoms/AppIcon', () => {
 });
 
 describe('CartItemRow Component', () => {
+  const mockProduct: Product = {
+    id: 'prod-1',
+    name: 'Yerba Mate',
+    barcode: '12345678',
+    brand: 'Taragui',
+    image_url: 'https://example.com/yerba.jpg',
+    price: 150.5,
+  };
+
   const mockItem: CartItemWithProduct = {
     id: 'item-1',
     cart_id: 'cart-1',
@@ -26,16 +35,7 @@ describe('CartItemRow Component', () => {
     unit_price: 150.5,
     created_at: '',
     updated_at: '',
-    product: {
-      id: 'prod-1',
-      name: 'Yerba Mate',
-      barcode: '12345678',
-      image_url: 'https://example.com/yerba.jpg',
-      category: 'Store',
-      brand: 'Taragui',
-      created_at: '',
-      updated_at: '',
-    },
+    product: mockProduct,
   };
 
   it('renders correctly with product name and calculated total price', () => {
@@ -56,9 +56,9 @@ describe('CartItemRow Component', () => {
   });
 
   it('renders fallback AppIcon when image_url is empty', () => {
-    const itemWithoutImage = {
+    const itemWithoutImage: CartItemWithProduct = {
       ...mockItem,
-      product: { ...mockItem.product, image_url: '' },
+      product: mockItem.product ? { ...mockItem.product, image_url: '' } : null,
     };
     const { queryByRole, getByTestId } = render(
       <CartItemRow item={itemWithoutImage} isLast={false} />
@@ -83,13 +83,15 @@ describe('CartItemRow Component', () => {
   it('applies styles based on isLast prop', () => {
     const { UNSAFE_root, rerender } = render(<CartItemRow item={mockItem} isLast={false} />);
     
-    // We inspect the style on the root view.
     const rootElement = UNSAFE_root.children[0];
-    // isLast = false: borderBottomWidth should not be overridden to 0
-    expect(rootElement.props.style).not.toContainEqual(expect.objectContaining({ borderBottomWidth: 0 }));
+    if (typeof rootElement !== 'string') {
+      expect(rootElement.props.style).not.toContainEqual(expect.objectContaining({ borderBottomWidth: 0 }));
+    }
 
     rerender(<CartItemRow item={mockItem} isLast={true} />);
     const rootElementUpdated = UNSAFE_root.children[0];
-    expect(rootElementUpdated.props.style).toContainEqual(expect.objectContaining({ borderBottomWidth: 0 }));
+    if (typeof rootElementUpdated !== 'string') {
+      expect(rootElementUpdated.props.style).toContainEqual(expect.objectContaining({ borderBottomWidth: 0 }));
+    }
   });
 });

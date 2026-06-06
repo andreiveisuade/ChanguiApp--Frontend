@@ -42,6 +42,7 @@ describe('ErrorMessage Component', () => {
     const errorObj = {
       title: 'Error de Red',
       message: 'No se pudo establecer conexión con el servidor.',
+      code: 'NETWORK_ERROR',
     };
 
     const { getByText, UNSAFE_queryAllByType } = render(
