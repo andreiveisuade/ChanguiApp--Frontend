@@ -17,7 +17,7 @@ const ICON_BY_STATUS: Record<Exclude<CheckoutStatus, 'checking'>, { name: string
   timeout: { name: 'error', color: colors.error },
 };
 
-export default function CheckoutConfirmationScreen(): React.JSX.Element {
+export default function CheckoutConfirmationScreen(): React.JSX.Element | null {
   const { t } = useTranslation();
   const router = useRouter();
   const { preferenceId } = useLocalSearchParams<{ preferenceId?: string }>();
@@ -26,6 +26,18 @@ export default function CheckoutConfirmationScreen(): React.JSX.Element {
   const goHistory = () => router.replace(ROUTES.tabs.history);
   const goHome = () => router.replace(ROUTES.tabs.home);
   const goCart = () => router.replace(ROUTES.tabs.cart);
+
+  // Sin preferenceId no hay nada que confirmar: evitamos 60s de requests inválidas
+  // y volvemos al home.
+  React.useEffect(() => {
+    if (!preferenceId) {
+      router.replace(ROUTES.tabs.home);
+    }
+  }, [preferenceId, router]);
+
+  if (!preferenceId) {
+    return null;
+  }
 
   if (status === 'checking') {
     return (
