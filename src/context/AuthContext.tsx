@@ -8,11 +8,17 @@
  *
  * Los componentes consumen este estado via el hook useAuth (que es ahora
  * un wrapper de useContext). La API pública del hook no cambia.
+ *
+ * La lógica se descompone en hooks internos por concern (useAuthSession para
+ * estado + ciclo de vida, useSignInMethods y useAccountActions para las
+ * operaciones) y AuthProvider sólo ensambla el value del context.
  */
 
 import React, {
   createContext,
+  Dispatch,
   ReactNode,
+  SetStateAction,
   useCallback,
   useContext,
   useEffect,
@@ -73,11 +79,44 @@ const validateRegisterCredentials = (credentials: RegisterCredentials): AuthErro
   return null;
 };
 
-interface AuthProviderProps {
-  children: ReactNode;
+/**
+ * Estado de sesión + ciclo de vida. Provee los primitivos que consumen los
+ * hooks de acciones (setSession/clearLocalSession/setters).
+ */
+type AuthSession = {
+  user: User | null;
+  token: string | null;
+  isLoading: boolean;
+  error: AuthError | null;
+  isAuthenticated: boolean;
+  setUser: Dispatch<SetStateAction<User | null>>;
+  setError: Dispatch<SetStateAction<AuthError | null>>;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  setSession: (token: string, user: User) => Promise<void>;
+  clearLocalSession: () => void;
+  clearError: () => void;
+};
+
+/** Lee la sesión guardada y la valida contra Supabase. Limpia y devuelve null si es inválida. */
+async function loadValidSession(): Promise<{ token: string; user: User } | null> {
+  try {
+    const stored = await AuthRepository.getStoredSession();
+    if (!stored) {
+      return null;
+    }
+    const { data, error } = await supabase.auth.getUser(stored.token);
+    if (error || !data.user) {
+      await AuthRepository.clearSession();
+      return null;
+    }
+    return stored;
+  } catch {
+    await AuthRepository.clearSession();
+    return null;
+  }
 }
 
-export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element {
+function useAuthSession(): AuthSession {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -85,9 +124,7 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
 
   const isAuthenticated = useMemo(() => Boolean(user && token), [user, token]);
 
-  const clearError = useCallback((): void => {
-    setError(null);
-  }, []);
+  const clearError = useCallback((): void => setError(null), []);
 
   const setSession = useCallback(async (nextToken: string, nextUser: User): Promise<void> => {
     await AuthRepository.saveSession(nextToken, nextUser);
@@ -104,37 +141,18 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
   useEffect(() => {
     let isMounted = true;
 
-    const restoreSession = async (): Promise<void> => {
+    void (async () => {
       setIsLoading(true);
-
-      try {
-        const storedSession = await AuthRepository.getStoredSession();
-
-        if (!storedSession) {
-          return;
-        }
-
-        const { data, error: userError } = await supabase.auth.getUser(storedSession.token);
-
-        if (userError || !data.user) {
-          await AuthRepository.clearSession();
-          return;
-        }
-
-        if (isMounted) {
-          setToken(storedSession.token);
-          setUser(storedSession.user);
-        }
-      } catch {
-        await AuthRepository.clearSession();
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
+      const restored = await loadValidSession();
+      if (!isMounted) {
+        return;
       }
-    };
-
-    void restoreSession();
+      if (restored) {
+        setToken(restored.token);
+        setUser(restored.user);
+      }
+      setIsLoading(false);
+    })();
 
     return () => {
       isMounted = false;
@@ -150,18 +168,36 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
     return unsubscribe;
   }, [clearLocalSession]);
 
+  return {
+    user,
+    token,
+    isLoading,
+    error,
+    isAuthenticated,
+    setUser,
+    setError,
+    setIsLoading,
+    setSession,
+    clearLocalSession,
+    clearError,
+  };
+}
+
+/** Formas de autenticar: todas crean sesión vía setSession al tener éxito. */
+function useSignInMethods(session: AuthSession) {
+  const { setSession, setError, setIsLoading } = session;
+
   const login = useCallback(
     async (email: string, password: string): Promise<void> => {
       setIsLoading(true);
       setError(null);
-
       try {
         if (!isValidEmail(email)) {
           throw new Error('invalid email');
         }
 
-        const session = await AuthRepository.login(email.trim(), password);
-        await setSession(session.token, session.user);
+        const result = await AuthRepository.login(email.trim(), password);
+        await setSession(result.token, result.user);
       } catch (loginError) {
         const mappedError =
           loginError instanceof Error && loginError.message === 'invalid email'
@@ -173,14 +209,13 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
         setIsLoading(false);
       }
     },
-    [setSession],
+    [setSession, setError, setIsLoading],
   );
 
   const register = useCallback(
     async (credentials: RegisterCredentials): Promise<void> => {
       setIsLoading(true);
       setError(null);
-
       try {
         const validationError = validateRegisterCredentials(credentials);
 
@@ -188,12 +223,12 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
           throw validationError;
         }
 
-        const session = await AuthRepository.register(
+        const result = await AuthRepository.register(
           credentials.full_name.trim(),
           credentials.email.trim(),
           credentials.password,
         );
-        await setSession(session.token, session.user);
+        await setSession(result.token, result.user);
       } catch (registerError) {
         const mappedError =
           typeof registerError === 'object' &&
@@ -208,16 +243,15 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
         setIsLoading(false);
       }
     },
-    [setSession],
+    [setSession, setError, setIsLoading],
   );
 
   const loginWithGoogle = useCallback(async (): Promise<void> => {
     setIsLoading(true);
     setError(null);
-
     try {
-      const session = await AuthRepository.loginWithGoogle();
-      await setSession(session.token, session.user);
+      const result = await AuthRepository.loginWithGoogle();
+      await setSession(result.token, result.user);
     } catch (googleError) {
       const mappedError = mapAuthError(googleError);
       setError(mappedError);
@@ -225,24 +259,34 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
     } finally {
       setIsLoading(false);
     }
-  }, [setSession]);
+  }, [setSession, setError, setIsLoading]);
 
-  const resetPassword = useCallback(async (email: string): Promise<boolean> => {
-    if (!isValidEmail(email)) {
-      setError({ message: i18n.t('auth.errors.invalidEmail'), field: 'email' });
-      return false;
-    }
-    setIsLoading(true);
-    setError(null);
-    try {
-      await AuthRepository.resetPassword(email.trim());
-    } catch {
-      // Error silenciado intencionalmente — no revelar si el email existe
-    } finally {
-      setIsLoading(false);
-    }
-    return true;
-  }, []);
+  return { login, register, loginWithGoogle };
+}
+
+/** Acciones que no crean una sesión nueva: reset, logout, update de perfil. */
+function useAccountActions(session: AuthSession) {
+  const { setUser, setError, setIsLoading, clearLocalSession } = session;
+
+  const resetPassword = useCallback(
+    async (email: string): Promise<boolean> => {
+      if (!isValidEmail(email)) {
+        setError({ message: i18n.t('auth.errors.invalidEmail'), field: 'email' });
+        return false;
+      }
+      setIsLoading(true);
+      setError(null);
+      try {
+        await AuthRepository.resetPassword(email.trim());
+      } catch {
+        // Error silenciado intencionalmente — no revelar si el email existe
+      } finally {
+        setIsLoading(false);
+      }
+      return true;
+    },
+    [setError, setIsLoading],
+  );
 
   const logout = useCallback(async (): Promise<void> => {
     setIsLoading(true);
@@ -255,15 +299,31 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
       clearLocalSession();
       setIsLoading(false);
     }
-  }, [clearLocalSession]);
+  }, [clearLocalSession, setError, setIsLoading]);
 
-  const updateUser = useCallback(async (updatedUser: User): Promise<void> => {
-    setUser(updatedUser);
-    const token = await AsyncStorage.getItem(STORAGE_KEYS.token);
-    if (token) {
-      await AuthRepository.saveSession(token, updatedUser);
-    }
-  }, []);
+  const updateUser = useCallback(
+    async (updatedUser: User): Promise<void> => {
+      setUser(updatedUser);
+      const storedToken = await AsyncStorage.getItem(STORAGE_KEYS.token);
+      if (storedToken) {
+        await AuthRepository.saveSession(storedToken, updatedUser);
+      }
+    },
+    [setUser],
+  );
+
+  return { resetPassword, logout, updateUser };
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element {
+  const session = useAuthSession();
+  const { login, register, loginWithGoogle } = useSignInMethods(session);
+  const { resetPassword, logout, updateUser } = useAccountActions(session);
+  const { user, isLoading, isAuthenticated, error, clearError } = session;
 
   const value = useMemo<AuthContextValue>(
     () => ({
