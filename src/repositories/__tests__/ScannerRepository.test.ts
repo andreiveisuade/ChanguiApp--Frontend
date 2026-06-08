@@ -1,12 +1,18 @@
 import { getProductByBarcode } from '../ScannerRepository';
 import AuthRepository from '@/repositories/AuthRepository';
+import * as ProductCatalogRepository from '@/repositories/ProductCatalogRepository';
 
 jest.mock('@/repositories/AuthRepository', () => ({
   __esModule: true,
   default: { getStoredSession: jest.fn() },
 }));
 
+jest.mock('@/repositories/ProductCatalogRepository', () => ({
+  getProductByBarcode: jest.fn(),
+}));
+
 const mockedGetSession = jest.mocked(AuthRepository.getStoredSession);
+const mockedLocalLookup = jest.mocked(ProductCatalogRepository.getProductByBarcode);
 
 describe('ScannerRepository.getProductByBarcode', () => {
   const fetchMock = jest.fn();
@@ -14,10 +20,34 @@ describe('ScannerRepository.getProductByBarcode', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     global.fetch = fetchMock as unknown as typeof fetch;
+    // Por defecto el cache local no tiene el producto → cae a la red.
+    mockedLocalLookup.mockResolvedValue(null);
     mockedGetSession.mockResolvedValue({
       token: 'tk',
       user: { id: 'u1', email: 'a@b.com', full_name: 'A', avatar_url: null, created_at: '2026-01-01' },
     });
+  });
+
+  it('cache-first: si el producto está en el catálogo local lo devuelve sin pegarle a la red', async () => {
+    const local = { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 };
+    mockedLocalLookup.mockResolvedValueOnce(local);
+
+    const result = await getProductByBarcode('779');
+
+    expect(result).toEqual(local);
+    expect(mockedLocalLookup).toHaveBeenCalledWith('779');
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('si el cache local falla, cae a la red sin romper el escaneo', async () => {
+    mockedLocalLookup.mockRejectedValueOnce(new Error('sqlite down'));
+    const product = { id: 'p1', name: 'Yerba', barcode: '779', brand: null, image_url: null, price: 1000 };
+    fetchMock.mockResolvedValueOnce({ status: 200, ok: true, json: async () => product });
+
+    const result = await getProductByBarcode('779');
+
+    expect(result).toEqual(product);
+    expect(fetchMock).toHaveBeenCalled();
   });
 
   it('devuelve el producto y manda el header Authorization con el token', async () => {
