@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { colors, fonts, spacing } from '@/utils/theme';
+import { StyleSheet } from 'react-native';
+import { colors, fonts, spacing } from '@/constants/theme';
+import { AppText } from '@/components/atoms/AppText';
 
 type FormLabelProps = {
   children: string;
 };
 
 export function FormLabel({ children }: FormLabelProps): React.JSX.Element {
-  return <Text style={styles.label}>{children}</Text>;
+  return <AppText variant="Body" style={styles.label}>{children}</AppText>;
 }
 
 const styles = StyleSheet.create({

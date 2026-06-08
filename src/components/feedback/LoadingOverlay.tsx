@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, Modal, StyleSheet, View } from 'react-native';
-import { colors, radii, spacing } from '@/utils/theme';
+import { colors, radii, spacing } from '@/constants/theme';
 
 type LoadingOverlayProps = {
   visible: boolean;

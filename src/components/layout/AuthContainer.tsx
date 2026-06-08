@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { colors, spacing } from '@/utils/theme';
+import { colors, spacing } from '@/constants/theme';
 
 type AuthContainerProps = {
   children: React.ReactNode;

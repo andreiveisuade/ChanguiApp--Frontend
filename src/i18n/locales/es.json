@@ -4,8 +4,6 @@
   "pay": "Pagar",
   "cart": "Mi carrito",
   "history": "Historial",
-  "profile": "Perfil",
-  "lists": "Mis listas",
   "login": "Iniciar sesión",
   "register": "Crear cuenta",
   "logout": "Cerrar sesión",
@@ -18,8 +16,58 @@
   "lang_en": "English",
   "home": {
     "title": "Inicio",
-    "greeting": "Hola, {{name}}. Tu módulo Scan & Go está listo para continuar.",
+    "greeting": "¡Hola, {{name}}!",
+    "continueShopping": "Continuá con tus compras",
+    "activeCart": "Carrito Activo",
+    "products_one": "{{count}} producto",
+    "products_other": "{{count}} productos",
+    "total": "Total",
+    "emptyCart": "Tu carrito está vacío",
+    "emptyCartSubtitle": "Escaneá un producto para empezar",
+    "errorLoading": "No se pudo cargar el carrito",
+    "defaultUser": "Usuario",
+    "fallbackProductName": "Producto",
     "placeholder": "Tu módulo Scan & Go está listo para continuar."
+  },
+  "nav": {
+    "home": "Inicio",
+    "cart": "Carrito",
+    "scanner": "Escanear",
+    "history": "Historial",
+    "settings": "Ajustes",
+    "hint": {
+      "home": "Ir a la pantalla de inicio",
+      "cart": "Ver el contenido de tu carrito",
+      "scanner": "Escanear un producto",
+      "history": "Ver tu historial de compras",
+      "settings": "Abrir ajustes de la cuenta"
+    }
+  },
+  "cartScreen": {
+    "detail": "Detalle del carrito",
+    "updatedNow": "Actualizado ahora",
+    "subtotal": "Subtotal",
+    "checkout": "Ir a pagar",
+    "checkoutHint": "Pagá tu carrito con Mercado Pago",
+    "greeting": "Hola, {{name}}"
+  },
+  "checkout": {
+    "confirmingTitle": "Confirmando tu pago",
+    "confirmingSubtitle": "Esto puede tardar unos segundos.",
+    "successTitle": "¡Pago confirmado!",
+    "successSubtitle": "Tu compra quedó registrada en tu historial.",
+    "pendingTitle": "Pago en proceso",
+    "pendingSubtitle": "Estamos esperando la confirmación de Mercado Pago. Vas a verla en tu historial.",
+    "timeoutTitle": "No pudimos confirmar el pago",
+    "timeoutSubtitle": "Si completaste el pago, puede tardar unos minutos en aparecer en tu historial.",
+    "viewHistory": "Ver mi historial",
+    "viewHistoryHint": "Abre el historial de compras",
+    "goHome": "Volver al inicio",
+    "goHomeHint": "Vuelve a la pantalla de inicio",
+    "backToCart": "Volver al carrito",
+    "backToCartHint": "Vuelve al carrito",
+    "retry": "Reintentar",
+    "retryHint": "Vuelve a verificar el estado del pago"
   },
   "auth": {
     "login": {
@@ -66,7 +114,9 @@
       "goToRegisterHint": "Ir a la pantalla de registro",
       "goToLoginHint": "Ir a la pantalla de inicio de sesión",
       "goToForgotPasswordHint": "Ir a la pantalla para recuperar contraseña",
-      "logoutHint": "Cierra la sesión actual"
+      "logoutHint": "Cierra la sesión actual",
+      "goToProfile": "Ir a mi perfil",
+      "goToProfileHint": "Abre la pantalla de ajustes de tu cuenta"
     },
     "errors": {
       "invalidEmail": "El email no es válido",
@@ -100,6 +150,132 @@
     "next": "Siguiente",
     "skip": "Saltar",
     "finish": "Comenzar"
+  },
+  "scanner": {
+    "addToCart": "Agregar al carrito",
+    "addToCartHint": "Agrega el producto al carrito de compras",
+    "productNotFound": "Producto no encontrado",
+    "productNotFoundSubtitle": "No encontramos este código de barras en el catálogo",
+    "tryAgain": "Reintentar",
+    "price": "Precio",
+    "brand": "Marca",
+    "scanHint": "Apuntá el código de barras al marco",
+    "permission": {
+      "title": "Permiso de cámara",
+      "message": "Necesitamos acceder a la cámara para escanear códigos de barras.",
+      "allow": "Permitir cámara",
+      "allowHint": "Abre el diálogo de permisos de cámara"
+    },
+    "consulting": "Consultando catálogo...",
+    "scanAgain": "Escanear nuevamente",
+    "scanAgainHint": "Reinicia el escáner para leer otro código",
+    "productFound": "Producto encontrado",
+    "quantity": "Cantidad",
+    "subtotal": "Subtotal",
+    "scanAnother": "Escanear otro",
+    "scanAnotherHint": "Volvé al escáner para leer otro código",
+    "backHint": "Volver al escáner",
+    "barcodeNotInCatalog": "El código {{barcode}} no está en nuestro catálogo todavía.",
+    "dismissError": "Cerrar mensaje"
+  },
+  "profile": {
+    "edit": "Editar",
+    "editField": "Editar campo",
+    "avatarFallback": "Avatar de perfil",
+    "name": "Nombre",
+    "email": "Email",
+    "avatarUrl": "URL del avatar",
+    "namePlaceholder": "Tu nombre completo",
+    "avatarUrlPlaceholder": "https://...",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteConfirmTitle": "¿Eliminar tu cuenta?",
+    "deleteConfirmBody": "Esta acción no se puede deshacer. Vas a perder todos tus datos.",
+    "deleteFinalTitle": "Confirmación final",
+    "deleteFinalBody": "¿Estás completamente seguro? Esta acción es definitiva.",
+    "deleteConfirmBtn": "Eliminar definitivamente",
+    "editTitle": "Editar datos personales",
+    "changePhoto": "Cambiar foto",
+    "infoBoxBold": "Importante: ",
+    "infoBoxText": "Asegúrate de que tus datos sean correctos. Algunos cambios pueden requerir verificación.",
+    "sections": {
+      "personalInfo": "INFORMACIÓN PERSONAL",
+      "preferences": "PREFERENCIAS",
+      "account": "CUENTA"
+    },
+    "menu": {
+      "editData": "Editar datos",
+      "editDataDesc": "Nombre, email, teléfono",
+      "config": "Configuración",
+      "configDesc": "Idioma, tamaño de fuente",
+      "logout": "Cerrar sesión",
+      "logoutDesc": "Salir de tu cuenta",
+      "deleteAccount": "Eliminar cuenta",
+      "deleteAccountDesc": "Borrar permanentemente"
+    },
+    "configTitle": "Configuración",
+    "configSubtitle": "Personaliza la apariencia y el idioma de la aplicación",
+    "languageSection": "Idioma",
+    "fontSizeSection": "Tamaño de fuente",
+    "fontSizes": {
+      "small": "Pequeño",
+      "medium": "Mediano",
+      "large": "Grande",
+      "xlarge": "Muy grande"
+    },
+    "preview": "Vista previa",
+    "previewText": "Este es un texto de ejemplo para visualizar el tamaño de fuente seleccionado.",
+    "logoutConfirmTitle": "¿Cerrar sesión?",
+    "logoutConfirmSubtitle": "Podrás volver a iniciar sesión en cualquier momento",
+    "logoutBoxBold": "Importante: ",
+    "logoutBoxText": "Asegúrate de haber guardado todos tus cambios antes de cerrar sesión.",
+    "deleteConfirmSubtitle": "Esta acción es permanente y no se puede deshacer",
+    "deleteBoxBold": "¡Atención! Esta acción es irreversible. ",
+    "deleteBoxText": "Al eliminar tu cuenta perderás permanentemente:",
+    "willBeDeleted": "Se eliminará:",
+    "deleteItems": {
+      "history": "Todo tu historial de compras",
+      "info": "Tu información personal y preferencias",
+      "payment": "Métodos de pago guardados"
+    },
+    "needABreakTitle": "¿Necesitas un descanso?",
+    "needABreakText": "En lugar de eliminar tu cuenta, puedes simplemente cerrar sesión y volver cuando quieras.",
+    "needABreakLink": "Cerrar sesión en su lugar →",
+    "confirmDeletePrompt": "Para confirmar, escribe: ",
+    "confirmDeletePlaceholder": "Escribe la frase exacta",
+    "deleteCancelBtn": "Cancelar y volver"
+  },
+  "common": {
+    "ok": "Entendido",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "add": "Agregar",
+    "save": "Guardar",
+    "continue": "Continuar",
+    "dismissError": "Cerrar mensaje de error",
+    "emptyTitle": "No hay nada acá",
+    "emptySubtitle": "Todavía no hay contenido para mostrar",
+    "decrementQuantity": "Reducir cantidad",
+    "incrementQuantity": "Aumentar cantidad",
+    "quantityValue": "Cantidad: {{value}}"
+  },
+  "lists": {
+    "addItemPlaceholder": "Nombre del producto...",
+    "progress": "{{done}} de {{total}} ítems",
+    "addItem": "Agregar ítem",
+    "markPurchased": "Marcar como comprado",
+    "markUnpurchased": "Marcar como no comprado"
+  },
+  "purchases": {
+    "total": "Total",
+    "date": "Fecha",
+    "status": "Estado",
+    "quantity": "Cantidad"
+  },
+  "pricing": {
+    "priceWithoutTax": "Precio sin IVA",
+    "iva": "IVA ({{rate}})",
+    "total": "Total"
   },
   "forgotPassword": {
     "title": "¿Olvidaste tu contraseña?",

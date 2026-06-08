@@ -4,13 +4,10 @@ import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import supabase from '@/config/supabase';
 import { AuthSession as StoredAuthSession, User } from '@/types/auth';
+import { API_URL, API_TIMEOUT_MS, DEEP_LINKS } from '@/constants/api';
+import { STORAGE_KEYS } from '@/constants/storage';
 
 WebBrowser.maybeCompleteAuthSession();
-
-const TOKEN_KEY = '@changuiapp/token';
-const USER_KEY = '@changuiapp/user';
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://changuiapp-backend.onrender.com';
-const REQUEST_TIMEOUT_MS = 15000;
 
 type ObjectRecord = Record<string, unknown>;
 
@@ -20,32 +17,37 @@ const isObjectRecord = (value: unknown): value is ObjectRecord =>
 const getString = (source: ObjectRecord, key: string): string | null =>
   typeof source[key] === 'string' ? source[key] : null;
 
+/** Devuelve el primer string no nulo entre los pares (objeto, key), en orden. */
+const pickString = (...lookups: [ObjectRecord, string][]): string | null => {
+  for (const [source, key] of lookups) {
+    const value = getString(source, key);
+    if (value !== null) {
+      return value;
+    }
+  }
+  return null;
+};
+
 const normalizeUser = (rawUser: unknown): User => {
   if (!isObjectRecord(rawUser)) {
     throw new Error('Invalid user response');
   }
 
   const metadata = isObjectRecord(rawUser.user_metadata) ? rawUser.user_metadata : {};
-  const email = getString(rawUser, 'email') ?? getString(metadata, 'email');
-  const fullName =
-    getString(rawUser, 'full_name') ??
-    getString(rawUser, 'fullName') ??
-    getString(metadata, 'full_name') ??
-    getString(metadata, 'name') ??
-    '';
 
   const user: User = {
     id: getString(rawUser, 'id') ?? '',
-    email: email ?? '',
-    full_name: fullName,
-    avatar_url:
-      getString(rawUser, 'avatar_url') ??
-      getString(rawUser, 'avatarUrl') ??
-      getString(metadata, 'avatar_url'),
+    email: pickString([rawUser, 'email'], [metadata, 'email']) ?? '',
+    full_name:
+      pickString(
+        [rawUser, 'full_name'],
+        [rawUser, 'fullName'],
+        [metadata, 'full_name'],
+        [metadata, 'name'],
+      ) ?? '',
+    avatar_url: pickString([rawUser, 'avatar_url'], [rawUser, 'avatarUrl'], [metadata, 'avatar_url']),
     created_at:
-      getString(rawUser, 'created_at') ??
-      getString(rawUser, 'createdAt') ??
-      new Date().toISOString(),
+      pickString([rawUser, 'created_at'], [rawUser, 'createdAt']) ?? new Date().toISOString(),
   };
 
   if (!user.id || !user.email) {
@@ -84,7 +86,7 @@ const requestAuth = async (
   body: ObjectRecord,
 ): Promise<StoredAuthSession> => {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
   try {
     const response = await fetch(`${API_URL}/api/auth/${endpoint}`, {
@@ -111,7 +113,7 @@ const requestAuth = async (
     return normalizeAuthSession(payload);
   } catch (err) {
     if (err instanceof Error && err.name === 'AbortError') {
-      throw new Error('network timeout');
+      throw new Error('network timeout', { cause: err });
     }
     throw err;
   } finally {
@@ -180,7 +182,7 @@ export const AuthRepository = {
 
   resetPassword: async (email: string): Promise<void> => {
     await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'changuiapp://auth/reset-password',
+      redirectTo: DEEP_LINKS.resetPassword,
     });
     // Supabase no revela si el email existe — siempre resuelve sin error
   },
@@ -195,11 +197,15 @@ export const AuthRepository = {
 
   getStoredSession: async (): Promise<StoredAuthSession | null> => {
     const [token, userJson] = await Promise.all([
-      AsyncStorage.getItem(TOKEN_KEY),
-      AsyncStorage.getItem(USER_KEY),
+      AsyncStorage.getItem(STORAGE_KEYS.token),
+      AsyncStorage.getItem(STORAGE_KEYS.user),
     ]);
 
     if (!token || !userJson) {
+      // Estado inconsistente (solo una de las dos keys): limpiar para evitar zombies.
+      if (token || userJson) {
+        await AuthRepository.clearSession();
+      }
       return null;
     }
 
@@ -216,13 +222,13 @@ export const AuthRepository = {
 
   saveSession: async (token: string, user: User): Promise<void> => {
     await Promise.all([
-      AsyncStorage.setItem(TOKEN_KEY, token),
-      AsyncStorage.setItem(USER_KEY, JSON.stringify(user)),
+      AsyncStorage.setItem(STORAGE_KEYS.token, token),
+      AsyncStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user)),
     ]);
   },
 
   clearSession: async (): Promise<void> => {
-    await Promise.all([AsyncStorage.removeItem(TOKEN_KEY), AsyncStorage.removeItem(USER_KEY)]);
+    await Promise.all([AsyncStorage.removeItem(STORAGE_KEYS.token), AsyncStorage.removeItem(STORAGE_KEYS.user)]);
   },
 };
 

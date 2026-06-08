@@ -22,42 +22,42 @@ const getMessage = (error: unknown): string => {
   return '';
 };
 
+type AuthErrorRule = {
+  keywords: string[];
+  messageKey: string;
+  field: NonNullable<AuthError['field']>;
+};
+
+// Primera regla cuyo keyword aparezca en el mensaje gana (orden = prioridad).
+const ERROR_RULES: AuthErrorRule[] = [
+  {
+    keywords: ['already registered', 'already exists', 'user already', 'email already', 'duplicate'],
+    messageKey: 'auth.errors.emailAlreadyUsed',
+    field: 'email',
+  },
+  {
+    keywords: ['invalid login', 'invalid credentials', 'credenciales inválidas', 'credenciales invalidas', 'incorrect', 'unauthorized'],
+    messageKey: 'auth.errors.invalidCredentials',
+    field: 'general',
+  },
+  {
+    keywords: ['network', 'failed to fetch', 'sin conexión', 'timeout'],
+    messageKey: 'auth.errors.networkError',
+    field: 'general',
+  },
+  {
+    keywords: ['google', 'oauth'],
+    messageKey: 'auth.errors.googleError',
+    field: 'general',
+  },
+];
+
 export const mapAuthError = (error: unknown): AuthError => {
   const message = getMessage(error).toLowerCase();
+  const rule = ERROR_RULES.find((r) => r.keywords.some((kw) => message.includes(kw)));
 
-  if (
-    message.includes('already registered') ||
-    message.includes('already exists') ||
-    message.includes('user already') ||
-    message.includes('email already') ||
-    message.includes('duplicate')
-  ) {
-    return { message: i18n.t('auth.errors.emailAlreadyUsed'), field: 'email' };
-  }
-
-  if (
-    message.includes('invalid login') ||
-    message.includes('invalid credentials') ||
-    message.includes('credenciales inválidas') ||
-    message.includes('credenciales invalidas') ||
-    message.includes('incorrect') ||
-    message.includes('unauthorized')
-  ) {
-    return { message: i18n.t('auth.errors.invalidCredentials'), field: 'general' };
-  }
-
-  if (
-    message.includes('network') ||
-    message.includes('failed to fetch') ||
-    message.includes('sin conexión') ||
-    message.includes('timeout')
-  ) {
-    return { message: i18n.t('auth.errors.networkError'), field: 'general' };
-  }
-
-  if (message.includes('google') || message.includes('oauth')) {
-    return { message: i18n.t('auth.errors.googleError'), field: 'general' };
-  }
-
-  return { message: i18n.t('auth.errors.unknown'), field: 'general' };
+  return {
+    message: i18n.t(rule?.messageKey ?? 'auth.errors.unknown'),
+    field: rule?.field ?? 'general',
+  };
 };

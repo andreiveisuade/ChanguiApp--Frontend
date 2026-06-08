@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ChanguiApp--Frontend-temp",
-    "slug": "ChanguiApp--Frontend-temp",
+    "name": "ChanguiApp",
+    "slug": "ChanguiApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "changuiapp",
@@ -31,7 +31,15 @@
     },
     "plugins": [
       "expo-router",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permitir a ChanguiApp acceder a tu cámara para escanear códigos de barras."
+        }
+      ],
+      "expo-font",
+      "expo-sqlite"
     ]
   }
 }
