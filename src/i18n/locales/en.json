@@ -4,8 +4,6 @@
   "pay": "Pay",
   "cart": "My cart",
   "history": "History",
-  "profile": "Profile",
-  "lists": "My lists",
   "login": "Sign in",
   "register": "Create account",
   "logout": "Sign out",
@@ -18,8 +16,58 @@
   "lang_en": "English",
   "home": {
     "title": "Home",
-    "greeting": "Hi, {{name}}. Your Scan & Go module is ready to continue.",
+    "greeting": "Hi, {{name}}!",
+    "continueShopping": "Continue with your shopping",
+    "activeCart": "Active Cart",
+    "products_one": "{{count}} product",
+    "products_other": "{{count}} products",
+    "total": "Total",
+    "emptyCart": "Your cart is empty",
+    "emptyCartSubtitle": "Scan a product to get started",
+    "errorLoading": "Could not load the cart",
+    "defaultUser": "User",
+    "fallbackProductName": "Product",
     "placeholder": "Your Scan & Go module is ready to continue."
+  },
+  "nav": {
+    "home": "Home",
+    "cart": "Cart",
+    "scanner": "Scan",
+    "history": "History",
+    "settings": "Settings",
+    "hint": {
+      "home": "Go to the home screen",
+      "cart": "View your cart",
+      "scanner": "Scan a product",
+      "history": "View your purchase history",
+      "settings": "Open account settings"
+    }
+  },
+  "cartScreen": {
+    "detail": "Cart detail",
+    "updatedNow": "Updated just now",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout",
+    "checkoutHint": "Pay for your cart with Mercado Pago",
+    "greeting": "Hello, {{name}}"
+  },
+  "checkout": {
+    "confirmingTitle": "Confirming your payment",
+    "confirmingSubtitle": "This may take a few seconds.",
+    "successTitle": "Payment confirmed!",
+    "successSubtitle": "Your purchase was saved to your history.",
+    "pendingTitle": "Payment in progress",
+    "pendingSubtitle": "We're waiting for Mercado Pago to confirm. You'll see it in your history.",
+    "timeoutTitle": "We couldn't confirm the payment",
+    "timeoutSubtitle": "If you completed the payment, it may take a few minutes to show up in your history.",
+    "viewHistory": "View my history",
+    "viewHistoryHint": "Opens the purchase history",
+    "goHome": "Back to home",
+    "goHomeHint": "Returns to the home screen",
+    "backToCart": "Back to cart",
+    "backToCartHint": "Returns to the cart",
+    "retry": "Retry",
+    "retryHint": "Checks the payment status again"
   },
   "auth": {
     "login": {
@@ -66,7 +114,9 @@
       "goToRegisterHint": "Go to the registration screen",
       "goToLoginHint": "Go to the sign in screen",
       "goToForgotPasswordHint": "Go to the password recovery screen",
-      "logoutHint": "Sign out of the current session"
+      "logoutHint": "Sign out of the current session",
+      "goToProfile": "Go to my profile",
+      "goToProfileHint": "Opens your account settings screen"
     },
     "errors": {
       "invalidEmail": "The email is not valid",
@@ -100,6 +150,132 @@
     "next": "Next",
     "skip": "Skip",
     "finish": "Get started"
+  },
+  "scanner": {
+    "addToCart": "Add to cart",
+    "addToCartHint": "Add the product to your cart",
+    "productNotFound": "Product not found",
+    "productNotFoundSubtitle": "We couldn't find this barcode in the catalog",
+    "tryAgain": "Try again",
+    "price": "Price",
+    "brand": "Brand",
+    "scanHint": "Point the barcode at the frame",
+    "permission": {
+      "title": "Camera permission",
+      "message": "We need camera access to scan barcodes.",
+      "allow": "Allow camera",
+      "allowHint": "Opens the camera permission dialog"
+    },
+    "consulting": "Checking catalog...",
+    "scanAgain": "Scan again",
+    "scanAgainHint": "Restart the scanner to read another code",
+    "productFound": "Product found",
+    "quantity": "Quantity",
+    "subtotal": "Subtotal",
+    "scanAnother": "Scan another",
+    "scanAnotherHint": "Go back to the scanner to read another code",
+    "backHint": "Back to the scanner",
+    "barcodeNotInCatalog": "The code {{barcode}} is not in our catalog yet.",
+    "dismissError": "Dismiss message"
+  },
+  "profile": {
+    "edit": "Edit",
+    "editField": "Edit field",
+    "avatarFallback": "Profile avatar",
+    "name": "Name",
+    "email": "Email",
+    "avatarUrl": "Avatar URL",
+    "namePlaceholder": "Your full name",
+    "avatarUrlPlaceholder": "https://...",
+    "deleteAccount": "Delete account",
+    "deleteConfirmTitle": "Delete your account?",
+    "deleteConfirmBody": "This action cannot be undone. You'll lose all your data.",
+    "deleteFinalTitle": "Final confirmation",
+    "deleteFinalBody": "Are you completely sure? This action is permanent.",
+    "deleteConfirmBtn": "Delete permanently",
+    "editTitle": "Edit personal info",
+    "changePhoto": "Change photo",
+    "infoBoxBold": "Important: ",
+    "infoBoxText": "Make sure your information is correct. Some changes may require verification.",
+    "sections": {
+      "personalInfo": "PERSONAL INFORMATION",
+      "preferences": "PREFERENCES",
+      "account": "ACCOUNT"
+    },
+    "menu": {
+      "editData": "Edit profile details",
+      "editDataDesc": "Name, email, phone number",
+      "config": "Settings",
+      "configDesc": "Language, font size",
+      "logout": "Log out",
+      "logoutDesc": "Sign out of your account",
+      "deleteAccount": "Delete account",
+      "deleteAccountDesc": "Permanently delete account"
+    },
+    "configTitle": "Settings",
+    "configSubtitle": "Customize the app appearance and language",
+    "languageSection": "Language",
+    "fontSizeSection": "Font size",
+    "fontSizes": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "xlarge": "Extra Large"
+    },
+    "preview": "Preview",
+    "previewText": "This is a sample text to visualize the selected font size.",
+    "logoutConfirmTitle": "Log out?",
+    "logoutConfirmSubtitle": "You can sign back in at any time",
+    "logoutBoxBold": "Important: ",
+    "logoutBoxText": "Make sure you have saved all your changes before logging out.",
+    "deleteConfirmSubtitle": "This action is permanent and cannot be undone",
+    "deleteBoxBold": "Warning! This action is irreversible. ",
+    "deleteBoxText": "Deleting your account will permanently remove:",
+    "willBeDeleted": "The following will be deleted:",
+    "deleteItems": {
+      "history": "All your purchase history",
+      "info": "Your personal info and preferences",
+      "payment": "Saved payment methods"
+    },
+    "needABreakTitle": "Need a break?",
+    "needABreakText": "Instead of deleting your account, you can simply log out and return whenever you want.",
+    "needABreakLink": "Log out instead →",
+    "confirmDeletePrompt": "To confirm, type: ",
+    "confirmDeletePlaceholder": "Type the exact phrase",
+    "deleteCancelBtn": "Cancel and return"
+  },
+  "common": {
+    "ok": "Got it",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "close": "Close",
+    "add": "Add",
+    "save": "Save",
+    "continue": "Continue",
+    "dismissError": "Close error message",
+    "emptyTitle": "Nothing here",
+    "emptySubtitle": "There's nothing here yet",
+    "decrementQuantity": "Decrease quantity",
+    "incrementQuantity": "Increase quantity",
+    "quantityValue": "Quantity: {{value}}"
+  },
+  "lists": {
+    "addItemPlaceholder": "Product name...",
+    "progress": "{{done}} of {{total}} items",
+    "addItem": "Add item",
+    "markPurchased": "Mark as purchased",
+    "markUnpurchased": "Mark as not purchased"
+  },
+  "purchases": {
+    "total": "Total",
+    "date": "Date",
+    "status": "Status",
+    "quantity": "Quantity"
+  },
+  "pricing": {
+    "priceWithoutTax": "Price without tax",
+    "iva": "VAT ({{rate}})",
+    "total": "Total"
   },
   "forgotPassword": {
     "title": "Forgot your password?",

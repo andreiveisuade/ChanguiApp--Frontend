@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { colors, radii, spacing } from '@/utils/theme';
+import { colors, radii, spacing } from '@/constants/theme';
 
 type OnboardingDotsProps = {
   total: number;

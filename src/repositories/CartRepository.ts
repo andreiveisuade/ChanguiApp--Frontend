@@ -1,0 +1,148 @@
+import { apiFetch } from '@/utils/apiFetch';
+import { CartWithItems, CartItemWithProduct, TaxSummary } from '@/types/domain';
+
+const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
+
+interface RawProduct {
+  id: string;
+  name: string;
+  barcode: string;
+  brand: string | null;
+  image_url: string | null;
+  price: number;
+}
+
+interface RawCartItem {
+  id: string;
+  cart_id: string;
+  product_id: string;
+  quantity: number;
+  unit_price: number;
+  created_at?: string;
+  updated_at?: string;
+  product?: RawProduct | null;
+  products?: RawProduct | null;
+}
+
+/** Maps a raw backend cart item to the typed domain object. */
+function mapRawItem(item: RawCartItem): CartItemWithProduct {
+  const rawProduct = item.product || item.products;
+  return {
+    id: item.id,
+    cart_id: item.cart_id,
+    product_id: item.product_id,
+    quantity: item.quantity,
+    unit_price: item.unit_price,
+    created_at: item.created_at,
+    updated_at: item.updated_at,
+    product: rawProduct
+      ? {
+          id: rawProduct.id,
+          name: rawProduct.name,
+          barcode: rawProduct.barcode,
+          brand: rawProduct.brand,
+          image_url: rawProduct.image_url,
+          price: rawProduct.price,
+        }
+      : null,
+  };
+}
+
+export const CartRepository = {
+  /**
+   * Fetches the current active cart and its items.
+   * Auth (bearer token) y manejo de 401 lo cubre apiFetch.
+   */
+  async getCart(): Promise<{
+    cart: CartWithItems | null;
+    items: CartItemWithProduct[];
+    total: number;
+    summary: TaxSummary;
+  }> {
+    const response = await apiFetch('/api/cart');
+    const data = await response.json();
+
+    // Map and normalize product relation name (could be product or products in backend JSON)
+    const rawCart = data.cart;
+    let mappedCart: CartWithItems | null = null;
+
+    if (rawCart) {
+      const rawCartItems: RawCartItem[] = rawCart.cart_items ?? [];
+      const mappedCartItems = rawCartItems.map(mapRawItem);
+
+      mappedCart = {
+        id: rawCart.id,
+        user_id: rawCart.user_id,
+        store_id: rawCart.store_id ?? '',
+        status: rawCart.status,
+        created_at: rawCart.created_at,
+        updated_at: rawCart.updated_at,
+        cart_items: mappedCartItems,
+      };
+    }
+
+    const rawItems: RawCartItem[] = data.items ?? [];
+    const mappedItems = rawItems.map(mapRawItem);
+
+    return {
+      cart: mappedCart,
+      items: mappedItems,
+      total: typeof data.total === 'number' ? data.total : 0,
+      summary: (data.summary as TaxSummary) ?? EMPTY_SUMMARY,
+    };
+  },
+
+  /**
+   * Modifies the quantity of an item in the cart.
+   * PUT /api/cart/items/{id}
+   */
+  async updateItemQuantity(itemId: string, quantity: number): Promise<void> {
+    await apiFetch(`/api/cart/items/${itemId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ quantity }),
+    });
+  },
+
+  /**
+   * Deletes an item from the cart.
+   * DELETE /api/cart/items/{id}
+   */
+  async deleteItem(itemId: string): Promise<void> {
+    await apiFetch(`/api/cart/items/${itemId}`, {
+      method: 'DELETE',
+    });
+  },
+
+  /**
+   * Adds an item to the active cart. If no active cart exists,
+   * it retrieves the available stores and associates the new cart with the first store.
+   */
+  async addItem(productId: string, quantity: number, unitPrice: number): Promise<void> {
+    const { cart } = await this.getCart();
+
+    let storeId: string | undefined = undefined;
+    if (!cart) {
+      const storesResponse = await apiFetch('/api/stores');
+      const stores = await storesResponse.json();
+      if (stores && stores.length > 0) {
+        storeId = stores[0].id;
+      }
+    }
+
+    const body: Record<string, unknown> = {
+      product_id: productId,
+      quantity,
+      unit_price: unitPrice,
+    };
+    if (storeId) {
+      body.store_id = storeId;
+    }
+
+    await apiFetch('/api/cart/items', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  },
+};
+
+export default CartRepository;

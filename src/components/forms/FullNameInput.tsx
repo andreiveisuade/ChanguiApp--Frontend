@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import FormLabel from '@/components/forms/FormLabel';
 import InlineError from '@/components/forms/InlineError';
-import { colors, fonts, radii, spacing } from '@/utils/theme';
+import { colors, fonts, radii, spacing } from '@/constants/theme';
 import { isValidFullName } from '@/utils/validators';
 
 type FullNameInputProps = {

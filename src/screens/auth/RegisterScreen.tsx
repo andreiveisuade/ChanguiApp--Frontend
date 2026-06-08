@@ -11,7 +11,8 @@ import PasswordInput from '@/components/forms/PasswordInput';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
 import AuthContainer from '@/components/layout/AuthContainer';
 import useAuth from '@/viewmodels/useAuth';
-import { colors, fonts, spacing } from '@/utils/theme';
+import { colors, fonts, spacing } from '@/constants/theme';
+import { ROUTES } from '@/constants/routes';
 import {
   doPasswordsMatch,
   isValidEmail,
@@ -63,7 +64,7 @@ export function RegisterScreen(): React.JSX.Element {
         password,
         confirmPassword,
       });
-      router.replace('/(tabs)/home');
+      router.replace(ROUTES.tabs.home);
     } catch {
       return;
     }
@@ -134,7 +135,7 @@ export function RegisterScreen(): React.JSX.Element {
         <Text style={styles.footerText}>{t('auth.register.hasAccount')}</Text>
         <TextLinkButton
           accessibilityHint={t('auth.accessibility.goToLoginHint')}
-          onPress={() => router.push('/auth/login')}
+          onPress={() => router.push(ROUTES.auth.login)}
           title={t('auth.register.login')}
         />
       </View>
