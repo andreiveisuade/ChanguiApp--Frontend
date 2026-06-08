@@ -1,6 +1,7 @@
 import { API_URL, API_TIMEOUT_MS } from '@/constants/api';
 import { Product } from '@/types/domain';
 import AuthRepository from '@/repositories/AuthRepository';
+import * as ProductCatalogRepository from '@/repositories/ProductCatalogRepository';
 
 const buildHeaders = (token: string | undefined): Record<string, string> => {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
@@ -26,7 +27,24 @@ const extractErrorMessage = async (response: Response, fallback: string): Promis
   return fallback;
 };
 
+/**
+ * Resuelve un producto por barcode. Cache-first: primero busca en el catálogo
+ * local (SQLite), instantáneo y sin red. Si no está (catálogo no sincronizado
+ * aún o producto nuevo), o si el cache falla, cae al backend.
+ */
 export async function getProductByBarcode(barcode: string): Promise<Product | null> {
+  try {
+    const local = await ProductCatalogRepository.getProductByBarcode(barcode);
+    if (local) {
+      return local;
+    }
+  } catch {
+    // Si el cache local falla, seguir con la red — el escaneo no debe romperse.
+  }
+  return fetchProductFromNetwork(barcode);
+}
+
+async function fetchProductFromNetwork(barcode: string): Promise<Product | null> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
