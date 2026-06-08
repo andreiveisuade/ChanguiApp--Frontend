@@ -1,4 +1,4 @@
-import { AuthSessionExpiredError, NetworkError, UserFriendlyError } from '@/types/errors';
+import { NetworkError, UserFriendlyError } from '@/types/errors';
 
 export const ErrorTranslationService = {
   translate(err: unknown): UserFriendlyError {

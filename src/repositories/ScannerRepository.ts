@@ -42,7 +42,7 @@ export async function getProductByBarcode(barcode: string): Promise<Product | nu
     return (await response.json()) as Product;
   } catch (err) {
     if (err instanceof Error && err.name === 'AbortError') {
-      throw new Error('network timeout');
+      throw new Error('network timeout', { cause: err });
     }
     throw err;
   } finally {

@@ -129,7 +129,7 @@ export const CartRepository = {
       }
     }
 
-    const body: Record<string, any> = {
+    const body: Record<string, unknown> = {
       product_id: productId,
       quantity,
       unit_price: unitPrice,

@@ -33,14 +33,13 @@ const HINT_KEYS: { [key: string]: string } = {
   Settings: 'nav.hint.settings',
 };
 
-export const BottomNavbar = ({ state, descriptors, navigation }: BottomTabBarProps) => {
+export const BottomNavbar = ({ state, navigation }: BottomTabBarProps) => {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
 
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom || 8 }]}>
       {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
         const isFocused = state.index === index;
 
         const capitalizedName = route.name.charAt(0).toUpperCase() + route.name.slice(1);

@@ -108,7 +108,7 @@ const requestAuth = async (
     return normalizeAuthSession(payload);
   } catch (err) {
     if (err instanceof Error && err.name === 'AbortError') {
-      throw new Error('network timeout');
+      throw new Error('network timeout', { cause: err });
     }
     throw err;
   } finally {

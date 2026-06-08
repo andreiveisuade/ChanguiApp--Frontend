@@ -7,7 +7,7 @@ import AvatarImage from '@/components/profile/AvatarImage';
 import ProfileInput from '@/components/profile/ProfileInput';
 import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { colors, spacing, radii } from '@/constants/theme';
+import { colors, spacing } from '@/constants/theme';
 import { User } from '@/types/auth';
 
 interface EditProfileViewProps {
@@ -40,14 +40,6 @@ export function EditProfileView({
       avatar_url: editAvatarUrl.trim() || null,
     });
   };
-
-  const initials = editName
-    .trim()
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join('');
 
   return (
     <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>

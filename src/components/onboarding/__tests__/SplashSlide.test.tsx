@@ -15,14 +15,14 @@ jest.mock('@/../assets/logos/changuiapp-logo.svg', () => {
 
 describe('SplashSlide Component', () => {
   it('renders the app name and tagline', () => {
-    const { getByText } = render(<SplashSlide onNext={jest.fn()} />);
+    const { getByText } = render(<SplashSlide />);
 
     expect(getByText('app_name')).toBeTruthy();
     expect(getByText('onboarding.splash.tagline')).toBeTruthy();
   });
 
   it('renders the logo', () => {
-    const { getByTestId } = render(<SplashSlide onNext={jest.fn()} />);
+    const { getByTestId } = render(<SplashSlide />);
     expect(getByTestId('logo')).toBeTruthy();
   });
 });

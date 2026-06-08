@@ -62,8 +62,8 @@ export const useProductFound = (): UseProductFoundReturn => {
     try {
       await CartRepository.addItem(product.id, quantity, product.price);
       router.replace('/(tabs)/cart');
-    } catch (err: any) {
-      setErrorMessage(err?.message || 'Error al agregar al carrito');
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : 'Error al agregar al carrito');
     } finally {
       setIsLoading(false);
     }

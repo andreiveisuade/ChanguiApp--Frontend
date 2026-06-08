@@ -65,7 +65,7 @@ export const useCheckoutStatus = (preferenceId: string): UseCheckoutStatusReturn
 
     const tick = async (): Promise<void> => {
       if (!active) return;
-      let done = false;
+      let done: boolean;
       try {
         done = await checkOnce();
       } catch {
