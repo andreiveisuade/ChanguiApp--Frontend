@@ -191,6 +191,18 @@ describe('AuthContext', () => {
       expect(mockedAuthRepo.resetPassword).toHaveBeenCalledWith('andrei@uade.edu.ar');
     });
 
+    it('resetPassword devuelve true aunque el repo falle (no revela si el email existe)', async () => {
+      mockedAuthRepo.resetPassword.mockRejectedValueOnce(new Error('boom'));
+      const { result } = await renderAuth();
+
+      let ok = false;
+      await act(async () => {
+        ok = await result.current.resetPassword('andrei@uade.edu.ar');
+      });
+
+      expect(ok).toBe(true);
+    });
+
     it('logout limpia la sesión y desautentica', async () => {
       mockedAuthRepo.login.mockResolvedValueOnce(session);
       mockedAuthRepo.logout.mockResolvedValueOnce(undefined);
@@ -218,6 +230,19 @@ describe('AuthContext', () => {
 
       expect(result.current.user).toEqual(updated);
       expect(mockedAuthRepo.saveSession).toHaveBeenCalledWith('tk', updated);
+    });
+
+    it('updateUser actualiza en memoria sin persistir si no hay token guardado', async () => {
+      mockedGetItem.mockResolvedValueOnce(null);
+      const { result } = await renderAuth();
+      const updated = { ...user, full_name: 'Sin Token' };
+
+      await act(async () => {
+        await result.current.updateUser(updated);
+      });
+
+      expect(result.current.user).toEqual(updated);
+      expect(mockedAuthRepo.saveSession).not.toHaveBeenCalled();
     });
 
     it('clearError limpia el error', async () => {

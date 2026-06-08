@@ -105,6 +105,12 @@ describe('AuthRepository', () => {
 
       await expect(AuthRepository.login('a@b.com', 'x')).rejects.toThrow('Invalid auth token');
     });
+
+    it('lanza si el user no tiene email', async () => {
+      fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ token: 'tk', user: { id: 'u1' } }) });
+
+      await expect(AuthRepository.login('a@b.com', 'x')).rejects.toThrow('Invalid user response');
+    });
   });
 
   describe('loginWithGoogle', () => {
@@ -134,6 +140,20 @@ describe('AuthRepository', () => {
       mockedSignInOAuth.mockResolvedValueOnce({ data: {}, error: new Error('oauth fail') } as never);
 
       await expect(AuthRepository.loginWithGoogle()).rejects.toThrow('oauth fail');
+    });
+
+    it('lanza si supabase no devuelve la URL de OAuth', async () => {
+      mockedSignInOAuth.mockResolvedValueOnce({ data: { url: null }, error: null } as never);
+
+      await expect(AuthRepository.loginWithGoogle()).rejects.toThrow('Google OAuth URL missing');
+    });
+
+    it('lanza si el redirect no trae el code', async () => {
+      mockedSignInOAuth.mockResolvedValueOnce({ data: { url: 'https://google/oauth' }, error: null } as never);
+      mockedOpenAuth.mockResolvedValueOnce({ type: 'success', url: 'changuiapp://redirect' } as never);
+      mockedParse.mockReturnValueOnce({ queryParams: {} } as never);
+
+      await expect(AuthRepository.loginWithGoogle()).rejects.toThrow('Google OAuth code missing');
     });
   });
 

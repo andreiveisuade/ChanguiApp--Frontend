@@ -11,8 +11,11 @@ describe('mapAuthError', () => {
     expect(mapAuthError(new Error('email already exists')).field).toBe('email');
   });
 
-  it('detecta credenciales inválidas', () => {
-    expect(mapAuthError(new Error('Invalid login credentials')).message).toBe('auth.errors.invalidCredentials');
+  it('detecta credenciales inválidas con field general', () => {
+    expect(mapAuthError(new Error('Invalid login credentials'))).toEqual({
+      message: 'auth.errors.invalidCredentials',
+      field: 'general',
+    });
     expect(mapAuthError(new Error('Unauthorized')).message).toBe('auth.errors.invalidCredentials');
   });
 

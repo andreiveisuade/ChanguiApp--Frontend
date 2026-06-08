@@ -120,6 +120,21 @@ describe('CartRepository', () => {
       });
     });
 
+    it('sin carrito y sin stores disponibles: POST sin store_id', async () => {
+      mockedFetch
+        .mockResolvedValueOnce(jsonResponse({ cart: null, items: [], total: 0 }))
+        .mockResolvedValueOnce(jsonResponse([]))
+        .mockResolvedValueOnce(jsonResponse({}));
+
+      await CartRepository.addItem('p1', 1, 500);
+
+      expect(mockedFetch).toHaveBeenNthCalledWith(2, '/api/stores');
+      expect(mockedFetch).toHaveBeenLastCalledWith('/api/cart/items', {
+        method: 'POST',
+        body: JSON.stringify({ product_id: 'p1', quantity: 1, unit_price: 500 }),
+      });
+    });
+
     it('sin carrito: trae stores y POST con el store_id del primero', async () => {
       mockedFetch
         .mockResolvedValueOnce(jsonResponse({ cart: null, items: [], total: 0 }))

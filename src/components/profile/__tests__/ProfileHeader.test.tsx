@@ -50,8 +50,10 @@ describe('ProfileHeader Component', () => {
     expect(mockOnProfilePress).toHaveBeenCalledTimes(1);
   });
 
-  it('renders without crashing when onProfilePress is omitted', () => {
-    const { getByRole } = render(<ProfileHeader userName="John Doe" />);
+  it('renders and stays stable when onProfilePress is omitted', () => {
+    const { getByRole, getByText } = render(<ProfileHeader userName="John Doe" />);
+    expect(getByText('John')).toBeTruthy();
     fireEvent.press(getByRole('button'));
+    expect(getByText('John')).toBeTruthy();
   });
 });

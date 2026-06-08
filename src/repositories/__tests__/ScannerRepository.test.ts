@@ -46,6 +46,24 @@ describe('ScannerRepository.getProductByBarcode', () => {
     await expect(getProductByBarcode('779')).rejects.toThrow('boom server');
   });
 
+  it('usa errorData.error cuando el body no trae message', async () => {
+    fetchMock.mockResolvedValueOnce({ status: 500, ok: false, json: async () => ({ error: 'campo error' }) });
+
+    await expect(getProductByBarcode('779')).rejects.toThrow('campo error');
+  });
+
+  it('usa el mensaje default cuando el body no es JSON', async () => {
+    fetchMock.mockResolvedValueOnce({
+      status: 503,
+      ok: false,
+      json: async () => {
+        throw new Error('not json');
+      },
+    });
+
+    await expect(getProductByBarcode('779')).rejects.toThrow('Product lookup failed: status 503');
+  });
+
   it('traduce AbortError a network timeout', async () => {
     const abort = new Error('aborted');
     abort.name = 'AbortError';

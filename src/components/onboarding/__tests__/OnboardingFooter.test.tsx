@@ -97,4 +97,19 @@ describe('OnboardingFooter Component', () => {
     fireEvent.press(getByRole('button'));
     expect(mockOnNext).toHaveBeenCalledTimes(1);
   });
+
+  it('calls onNext when pressing finish on the last slide', () => {
+    const { getByRole } = render(
+      <OnboardingFooter
+        isLast
+        current={2}
+        total={3}
+        onNext={mockOnNext}
+        onSkip={mockOnSkip}
+      />
+    );
+
+    fireEvent.press(getByRole('button'));
+    expect(mockOnNext).toHaveBeenCalledTimes(1);
+  });
 });
