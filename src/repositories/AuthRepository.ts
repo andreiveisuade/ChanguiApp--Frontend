@@ -17,32 +17,37 @@ const isObjectRecord = (value: unknown): value is ObjectRecord =>
 const getString = (source: ObjectRecord, key: string): string | null =>
   typeof source[key] === 'string' ? source[key] : null;
 
+/** Devuelve el primer string no nulo entre los pares (objeto, key), en orden. */
+const pickString = (...lookups: [ObjectRecord, string][]): string | null => {
+  for (const [source, key] of lookups) {
+    const value = getString(source, key);
+    if (value !== null) {
+      return value;
+    }
+  }
+  return null;
+};
+
 const normalizeUser = (rawUser: unknown): User => {
   if (!isObjectRecord(rawUser)) {
     throw new Error('Invalid user response');
   }
 
   const metadata = isObjectRecord(rawUser.user_metadata) ? rawUser.user_metadata : {};
-  const email = getString(rawUser, 'email') ?? getString(metadata, 'email');
-  const fullName =
-    getString(rawUser, 'full_name') ??
-    getString(rawUser, 'fullName') ??
-    getString(metadata, 'full_name') ??
-    getString(metadata, 'name') ??
-    '';
 
   const user: User = {
     id: getString(rawUser, 'id') ?? '',
-    email: email ?? '',
-    full_name: fullName,
-    avatar_url:
-      getString(rawUser, 'avatar_url') ??
-      getString(rawUser, 'avatarUrl') ??
-      getString(metadata, 'avatar_url'),
+    email: pickString([rawUser, 'email'], [metadata, 'email']) ?? '',
+    full_name:
+      pickString(
+        [rawUser, 'full_name'],
+        [rawUser, 'fullName'],
+        [metadata, 'full_name'],
+        [metadata, 'name'],
+      ) ?? '',
+    avatar_url: pickString([rawUser, 'avatar_url'], [rawUser, 'avatarUrl'], [metadata, 'avatar_url']),
     created_at:
-      getString(rawUser, 'created_at') ??
-      getString(rawUser, 'createdAt') ??
-      new Date().toISOString(),
+      pickString([rawUser, 'created_at'], [rawUser, 'createdAt']) ?? new Date().toISOString(),
   };
 
   if (!user.id || !user.email) {
