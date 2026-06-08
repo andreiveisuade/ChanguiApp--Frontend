@@ -36,7 +36,7 @@ export const useCart = (): UseCartReturn => {
       setItems(data.items);
       setTotal(data.total);
       setSummary(data.summary);
-    } catch (err: any) {
+    } catch (err) {
       // 401 / sesión inválida: apiFetch ya limpió el storage y emitió el evento.
       // El AuthContext va a limpiar estado y el guard del tabs layout redirige a login.
       // No exponemos el error al usuario para evitar flicker visual.
@@ -63,7 +63,7 @@ export const useCart = (): UseCartReturn => {
     try {
       await CartRepository.updateItemQuantity(itemId, quantity);
       await fetchCart();
-    } catch (err: any) {
+    } catch (err) {
       setError(ErrorTranslationService.translate(err));
       setIsLoading(false);
     }
@@ -75,7 +75,7 @@ export const useCart = (): UseCartReturn => {
     try {
       await CartRepository.deleteItem(itemId);
       await fetchCart();
-    } catch (err: any) {
+    } catch (err) {
       setError(ErrorTranslationService.translate(err));
       setIsLoading(false);
     }

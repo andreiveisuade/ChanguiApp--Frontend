@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, ViewStyle, TextStyle } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing, radii } from '@/constants/theme';
+import { spacing, radii } from '@/constants/theme';
 
 export type InfoBoxVariant = 'info' | 'warning' | 'danger';
 

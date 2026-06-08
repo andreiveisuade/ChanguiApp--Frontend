@@ -76,6 +76,21 @@ describe('ErrorTranslationService', () => {
     expect(result.code).toBe('SERVER_ERROR');
   });
 
+  it('translates any 5xx status to SERVER_ERROR', () => {
+    const result = ErrorTranslationService.translate(new Error('Request failed with status 503'));
+    expect(result.code).toBe('SERVER_ERROR');
+  });
+
+  it('falls back to UNKNOWN for an unmapped status code', () => {
+    const result = ErrorTranslationService.translate(new Error('Request failed with status 418'));
+    expect(result.code).toBe('UNKNOWN');
+  });
+
+  it('extracts the status code from a string error', () => {
+    const result = ErrorTranslationService.translate('Request failed with status 404');
+    expect(result.code).toBe('NOT_FOUND');
+  });
+
   it('falls back to UNKNOWN for unexpected errors', () => {
     const error = new Error('Some random backend error');
     const result = ErrorTranslationService.translate(error);

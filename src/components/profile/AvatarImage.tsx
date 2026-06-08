@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts } from '@/constants/theme';
+import { colors } from '@/constants/theme';
 
 interface AvatarImageProps {
   uri?: string | null;

@@ -6,7 +6,7 @@ import { AppIcon } from '@/components/atoms/AppIcon';
 import AvatarImage from '@/components/profile/AvatarImage';
 import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { colors, spacing, radii } from '@/constants/theme';
+import { spacing, radii } from '@/constants/theme';
 import { User } from '@/types/auth';
 
 interface LogoutViewProps {

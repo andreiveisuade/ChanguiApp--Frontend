@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing, radii, touchTarget } from '@/constants/theme';
+import { colors, spacing, radii } from '@/constants/theme';
 
 export type ProfileButtonVariant = 'primary' | 'secondary' | 'danger' | 'warning' | 'disabled';
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, TextInput, StyleProp, ViewStyle } from 'react-native';
-import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import FormLabel from '@/components/forms/FormLabel';
 import InlineError from '@/components/forms/InlineError';
