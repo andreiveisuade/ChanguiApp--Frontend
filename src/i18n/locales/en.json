@@ -48,8 +48,26 @@
     "updatedNow": "Updated just now",
     "subtotal": "Subtotal",
     "checkout": "Checkout",
-    "checkoutHint": "Coming soon",
+    "checkoutHint": "Pay for your cart with Mercado Pago",
     "greeting": "Hello, {{name}}"
+  },
+  "checkout": {
+    "confirmingTitle": "Confirming your payment",
+    "confirmingSubtitle": "This may take a few seconds.",
+    "successTitle": "Payment confirmed!",
+    "successSubtitle": "Your purchase was saved to your history.",
+    "pendingTitle": "Payment in progress",
+    "pendingSubtitle": "We're waiting for Mercado Pago to confirm. You'll see it in your history.",
+    "timeoutTitle": "We couldn't confirm the payment",
+    "timeoutSubtitle": "If you completed the payment, it may take a few minutes to show up in your history.",
+    "viewHistory": "View my history",
+    "viewHistoryHint": "Opens the purchase history",
+    "goHome": "Back to home",
+    "goHomeHint": "Returns to the home screen",
+    "backToCart": "Back to cart",
+    "backToCartHint": "Returns to the cart",
+    "retry": "Retry",
+    "retryHint": "Checks the payment status again"
   },
   "auth": {
     "login": {
@@ -227,6 +245,7 @@
     "deleteCancelBtn": "Cancel and return"
   },
   "common": {
+    "ok": "Got it",
     "confirm": "Confirm",
     "cancel": "Cancel",
     "close": "Close",
@@ -284,6 +303,11 @@
     "date": "Date",
     "status": "Status",
     "quantity": "Quantity"
+  },
+  "pricing": {
+    "priceWithoutTax": "Price without tax",
+    "iva": "VAT ({{rate}})",
+    "total": "Total"
   },
   "forgotPassword": {
     "title": "Forgot your password?",

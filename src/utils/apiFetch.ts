@@ -14,7 +14,7 @@
 
 import AuthRepository from '@/repositories/AuthRepository';
 import { authEvents } from '@/utils/authEvents';
-import { AuthSessionExpiredError } from '@/types/errors';
+import { AuthSessionExpiredError, NetworkError } from '@/types/errors';
 import { API_URL } from '@/constants/api';
 
 export interface ApiFetchOptions extends Omit<RequestInit, 'headers'> {
@@ -45,14 +45,19 @@ export async function apiFetch(path: string, options: ApiFetchOptions = {}): Pro
     return handleSessionExpired();
   }
 
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${session.token}`,
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      ...options,
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+  } catch {
+    throw new NetworkError();
+  }
 
   if (response.status === 401) {
     return handleSessionExpired();

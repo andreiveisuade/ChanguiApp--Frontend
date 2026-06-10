@@ -4,11 +4,7 @@ import { useTranslation } from 'react-i18next';
 import ChanguiAppLogo from '@/../assets/logos/changuiapp-logo.svg';
 import { colors, fonts, spacing } from '@/constants/theme';
 
-type SplashSlideProps = {
-  onNext: () => void;
-};
-
-export function SplashSlide({ onNext }: SplashSlideProps): React.JSX.Element {
+export function SplashSlide(): React.JSX.Element {
   const { t } = useTranslation();
 
   return (

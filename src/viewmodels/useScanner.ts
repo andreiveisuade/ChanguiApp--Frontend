@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Vibration } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getProductByBarcode } from '@/repositories/ScannerRepository';
@@ -17,10 +17,14 @@ export const useScanner = (): UseScannerReturn => {
   const [scanned, setScanned] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  
+  // Synchronous lock ref to prevent multiple triggers in rapid succession
+  const isScanningRef = useRef<boolean>(false);
 
   const handleBarcodeScanned = async ({ data }: { data: string }): Promise<void> => {
-    if (scanned || loading) return;
+    if (isScanningRef.current || scanned || loading) return;
 
+    isScanningRef.current = true;
     setScanned(true);
     setLoading(true);
     setErrorMessage(null);
@@ -46,6 +50,7 @@ export const useScanner = (): UseScannerReturn => {
   };
 
   const resetScanner = (): void => {
+    isScanningRef.current = false;
     setScanned(false);
     setLoading(false);
     setErrorMessage(null);

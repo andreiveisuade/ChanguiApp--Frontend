@@ -1,14 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import CartRepository from '@/repositories/CartRepository';
-import { CartWithItems, CartItemWithProduct } from '@/types/domain';
+import { CartWithItems, CartItemWithProduct, TaxSummary } from '@/types/domain';
+
+const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
 import { AuthSessionExpiredError } from '@/types/errors';
+import { ErrorTranslationService } from '@/services/ErrorTranslationService';
+import { UserFriendlyError } from '@/types/errors';
 
 export type UseCartReturn = {
   cart: CartWithItems | null;
   items: CartItemWithProduct[];
   total: number;
+  summary: TaxSummary;
   isLoading: boolean;
-  error: string | null;
+  error: UserFriendlyError | null;
   refresh: () => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
@@ -18,8 +23,9 @@ export const useCart = (): UseCartReturn => {
   const [cart, setCart] = useState<CartWithItems | null>(null);
   const [items, setItems] = useState<CartItemWithProduct[]>([]);
   const [total, setTotal] = useState<number>(0);
+  const [summary, setSummary] = useState<TaxSummary>(EMPTY_SUMMARY);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<UserFriendlyError | null>(null);
 
   const fetchCart = useCallback(async () => {
     setIsLoading(true);
@@ -29,18 +35,15 @@ export const useCart = (): UseCartReturn => {
       setCart(data.cart);
       setItems(data.items);
       setTotal(data.total);
-    } catch (err: any) {
+      setSummary(data.summary);
+    } catch (err) {
       // 401 / sesión inválida: apiFetch ya limpió el storage y emitió el evento.
       // El AuthContext va a limpiar estado y el guard del tabs layout redirige a login.
       // No exponemos el error al usuario para evitar flicker visual.
       if (err instanceof AuthSessionExpiredError) {
         return;
       }
-      // El manejo de errores de red y HTTP se implementa en DEV-180
-      // (rama feat/DEV-35-DEV-180-error-handling, PR abierta en paralelo).
-      // Cuando DEV-180 se mergee, esta línea se reemplaza por:
-      // setError(ErrorTranslationService.translate(err));
-      console.error('[useCart] fetchCart:', err);
+      setError(ErrorTranslationService.translate(err));
     } finally {
       setIsLoading(false);
     }
@@ -60,12 +63,8 @@ export const useCart = (): UseCartReturn => {
     try {
       await CartRepository.updateItemQuantity(itemId, quantity);
       await fetchCart();
-    } catch (err: any) {
-      // El manejo de errores de red y HTTP se implementa en DEV-180
-      // (rama feat/DEV-35-DEV-180-error-handling, PR abierta en paralelo).
-      // Cuando DEV-180 se mergee, esta línea se reemplaza por:
-      // setError(ErrorTranslationService.translate(err));
-      console.error('[useCart] updateQuantity:', err);
+    } catch (err) {
+      setError(ErrorTranslationService.translate(err));
       setIsLoading(false);
     }
   }, [fetchCart]);
@@ -76,12 +75,8 @@ export const useCart = (): UseCartReturn => {
     try {
       await CartRepository.deleteItem(itemId);
       await fetchCart();
-    } catch (err: any) {
-      // El manejo de errores de red y HTTP se implementa en DEV-180
-      // (rama feat/DEV-35-DEV-180-error-handling, PR abierta en paralelo).
-      // Cuando DEV-180 se mergee, esta línea se reemplaza por:
-      // setError(ErrorTranslationService.translate(err));
-      console.error('[useCart] removeItem:', err);
+    } catch (err) {
+      setError(ErrorTranslationService.translate(err));
       setIsLoading(false);
     }
   }, [fetchCart]);
@@ -90,6 +85,7 @@ export const useCart = (): UseCartReturn => {
     cart,
     items,
     total,
+    summary,
     isLoading,
     error,
     refresh,

@@ -1,19 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
 import PurchaseRepository from '@/repositories/PurchaseRepository';
 import { Purchase } from '@/types/domain';
-import { AuthSessionExpiredError } from '@/types/errors';
+import { AuthSessionExpiredError, UserFriendlyError } from '@/types/errors';
+import { ErrorTranslationService } from '@/services/ErrorTranslationService';
 
 export type UsePurchaseHistoryReturn = {
   purchases: Purchase[];
   isLoading: boolean;
-  error: string | null;
+  error: UserFriendlyError | null;
   refresh: () => Promise<void>;
 };
 
 export const usePurchaseHistory = (): UsePurchaseHistoryReturn => {
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<UserFriendlyError | null>(null);
 
   const fetchPurchases = useCallback(async () => {
     setIsLoading(true);
@@ -27,11 +28,7 @@ export const usePurchaseHistory = (): UsePurchaseHistoryReturn => {
       if (err instanceof AuthSessionExpiredError) {
         return;
       }
-      // El manejo de errores de red y HTTP se unifica en DEV-180.
-      // Cuando se mergee, esta línea se reemplaza por:
-      // setError(ErrorTranslationService.translate(err));
-      console.error('[usePurchaseHistory] fetchPurchases:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(ErrorTranslationService.translate(err));
     } finally {
       setIsLoading(false);
     }

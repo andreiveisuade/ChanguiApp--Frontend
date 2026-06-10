@@ -4,7 +4,7 @@ import {
   Purchase,
   PurchaseDetail,
   PurchaseItem,
-  PurchaseSummary,
+  TaxSummary,
 } from '@/types/domain';
 
 interface RawPurchase {
@@ -27,7 +27,7 @@ interface RawPurchaseItem {
 
 interface RawPurchaseDetail extends RawPurchase {
   items?: RawPurchaseItem[];
-  summary?: PurchaseSummary;
+  summary?: TaxSummary;
 }
 
 /** Maps a raw backend purchase to the typed domain object. */

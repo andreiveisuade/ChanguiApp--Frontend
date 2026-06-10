@@ -4,11 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import useAuth from '@/viewmodels/useAuth';
 import useCart from '@/viewmodels/useCart';
+import useCheckout from '@/viewmodels/useCheckout';
 import { CartHeader } from '@/components/cart/CartHeader';
 import { CartItem } from '@/components/cart/CartItem';
 import { CartSummary } from '@/components/cart/CartSummary';
 import EmptyCartMessage from '@/components/home/EmptyCartMessage';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
+import LoadingOverlay from '@/components/feedback/LoadingOverlay';
 import { AppText } from '@/components/atoms/AppText';
 import { colors, spacing } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
@@ -17,13 +19,28 @@ export default function CartScreen(): React.JSX.Element {
   const router = useRouter();
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { items, total, isLoading, error, refresh, updateQuantity, removeItem } = useCart();
+  const { items, summary, isLoading, error, refresh, updateQuantity, removeItem } = useCart();
+  const { startCheckout, isStarting, error: checkoutError, clearError } = useCheckout();
 
   const userName = user?.full_name ?? t('home.defaultUser');
 
-  const handlePay = () => {
-    Alert.alert(t('cartScreen.checkout'), t('cartScreen.checkoutHint'));
+  const handlePay = async () => {
+    const result = await startCheckout();
+    if (result) {
+      router.push({
+        pathname: ROUTES.checkout.confirmation,
+        params: { preferenceId: result.preferenceId },
+      });
+    }
   };
+
+  React.useEffect(() => {
+    if (checkoutError) {
+      Alert.alert(checkoutError.title, checkoutError.message, [
+        { text: t('common.ok'), onPress: clearError },
+      ]);
+    }
+  }, [checkoutError, clearError, t]);
 
   const handleProfilePress = () => {
     router.push(ROUTES.tabs.settings);
@@ -73,10 +90,12 @@ export default function CartScreen(): React.JSX.Element {
               />
             ))}
 
-            <CartSummary subtotal={total} onPay={handlePay} />
+            <CartSummary summary={summary} onPay={handlePay} />
           </>
         )}
       </ScrollView>
+
+      <LoadingOverlay visible={isStarting} />
     </View>
   );
 }

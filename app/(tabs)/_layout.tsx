@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import useAuth from '@/viewmodels/useAuth';
+import { useCatalogSync } from '@/viewmodels/useCatalogSync';
 import { BottomNavbar } from '@/components/layout/BottomNavbar';
 import { colors, fonts } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
@@ -11,6 +12,9 @@ export default function TabsLayout(): React.JSX.Element {
   const { t } = useTranslation();
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
+
+  // Sincroniza el catálogo local en background una vez que hay sesión.
+  useCatalogSync(isAuthenticated && !isLoading);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {

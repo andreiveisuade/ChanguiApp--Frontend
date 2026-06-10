@@ -9,6 +9,7 @@ import useProfile from '@/viewmodels/useProfile';
 import { usePurchaseHistory } from '@/viewmodels/usePurchaseHistory';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
 import { ROUTES } from '@/constants/routes';
 import { Purchase } from '@/types/domain';
 import { formatARS } from '@/utils/currency';
@@ -67,10 +68,7 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
     if (error) {
       return (
         <View style={styles.stateContainer}>
-          <AppText variant="Body" style={styles.errorText}>{error}</AppText>
-          <Pressable onPress={refresh} style={styles.retryButton} accessibilityRole="button">
-            <AppText variant="Body" style={styles.retryText}>{t('common.retry')}</AppText>
-          </Pressable>
+          <ErrorMessage message={error} closeAccessibilityHint={t('common.retry')} onClose={refresh} />
         </View>
       );
     }
@@ -243,21 +241,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 40,
     padding: spacing.xl,
-  },
-  errorText: {
-    color: colors.error,
-    marginBottom: spacing.md,
-    textAlign: 'center',
-  },
-  retryButton: {
-    backgroundColor: colors.primary,
-    borderRadius: radii.md,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-  },
-  retryText: {
-    color: colors.white,
-    fontWeight: '700',
   },
   emptyTitle: {
     marginBottom: spacing.sm,

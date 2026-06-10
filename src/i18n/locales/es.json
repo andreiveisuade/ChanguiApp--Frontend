@@ -48,8 +48,26 @@
     "updatedNow": "Actualizado ahora",
     "subtotal": "Subtotal",
     "checkout": "Ir a pagar",
-    "checkoutHint": "Próximamente disponible",
+    "checkoutHint": "Pagá tu carrito con Mercado Pago",
     "greeting": "Hola, {{name}}"
+  },
+  "checkout": {
+    "confirmingTitle": "Confirmando tu pago",
+    "confirmingSubtitle": "Esto puede tardar unos segundos.",
+    "successTitle": "¡Pago confirmado!",
+    "successSubtitle": "Tu compra quedó registrada en tu historial.",
+    "pendingTitle": "Pago en proceso",
+    "pendingSubtitle": "Estamos esperando la confirmación de Mercado Pago. Vas a verla en tu historial.",
+    "timeoutTitle": "No pudimos confirmar el pago",
+    "timeoutSubtitle": "Si completaste el pago, puede tardar unos minutos en aparecer en tu historial.",
+    "viewHistory": "Ver mi historial",
+    "viewHistoryHint": "Abre el historial de compras",
+    "goHome": "Volver al inicio",
+    "goHomeHint": "Vuelve a la pantalla de inicio",
+    "backToCart": "Volver al carrito",
+    "backToCartHint": "Vuelve al carrito",
+    "retry": "Reintentar",
+    "retryHint": "Vuelve a verificar el estado del pago"
   },
   "auth": {
     "login": {
@@ -227,6 +245,7 @@
     "deleteCancelBtn": "Cancelar y volver"
   },
   "common": {
+    "ok": "Entendido",
     "confirm": "Confirmar",
     "cancel": "Cancelar",
     "close": "Cerrar",
@@ -284,6 +303,11 @@
     "date": "Fecha",
     "status": "Estado",
     "quantity": "Cantidad"
+  },
+  "pricing": {
+    "priceWithoutTax": "Precio sin IVA",
+    "iva": "IVA ({{rate}})",
+    "total": "Total"
   },
   "forgotPassword": {
     "title": "¿Olvidaste tu contraseña?",

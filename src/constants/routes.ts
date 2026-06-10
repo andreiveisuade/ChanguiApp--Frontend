@@ -3,10 +3,15 @@ export const ROUTES = {
   onboarding: '/onboarding',
   tabs: {
     home: '/(tabs)/home',
+    cart: '/(tabs)/cart',
+    scanner: '/(tabs)/scanner',
     history: '/(tabs)/history',
     settings: '/(tabs)/settings',
   },
   purchaseDetail: '/purchase-detail',
+  checkout: {
+    confirmation: '/checkout/confirmation',
+  },
   auth: {
     login: '/auth/login',
     register: '/auth/register',

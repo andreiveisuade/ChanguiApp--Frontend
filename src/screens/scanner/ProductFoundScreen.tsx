@@ -4,14 +4,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import AppHeader from '@/components/layout/AppHeader';
 import SuccessMessage from '@/components/feedback/SuccessMessage';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import SecondaryButton from '@/components/buttons/SecondaryButton';
 import { ProductCard } from '@/components/scanner/ProductCard';
 import { ProductNotFound } from '@/components/scanner/ProductNotFound';
 import { AppText } from '@/components/atoms/AppText';
+import { PriceBreakdown } from '@/components/pricing/PriceBreakdown';
 import useProductFound from '@/viewmodels/useProductFound';
 import { colors, radii, spacing } from '@/constants/theme';
-import { formatARS } from '@/utils/currency';
+import { formatRate } from '@/utils/currency';
 
 export default function ProductFoundScreen(): React.JSX.Element {
   const { t } = useTranslation();
@@ -19,10 +21,16 @@ export default function ProductFoundScreen(): React.JSX.Element {
     product,
     quantity,
     subtotal,
+    netSubtotal,
+    ivaSubtotal,
+    taxRate,
     incrementQuantity,
     decrementQuantity,
     goToScanner,
     goToCart,
+    isLoading,
+    errorMessage,
+    clearError,
   } = useProductFound();
 
   if (!product) {
@@ -41,11 +49,19 @@ export default function ProductFoundScreen(): React.JSX.Element {
     <View style={styles.root}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       <SafeAreaView style={styles.safeArea}>
-        <AppHeader onBack={goToScanner} />
+        <AppHeader onBack={isLoading ? undefined : goToScanner} />
 
         <SuccessMessage message={t('scanner.productFound')} />
 
         <View style={styles.content}>
+          {errorMessage ? (
+            <ErrorMessage
+              message={errorMessage}
+              closeAccessibilityHint={t('scanner.dismissError')}
+              onClose={clearError}
+            />
+          ) : null}
+
           <ProductCard product={product} showBarcode />
 
           <AppText variant="Body" style={styles.quantityLabel}>
@@ -56,7 +72,7 @@ export default function ProductFoundScreen(): React.JSX.Element {
               title="-"
               accessibilityHint={t('common.decrementQuantity')}
               onPress={decrementQuantity}
-              disabled={quantity <= 1}
+              disabled={quantity <= 1 || isLoading}
             />
             <AppText variant="H2" style={styles.quantityValue}>
               {quantity}
@@ -65,14 +81,18 @@ export default function ProductFoundScreen(): React.JSX.Element {
               title="+"
               accessibilityHint={t('common.incrementQuantity')}
               onPress={incrementQuantity}
+              disabled={isLoading}
             />
           </View>
 
-          <View style={styles.subtotalRow}>
-            <AppText variant="Body" style={styles.subtotalLabel}>
-              {t('scanner.subtotal')}
-            </AppText>
-            <AppText variant="H2">{formatARS(subtotal)}</AppText>
+          <View style={styles.breakdownBox}>
+            <PriceBreakdown
+              subtotalNet={netSubtotal}
+              taxLines={[
+                { label: t('pricing.iva', { rate: formatRate(taxRate) }), amount: ivaSubtotal },
+              ]}
+              total={subtotal}
+            />
           </View>
 
           <View style={styles.actions}>
@@ -80,11 +100,13 @@ export default function ProductFoundScreen(): React.JSX.Element {
               title={t('scanner.addToCart')}
               accessibilityHint={t('scanner.addToCartHint')}
               onPress={goToCart}
+              isLoading={isLoading}
             />
             <SecondaryButton
               title={t('scanner.scanAnother')}
               accessibilityHint={t('scanner.scanAnotherHint')}
               onPress={goToScanner}
+              disabled={isLoading}
             />
           </View>
         </View>
@@ -117,18 +139,12 @@ const styles = StyleSheet.create({
   quantityValue: {
     marginHorizontal: spacing.xxl,
   },
-  subtotalRow: {
-    alignItems: 'center',
+  breakdownBox: {
     backgroundColor: colors.muted,
     borderRadius: radii.md,
-    flexDirection: 'row',
-    height: 64,
-    justifyContent: 'space-between',
     marginTop: spacing.xl,
     paddingHorizontal: spacing.lg,
-  },
-  subtotalLabel: {
-    color: colors.textSecondary,
+    paddingVertical: spacing.md,
   },
   actions: {
     gap: spacing.lg,

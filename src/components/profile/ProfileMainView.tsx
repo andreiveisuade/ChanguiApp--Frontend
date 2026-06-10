@@ -5,7 +5,7 @@ import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import AvatarImage from '@/components/profile/AvatarImage';
 import SettingsCard from '@/components/profile/SettingsCard';
-import { colors, spacing, radii } from '@/constants/theme';
+import { spacing, radii } from '@/constants/theme';
 import { User } from '@/types/auth';
 
 interface ProfileMainViewProps {

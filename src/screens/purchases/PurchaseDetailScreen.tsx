@@ -6,6 +6,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { colors, radii, spacing, touchTarget } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
+import ErrorMessage from '@/components/feedback/ErrorMessage';
 import { PurchaseItemRow } from '@/components/purchases/PurchaseItemRow';
 import { usePurchaseDetail } from '@/viewmodels/usePurchaseDetail';
 import { formatARS } from '@/utils/currency';
@@ -28,10 +29,7 @@ export function PurchaseDetailScreen(): React.JSX.Element {
     if (error) {
       return (
         <View style={styles.stateContainer}>
-          <AppText variant="Body" style={styles.errorText}>{error}</AppText>
-          <Pressable onPress={refresh} style={styles.retryButton} accessibilityRole="button">
-            <AppText variant="Body" style={styles.retryText}>{t('common.retry')}</AppText>
-          </Pressable>
+          <ErrorMessage message={error} closeAccessibilityHint={t('common.retry')} onClose={refresh} />
         </View>
       );
     }
@@ -199,21 +197,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: spacing.xl,
-  },
-  errorText: {
-    color: colors.error,
-    marginBottom: spacing.md,
-    textAlign: 'center',
-  },
-  retryButton: {
-    backgroundColor: colors.primary,
-    borderRadius: radii.md,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-  },
-  retryText: {
-    color: colors.white,
-    fontWeight: '700',
   },
   emptySubtitle: {
     opacity: 0.7,

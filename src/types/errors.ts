@@ -11,3 +11,17 @@ export class AuthSessionExpiredError extends Error {
     this.name = 'AuthSessionExpiredError';
   }
 }
+
+export type UserFriendlyError = {
+  title: string;
+  message: string;
+  actionLabel?: string;
+  code: string;
+};
+
+export class NetworkError extends Error {
+  constructor(message = 'Network error') {
+    super(message);
+    this.name = 'NetworkError';
+  }
+}
