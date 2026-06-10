@@ -51,21 +51,41 @@ export interface ShoppingListItem {
   created_at?: string;
 }
 
+export type PaymentStatus = 'pending' | 'completed' | 'failed';
+
 export interface Purchase {
   id: string;
-  user_id: string;
-  store_name: string;
+  store_name: string | null;
   date: string;
   total: number;
-  status: string;
-  created_at?: string;
+  status: PaymentStatus;
+  // Solo disponible en el detalle; el listado no devuelve el conteo de items.
+  item_count?: number;
 }
 
 export interface PurchaseItem {
   id: string;
   purchase_id: string;
-  product_id: string;
   product_name: string;
+  barcode: string;
   quantity: number;
   unit_price: number;
+}
+
+export interface PurchaseTaxLine {
+  rate: number;
+  label: string;
+  base: number;
+  amount: number;
+}
+
+export interface PurchaseSummary {
+  subtotal_net: number;
+  taxes: PurchaseTaxLine[];
+  total: number;
+}
+
+export interface PurchaseDetail extends Purchase {
+  items: PurchaseItem[];
+  summary?: PurchaseSummary;
 }

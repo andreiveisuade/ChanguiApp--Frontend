@@ -1,241 +1,151 @@
-import React, { useState, useMemo } from 'react';
-import { ActivityIndicator, FlatList, Pressable, RefreshControl, StyleSheet, TextInput, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { FlatList, Pressable, RefreshControl, StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, radii, spacing } from '@/constants/theme';
 import { useRouter } from 'expo-router';
-import HistoryHeader from '@/components/layout/HistoryHeader'; 
+import { colors, fonts, radii, spacing } from '@/constants/theme';
+import HistoryHeader from '@/components/layout/HistoryHeader';
+import { PurchaseCard } from '@/components/purchases/PurchaseCard';
 import useProfile from '@/viewmodels/useProfile';
 import { usePurchaseHistory } from '@/viewmodels/usePurchaseHistory';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
+import { ROUTES } from '@/constants/routes';
+import { Purchase } from '@/types/domain';
+import { formatARS } from '@/utils/currency';
 
-const filterOptions = ['thisWeek', 'thisMonth', 'thisYear'] as const;
+const FILTERS = ['thisWeek', 'thisMonth', 'thisYear'] as const;
+type DateFilter = (typeof FILTERS)[number];
+
+/** Filtra por ventana temporal usando created_at (lo único confiable que da el listado). */
+function withinFilter(dateIso: string, filter: DateFilter): boolean {
+  const date = new Date(dateIso);
+  if (Number.isNaN(date.getTime())) return false;
+  const now = new Date();
+  if (filter === 'thisWeek') {
+    const diffDays = (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
+    return diffDays >= 0 && diffDays <= 7;
+  }
+  if (filter === 'thisMonth') {
+    return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+  }
+  return date.getFullYear() === now.getFullYear();
+}
 
 export function PurchaseHistoryScreen(): React.JSX.Element {
-  const [search, setSearch] = useState<string>('');
-  const [selectedFilter, setSelectedFilter] = useState<typeof filterOptions[number]>('thisYear');
-
-  const [expandedCardId, setExpandedCardId] = useState<string | null>(null); 
-
   const { t } = useTranslation();
   const router = useRouter();
   const { profile } = useProfile();
-  
-  // Traemos los datos del backend a través del ViewModel
-  const { purchases, isLoading, error, refetch } = usePurchaseHistory();
+  const { purchases, isLoading, error, refresh } = usePurchaseHistory();
 
-  // Calculamos los totales reales en base a la data
+  const [search, setSearch] = useState<string>('');
+  const [filter, setFilter] = useState<DateFilter>('thisYear');
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return purchases.filter((p) => {
+      if (!withinFilter(p.date, filter)) return false;
+      if (!q) return true;
+      const store = (p.store_name ?? '').toLowerCase();
+      return store.includes(q) || String(p.id).toLowerCase().includes(q);
+    });
+  }, [purchases, search, filter]);
+
   const summary = useMemo(() => {
-    const totalSpent = purchases.reduce((acc, p) => acc + (p.total || 0), 0);
-    const completedCount = purchases.filter(p => p.status === 'COMPLETED').length;
-    return {
-      totalSpent,
-      completedCount,
-      totalPurchases: purchases.length,
-    };
-  }, [purchases]);
-  
-  const userName = profile?.full_name ?? t('home.defaultUser', { defaultValue: 'Usuario' });
+    const totalSpent = filtered.reduce((acc, p) => acc + p.total, 0);
+    const completedCount = filtered.filter((p) => p.status === 'completed').length;
+    return { totalSpent, completedCount };
+  }, [filtered]);
 
-  // UI para cuando la lista está vacía o cargando
-  const renderEmptyState = () => {
+  const userName = profile?.full_name ?? t('home.defaultUser');
+
+  const goToDetail = (purchase: Purchase): void => {
+    router.push({ pathname: '/purchase-detail', params: { id: String(purchase.id) } });
+  };
+
+  const renderEmpty = (): React.JSX.Element | null => {
     if (isLoading) return null;
     if (error) {
       return (
-        <View style={styles.emptyContainer}>
-          <AppText variant="Body" style={{ color: colors.error, marginBottom: 16 }}>{error}</AppText>
-          <Pressable onPress={refetch} style={styles.filterButtonActive}>
-            <AppText variant="Body" style={{ color: colors.white, padding: 8 }}>Reintentar</AppText>
+        <View style={styles.stateContainer}>
+          <AppText variant="Body" style={styles.errorText}>{error}</AppText>
+          <Pressable onPress={refresh} style={styles.retryButton} accessibilityRole="button">
+            <AppText variant="Body" style={styles.retryText}>{t('common.retry')}</AppText>
           </Pressable>
         </View>
       );
     }
     return (
-      <View style={styles.emptyContainer}>
-        <AppText variant="H3" style={{ textAlign: 'center', marginBottom: 8 }}>
-          {t('common.emptyTitle', { defaultValue: 'No hay nada acá' })}
-        </AppText>
-        <AppText variant="Body" style={{ textAlign: 'center', opacity: 0.7 }}>
-          {t('common.emptySubtitle', { defaultValue: 'Todavía no hay contenido para mostrar' })}
-        </AppText>
+      <View style={styles.stateContainer}>
+        <AppText variant="H3" style={styles.emptyTitle}>{t('historyScreen.emptyTitle')}</AppText>
+        <AppText variant="Body" style={styles.emptySubtitle}>{t('historyScreen.emptySubtitle')}</AppText>
       </View>
     );
   };
 
   return (
     <View style={styles.page}>
-      
-      <HistoryHeader userName={userName} onProfilePress={() => router.push('/settings')} />
-      <View style={styles.headerDivider} />
-
+      <HistoryHeader userName={userName} onProfilePress={() => router.push(ROUTES.tabs.settings)} />
       <FlatList
-        data={purchases}
+        data={filtered}
         keyExtractor={(item) => String(item.id)}
-        contentContainerStyle={styles.pageContent}
-        ListEmptyComponent={renderEmptyState}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={refetch} tintColor={colors.primary} />
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={refresh}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+          />
         }
         ListHeaderComponent={
-          <>
-            <View style={styles.titleContainer}>
-              <AppText variant="Display" style={styles.mainTitle}>Historial de compras</AppText>
-              <AppText variant="Body" style={styles.subTitle}>{summary.totalPurchases} compras realizadas</AppText>
-            </View>
-
-            <View style={styles.combinedSummaryContainer}>
-              <View style={styles.summaryColumn}>
-                <AppText variant="Body" style={styles.summaryLabel}>Total gastado</AppText>
-                <AppText variant="Display" style={styles.summaryValue}>${summary.totalSpent}</AppText>
+          <View>
+            <View style={styles.summary}>
+              <View style={styles.summaryCol}>
+                <AppText variant="Label" style={styles.summaryLabel}>{t('historyScreen.totalSpent')}</AppText>
+                <AppText variant="Display" style={styles.summaryValue}>{formatARS(summary.totalSpent)}</AppText>
               </View>
               <View style={styles.summaryDivider} />
-              <View style={styles.summaryColumn}>
-                <AppText variant="Body" style={styles.summaryLabel}>Compras completadas</AppText>
+              <View style={styles.summaryCol}>
+                <AppText variant="Label" style={styles.summaryLabel}>{t('historyScreen.completed')}</AppText>
                 <AppText variant="Display" style={styles.summaryValue}>{summary.completedCount}</AppText>
               </View>
             </View>
 
             <View style={styles.searchContainer}>
-              <AppIcon color={colors.textSecondary} name="buscar" size={18} />
+              <AppIcon name="buscar" size={18} color={colors.textSecondary} />
               <TextInput
                 accessibilityLabel={t('historyScreen.searchA11y')}
-                onChangeText={setSearch}
-                placeholder="Buscar por tienda o número de orden"
+                placeholder={t('historyScreen.searchPlaceholder')}
                 placeholderTextColor={colors.textSecondary}
-                style={styles.searchInput}
                 value={search}
+                onChangeText={setSearch}
+                style={styles.searchInput}
               />
             </View>
 
             <View style={styles.filtersRow}>
-              {filterOptions.map((option, index) => {
-                const isActive = selectedFilter === option;
-                const label = option === 'thisWeek' ? 'Esta semana' : option === 'thisMonth' ? 'Este mes' : 'Este año';
-                
+              {FILTERS.map((option) => {
+                const active = filter === option;
                 return (
                   <Pressable
                     key={option}
                     accessibilityRole="button"
-                    onPress={() => setSelectedFilter(option)}
-                    style={[
-                      styles.filterButton,
-                      isActive && styles.filterButtonActive,
-                      index < filterOptions.length - 1 ? styles.filterButtonSpacing : null,
-                    ]}
+                    onPress={() => setFilter(option)}
+                    style={[styles.filterButton, active && styles.filterButtonActive]}
                   >
-                    <AppText variant="Body" style={[styles.filterText, isActive && styles.filterTextActive]}>
-                      {label}
+                    <AppText variant="Body" style={[styles.filterText, active && styles.filterTextActive]}>
+                      {t(`historyScreen.filters.${option}`)}
                     </AppText>
                   </Pressable>
                 );
               })}
             </View>
-          </>
+          </View>
         }
-        renderItem={({ item }) => {
-          const isExpanded = expandedCardId === String(item.id);
-          const isCompleted = item.status === 'COMPLETED';
-          
-          const dateObj = new Date(item.created_at || Date.now());
-          const dateStr = dateObj.toLocaleDateString();
-          const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-          return (
-            <View style={[styles.purchaseCard, isExpanded && styles.purchaseCardExpanded]}>
-              <Pressable
-                accessibilityRole="button"
-                style={styles.purchaseHeader}
-                onPress={() => setExpandedCardId(isExpanded ? null : String(item.id))}
-              >
-                <View style={styles.cardRow}>
-                  <View style={styles.cardHeaderLeft}>
-                    <AppText variant="Display" style={styles.storeName}>{item.store_name}</AppText>
-                    <View style={[styles.statusBadge, !isCompleted && { backgroundColor: '#FEF3C7' }]}>
-                      <AppText variant="Label" style={[styles.statusTextSuccess, !isCompleted && { color: '#92400E' }]}>
-                        {item.status}
-                      </AppText>
-                    </View>
-                  </View>
-                  <AppText variant="Display" style={styles.cardTotalAmount}>
-                    ${item.total}
-                  </AppText>
-                </View>
-
-                <View style={[styles.cardRow, { marginTop: 4 }]}>
-                  <AppText variant="Body" style={styles.orderId}>{String(item.id)}</AppText>
-                  <AppIcon name={isExpanded ? 'arriba' : 'abajo'} size={20} color={colors.textSecondary} />
-                </View>
-
-                <View style={styles.cardMetaRow}>
-                  <View style={styles.metaItem}>
-                    <AppIcon name="calendario" size={14} color={colors.textSecondary} />
-                    <AppText variant="Body" style={styles.metaText}>{dateStr} • {timeStr}</AppText>
-                  </View>
-                  <View style={styles.metaItem}>
-                    <AppIcon name="ubicacion" size={14} color={colors.textSecondary} />
-                    <AppText variant="Body" style={styles.metaText}>{item.store_location || 'Ubicación no disponible'}</AppText>
-                  </View>
-                </View>
-              </Pressable>
-
-              {isExpanded && (
-                <View style={styles.expandedContent}>
-                  <View style={styles.cardDivider} />
-                  
-                  <View style={styles.paymentMethodRow}>
-                    <AppIcon name="tarjeta" size={16} color={colors.textSecondary} />
-                    <AppText variant="Body" style={styles.paymentMethodText}>
-                      Método de pago: <AppText variant="Body" style={styles.paymentMethodBold}>{item.payment_method || 'No especificado'}</AppText>
-                    </AppText>
-                  </View>
-
-                  <View style={styles.cardDivider} />
-
-                  <View style={styles.itemsHeader}>
-                    <AppText variant="Body" style={styles.itemsHeaderText}>Productos ({(item.items || []).length})</AppText>
-                  </View>
-                  
-                  {(item.items || []).map((product) => (
-                    <View key={String(product.id)} style={styles.productCard}>
-                      <View style={styles.productRowTop}>
-                        <AppText variant="Body" style={styles.productName}>{product.product_name}</AppText>
-                        <AppText variant="Body" style={styles.productPriceTotal}>
-                          ${product.price * product.quantity}
-                        </AppText>
-                      </View>
-                      <AppText variant="Body" style={styles.productPriceUnit}>
-                        Cantidad: {product.quantity} • ${product.price} c/u
-                      </AppText>
-                    </View>
-                  ))}
-
-                  <View style={styles.totalsContainer}>
-                    <View style={styles.feeRow}>
-                      <AppText variant="Body" style={styles.feeLabel}>Subtotal</AppText>
-                      <AppText variant="Body" style={styles.feeValue}>${item.subtotal}</AppText>
-                    </View>
-                    <View style={styles.feeRow}>
-                      <AppText variant="Body" style={styles.feeLabel}>Cargo por servicio</AppText>
-                      <AppText variant="Body" style={styles.feeValue}>${item.service_fee}</AppText>
-                    </View>
-                    <View style={styles.cardDivider} />
-                    <View style={styles.totalRow}>
-                      <AppText variant="Display" style={styles.totalLabel}>Total</AppText>
-                      <AppText variant="Display" style={styles.totalFinalValue}>${item.total}</AppText>
-                    </View>
-                  </View>
-
-                  <Pressable style={styles.downloadButton} onPress={() => {}}>
-                    <AppIcon name="descargar" size={20} color={colors.white} />
-                    <AppText variant="Body" style={styles.downloadButtonText}>
-                      Descargar comprobante
-                    </AppText>
-                  </Pressable>
-                </View>
-              )}
-            </View>
-          );
-        }}
+        renderItem={({ item }) => <PurchaseCard purchase={item} onPress={() => goToDetail(item)} />}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListEmptyComponent={renderEmpty}
       />
     </View>
   );
@@ -243,77 +153,55 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   page: {
-    backgroundColor: colors.white, 
+    backgroundColor: colors.white,
     flex: 1,
   },
-  headerDivider: {
-    height: 1,
-    backgroundColor: colors.border || '#E5E7EB',
-    width: '100%',
-  },
-  pageContent: {
+  content: {
+    flexGrow: 1,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
-    paddingBottom: spacing.xxl,
+    paddingBottom: 100,
   },
-  titleContainer: {
-    marginBottom: spacing.lg,
-  },
-  mainTitle: {
-    color: colors.textPrimary,
-    fontFamily: fonts.display,
-    fontSize: 24,
-    fontWeight: '800',
-    marginBottom: 4,
-  },
-  subTitle: {
-    color: colors.textSecondary,
-    fontFamily: fonts.body,
-    fontSize: 14,
-  },
-  combinedSummaryContainer: {
+  summary: {
     alignItems: 'center',
-    backgroundColor: '#EEF4FF',
-    borderRadius: 24,
+    backgroundColor: colors.surface,
+    borderRadius: radii.lg,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: spacing.xl,
-    paddingVertical: spacing.lg,
+    marginBottom: spacing.lg,
     paddingHorizontal: spacing.md,
+    paddingVertical: spacing.lg,
   },
-  summaryColumn: {
+  summaryCol: {
     alignItems: 'center',
     flex: 1,
   },
   summaryDivider: {
-    backgroundColor: '#D0DDF7',
+    backgroundColor: colors.border,
     height: '100%',
     marginHorizontal: spacing.sm,
     width: 1,
   },
   summaryLabel: {
-    color: colors.textSecondary,
-    fontFamily: fonts.body,
-    fontSize: 13,
     marginBottom: spacing.xs,
   },
   summaryValue: {
     color: colors.textPrimary,
     fontFamily: fonts.display,
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: '800',
   },
   searchContainer: {
     alignItems: 'center',
     backgroundColor: colors.white,
+    borderColor: colors.border,
     borderRadius: radii.lg,
     borderWidth: 1,
-    borderColor: colors.border || '#E5E7EB',
     flexDirection: 'row',
-    paddingHorizontal: spacing.md,
+    gap: spacing.sm,
     height: 48,
     marginBottom: spacing.md,
-    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
   },
   searchInput: {
     color: colors.textPrimary,
@@ -324,21 +212,19 @@ const styles = StyleSheet.create({
   },
   filtersRow: {
     flexDirection: 'row',
+    gap: spacing.sm,
     marginBottom: spacing.xl,
   },
   filterButton: {
     alignItems: 'center',
-    backgroundColor: colors.inputBackground || '#F3F4F6',
+    backgroundColor: colors.inputBackground,
     borderRadius: 18,
+    height: 36,
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
-    height: 36,
-  },
-  filterButtonSpacing: {
-    marginRight: spacing.sm,
   },
   filterButtonActive: {
-    backgroundColor: '#D84B47', 
+    backgroundColor: colors.primary,
   },
   filterText: {
     color: colors.textPrimary,
@@ -349,201 +235,38 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: '700',
   },
-  emptyContainer: {
+  separator: {
+    height: spacing.md,
+  },
+  stateContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: spacing.xl,
     marginTop: 40,
+    padding: spacing.xl,
   },
-  purchaseCard: {
-    backgroundColor: colors.white,
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    borderColor: colors.border || '#E5E7EB',
+  errorText: {
+    color: colors.error,
     marginBottom: spacing.md,
-    padding: spacing.lg,
+    textAlign: 'center',
   },
-  purchaseCardExpanded: {
-    borderColor: '#080808',
-    borderWidth: 1.5,
-  },
-  purchaseHeader: {
-    width: '100%',
-  },
-  cardRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-  },
-  cardHeaderLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  storeName: {
-    color: colors.textPrimary,
-    fontFamily: fonts.display,
-    fontSize: 16,
-    fontWeight: '800',
-  },
-  cardTotalAmount: {
-    color: colors.textPrimary,
-    fontFamily: fonts.display,
-    fontSize: 18,
-    fontWeight: '800',
-  },
-  statusBadge: {
-    borderRadius: radii.sm,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    backgroundColor: '#E6F4EA',
-  },
-  statusTextSuccess: {
-    fontFamily: fonts.body,
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#137333',
-  },
-  orderId: {
-    color: colors.textSecondary,
-    fontFamily: fonts.body,
-    fontSize: 13,
-  },
-  cardMetaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: spacing.md,
-    gap: spacing.md,
-  },
-  metaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  metaText: {
-    color: colors.textSecondary,
-    fontFamily: fonts.body,
-    fontSize: 12,
-  },
-  expandedContent: {
-    marginTop: spacing.xs,
-  },
-  cardDivider: {
-    backgroundColor: colors.border || '#E5E7EB',
-    height: 1,
-    width: '100%',
-    marginVertical: spacing.md,
-  },
-  paymentMethodRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  paymentMethodText: {
-    color: colors.textSecondary,
-    fontFamily: fonts.body,
-    fontSize: 13,
-  },
-  paymentMethodBold: {
-    color: colors.textPrimary,
-    fontFamily: fonts.body,
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  itemsHeader: {
-    marginBottom: spacing.md,
-  },
-  itemsHeaderText: {
-    color: colors.textPrimary,
-    fontFamily: fonts.body,
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  productCard: {
-    backgroundColor: '#F9FAFB',
+  retryButton: {
+    backgroundColor: colors.primary,
     borderRadius: radii.md,
-    padding: spacing.md,
-    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
   },
-  productRowTop: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 2,
-  },
-  productName: {
-    color: colors.textPrimary,
-    flex: 1,
-    fontFamily: fonts.body,
-    fontSize: 14,
-    fontWeight: '700',
-    marginRight: spacing.sm,
-  },
-  productPriceTotal: {
-    color: colors.textPrimary,
-    fontFamily: fonts.body,
-    fontSize: 14,
-    fontWeight: '800',
-  },
-  productPriceUnit: {
-    color: colors.textSecondary,
-    fontFamily: fonts.body,
-    fontSize: 13,
-  },
-  totalsContainer: {
-    marginBottom: spacing.lg,
-  },
-  feeRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  feeLabel: {
-    color: colors.textSecondary,
-    fontFamily: fonts.body,
-    fontSize: 13,
-  },
-  feeValue: {
-    color: colors.textPrimary,
-    fontFamily: fonts.body,
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  totalRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  totalLabel: {
-    color: colors.textPrimary,
-    fontFamily: fonts.display,
-    fontSize: 16,
-    fontWeight: '800',
-  },
-  totalFinalValue: {
-    color: colors.textPrimary,
-    fontFamily: fonts.display,
-    fontSize: 18,
-    fontWeight: '800',
-  },
-  downloadButton: {
-    backgroundColor: '#D84B47',
-    borderRadius: radii.md,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    gap: spacing.sm,
-  },
-  downloadButtonText: {
+  retryText: {
     color: colors.white,
-    fontFamily: fonts.body,
-    fontSize: 15,
     fontWeight: '700',
-  }
+  },
+  emptyTitle: {
+    marginBottom: spacing.sm,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    opacity: 0.7,
+    textAlign: 'center',
+  },
 });
 
 export default PurchaseHistoryScreen;
