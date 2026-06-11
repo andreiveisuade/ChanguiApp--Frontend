@@ -23,7 +23,7 @@ export const usePurchaseHistory = (): UsePurchaseHistoryReturn => {
       const data = await PurchaseRepository.getPurchases();
       setPurchases(data);
     } catch (err) {
-      // 401 / sesión inválida: apiFetch ya limpió el storage y emitió el evento.
+      // 401 / sesión inválida: el httpClient ya limpió el storage y emitió el evento.
       // El AuthContext limpia estado y el guard del tabs layout redirige a login.
       if (err instanceof AuthSessionExpiredError) {
         return;

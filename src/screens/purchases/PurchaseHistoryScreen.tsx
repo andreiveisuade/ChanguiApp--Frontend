@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { FlatList, Pressable, RefreshControl, StyleSheet, TextInput, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, RefreshControl, StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { colors, fonts, radii, spacing } from '@/constants/theme';
@@ -23,8 +23,12 @@ function withinFilter(dateIso: string, filter: DateFilter): boolean {
   if (Number.isNaN(date.getTime())) return false;
   const now = new Date();
   if (filter === 'thisWeek') {
-    const diffDays = (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
-    return diffDays >= 0 && diffDays <= 7;
+    // Semana calendario (desde el lunes), coherente con thisMonth/thisYear.
+    const startOfWeek = new Date(now);
+    startOfWeek.setHours(0, 0, 0, 0);
+    const daysFromMonday = (now.getDay() + 6) % 7; // 0 = lunes ... 6 = domingo
+    startOfWeek.setDate(now.getDate() - daysFromMonday);
+    return date >= startOfWeek;
   }
   if (filter === 'thisMonth') {
     return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
@@ -61,11 +65,17 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
   const userName = profile?.full_name ?? t('home.defaultUser');
 
   const goToDetail = (purchase: Purchase): void => {
-    router.push({ pathname: '/purchase-detail', params: { id: String(purchase.id) } });
+    router.push({ pathname: ROUTES.purchaseDetail, params: { id: String(purchase.id) } });
   };
 
   const renderEmpty = (): React.JSX.Element | null => {
-    if (isLoading) return null;
+    if (isLoading) {
+      return (
+        <View style={styles.stateContainer}>
+          <ActivityIndicator color={colors.primary} size="large" />
+        </View>
+      );
+    }
     if (error) {
       return (
         <View style={styles.stateContainer}>
@@ -91,7 +101,7 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
-            refreshing={isLoading}
+            refreshing={isLoading && purchases.length > 0}
             onRefresh={refresh}
             tintColor={colors.primary}
             colors={[colors.primary]}

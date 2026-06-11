@@ -20,7 +20,7 @@ jest.mock('react-i18next', () => ({
 const makePurchase = (overrides: Partial<Purchase> = {}): Purchase => ({
   id: '1',
   store_name: 'Coto',
-  date: '2026-06-01',
+  date: '2026-06-01T12:00:00Z',
   total: 12500,
   status: 'completed',
   ...overrides,

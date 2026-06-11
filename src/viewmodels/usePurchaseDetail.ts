@@ -27,7 +27,7 @@ export const usePurchaseDetail = (id: string | undefined): UsePurchaseDetailRetu
       const data = await PurchaseRepository.getPurchaseById(id);
       setPurchase(data);
     } catch (err) {
-      // 401 / sesión inválida: apiFetch ya limpió el storage y emitió el evento.
+      // 401 / sesión inválida: el httpClient ya limpió el storage y emitió el evento.
       if (err instanceof AuthSessionExpiredError) {
         return;
       }
