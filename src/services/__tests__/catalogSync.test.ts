@@ -1,19 +1,25 @@
 import { syncCatalog } from '../catalogSync';
-import { apiFetch } from '@/utils/apiFetch';
+import httpClient from '@/config/clients';
 import * as ProductCatalogRepository from '@/repositories/ProductCatalogRepository';
 
-jest.mock('@/utils/apiFetch', () => ({ apiFetch: jest.fn() }));
+jest.mock('@/config/clients', () => ({
+  __esModule: true,
+  default: {
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+  },
+}));
 jest.mock('@/repositories/ProductCatalogRepository', () => ({
   getSyncedAt: jest.fn(),
   setSyncedAt: jest.fn(),
   upsertProducts: jest.fn(),
 }));
 
-const mockedApiFetch = jest.mocked(apiFetch);
+const mockedGet = httpClient.get as jest.Mock;
 const mockedRepo = jest.mocked(ProductCatalogRepository);
-
-const jsonResponse = (body: unknown): Response =>
-  ({ json: async () => body }) as unknown as Response;
+const axiosResponse = <T>(data: T) => ({ data });
 
 const product = (barcode: string, updated_at: string) => ({
   id: `id-${barcode}`,
@@ -35,8 +41,8 @@ describe('catalogSync.syncCatalog', () => {
 
   it('primer arranque (sin cursor): baja todo, upsertea y guarda el cursor final', async () => {
     mockedRepo.getSyncedAt.mockResolvedValue(null);
-    mockedApiFetch.mockResolvedValueOnce(
-      jsonResponse({
+    mockedGet.mockResolvedValueOnce(
+      axiosResponse({
         products: [product('111', '2026-06-08T10:00:00.000Z')],
         count: 1,
         has_more: false,
@@ -48,16 +54,18 @@ describe('catalogSync.syncCatalog', () => {
 
     expect(result).toEqual({ synced: 1 });
     // sin cursor, no manda updated_since
-    expect(mockedApiFetch.mock.calls[0][0]).not.toContain('updated_since');
+    expect(mockedGet).toHaveBeenCalledWith('/api/products', {
+      params: { limit: 500, offset: 0 },
+    });
     expect(mockedRepo.upsertProducts).toHaveBeenCalledTimes(1);
     expect(mockedRepo.setSyncedAt).toHaveBeenCalledWith('2026-06-08T10:00:00.000Z');
   });
 
   it('pagina mientras has_more y acumula el offset', async () => {
     mockedRepo.getSyncedAt.mockResolvedValue(null);
-    mockedApiFetch
+    mockedGet
       .mockResolvedValueOnce(
-        jsonResponse({
+        axiosResponse({
           products: [product('1', '2026-06-08T09:00:00.000Z'), product('2', '2026-06-08T09:30:00.000Z')],
           count: 2,
           has_more: true,
@@ -65,7 +73,7 @@ describe('catalogSync.syncCatalog', () => {
         }),
       )
       .mockResolvedValueOnce(
-        jsonResponse({
+        axiosResponse({
           products: [product('3', '2026-06-08T10:00:00.000Z')],
           count: 1,
           has_more: false,
@@ -76,22 +84,24 @@ describe('catalogSync.syncCatalog', () => {
     const result = await syncCatalog();
 
     expect(result).toEqual({ synced: 3 });
-    expect(mockedApiFetch).toHaveBeenCalledTimes(2);
-    expect(mockedApiFetch.mock.calls[0][0]).toContain('offset=0');
-    expect(mockedApiFetch.mock.calls[1][0]).toContain('offset=2');
+    expect(mockedGet).toHaveBeenCalledTimes(2);
+    expect(mockedGet.mock.calls[0][1].params.offset).toBe(0);
+    expect(mockedGet.mock.calls[1][1].params.offset).toBe(2);
     expect(mockedRepo.setSyncedAt).toHaveBeenCalledWith('2026-06-08T10:00:00.000Z');
   });
 
   it('con cursor previo manda updated_since y no reescribe el cursor si no hay cambios', async () => {
     mockedRepo.getSyncedAt.mockResolvedValue('2026-06-07T00:00:00.000Z');
-    mockedApiFetch.mockResolvedValueOnce(
-      jsonResponse({ products: [], count: 0, has_more: false, next_cursor: null }),
+    mockedGet.mockResolvedValueOnce(
+      axiosResponse({ products: [], count: 0, has_more: false, next_cursor: null }),
     );
 
     const result = await syncCatalog();
 
     expect(result).toEqual({ synced: 0 });
-    expect(mockedApiFetch.mock.calls[0][0]).toContain('updated_since=2026-06-07T00%3A00%3A00.000Z');
+    expect(mockedGet).toHaveBeenCalledWith('/api/products', {
+      params: { limit: 500, offset: 0, updated_since: '2026-06-07T00:00:00.000Z' },
+    });
     expect(mockedRepo.upsertProducts).not.toHaveBeenCalled();
     expect(mockedRepo.setSyncedAt).not.toHaveBeenCalled();
   });
