@@ -95,6 +95,27 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
             <AppIcon name="check-circulo" size={22} color="#10B981" />
           )}
         </Pressable>
+
+        {/* Tarjeta de Portugués */}
+        <Pressable
+          onPress={() => setTempLanguage('pt')}
+          style={[
+            styles.optionCard,
+            tempLanguage === 'pt' ? styles.optionCardSelected : null,
+          ]}
+        >
+          <View style={styles.optionLeft}>
+            <AppText variant="H2" style={styles.flagEmoji}>
+              🇧🇷
+            </AppText>
+            <AppText variant="H3" style={styles.optionLabel}>
+              {t('lang_pt', { defaultValue: 'Português' })}
+            </AppText>
+          </View>
+          {tempLanguage === 'pt' && (
+            <AppIcon name="check-circulo" size={22} color="#10B981" />
+          )}
+        </Pressable>
       </View>
 
       {/* Sección 2: Tamaño de Fuente */}
