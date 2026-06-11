@@ -6,7 +6,7 @@
  * agotar. El primer arranque (sin cursor) baja el catálogo completo.
  */
 
-import { apiFetch } from '@/utils/apiFetch';
+import httpClient from '@/config/clients';
 import * as ProductCatalogRepository from '@/repositories/ProductCatalogRepository';
 import type { CatalogApiItem } from '@/repositories/ProductCatalogRepository';
 
@@ -31,14 +31,13 @@ export async function syncCatalog(): Promise<{ synced: number }> {
   let maxCursor = since;
 
   for (;;) {
-    const params = new URLSearchParams({
-      limit: String(PAGE_LIMIT),
-      offset: String(offset),
-    });
-    if (since) params.set('updated_since', since);
+    const params: Record<string, string | number> = {
+      limit: PAGE_LIMIT,
+      offset,
+    };
+    if (since) params.updated_since = since;
 
-    const response = await apiFetch(`/api/products?${params.toString()}`);
-    const page = (await response.json()) as CatalogPage;
+    const { data: page } = await httpClient.get<CatalogPage>('/api/products', { params });
 
     if (page.products.length > 0) {
       await ProductCatalogRepository.upsertProducts(page.products);

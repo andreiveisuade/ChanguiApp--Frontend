@@ -1,4 +1,4 @@
-import { apiFetch } from '@/utils/apiFetch';
+import httpClient from '@/config/clients';
 import {
   PaymentStatus,
   Purchase,
@@ -57,22 +57,23 @@ export const PurchaseRepository = {
   /**
    * Historial de compras del usuario autenticado.
    * GET /api/purchases — ordenado por fecha descendente desde el backend.
-   * Auth (bearer) y manejo de 401 lo cubre apiFetch.
+   * Auth (bearer) y manejo de 401 lo cubre el httpClient.
    */
   async getPurchases(status?: PaymentStatus): Promise<Purchase[]> {
-    const path = status ? `/api/purchases?status=${status}` : '/api/purchases';
-    const response = await apiFetch(path);
-    const data: RawPurchase[] = await response.json();
+    const { data } = await httpClient.get<RawPurchase[]>('/api/purchases', {
+      params: status ? { status } : undefined,
+    });
     return (data ?? []).map(mapPurchase);
   },
 
   /**
    * Detalle de una compra con sus items y el desglose impositivo.
-   * GET /api/purchases/{id}
+   * GET /api/purchases/{id} — un 404 acá significa que la compra no es del
+   * usuario o no existe, así que debe seguir siendo error (lo tira el
+   * interceptor del httpClient). Por eso no usamos validateStatus.
    */
   async getPurchaseById(id: string): Promise<PurchaseDetail> {
-    const response = await apiFetch(`/api/purchases/${id}`);
-    const data: RawPurchaseDetail = await response.json();
+    const { data } = await httpClient.get<RawPurchaseDetail>(`/api/purchases/${id}`);
     const items = (data.items ?? []).map(mapItem);
 
     return {

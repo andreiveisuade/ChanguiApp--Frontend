@@ -4,7 +4,7 @@
  * Centraliza la lógica que antes vivía en useAuth (estado local por hook):
  * - Restauración de sesión al iniciar (con validación contra Supabase)
  * - Login / register / loginWithGoogle / resetPassword / logout
- * - Escucha eventos de sesión expirada desde apiFetch (401 → clearSession)
+ * - Escucha eventos de sesión expirada desde el httpClient (401 → clearSession)
  *
  * Los componentes consumen este estado via el hook useAuth (que es ahora
  * un wrapper de useContext). La API pública del hook no cambia.
@@ -159,7 +159,7 @@ function useAuthSession(): AuthSession {
     };
   }, []);
 
-  // Listener: cuando apiFetch detecta 401, limpia estado local.
+  // Listener: cuando el httpClient detecta 401, limpia estado local.
   // El auth guard del tabs layout va a detectar !isAuthenticated y redirige.
   useEffect(() => {
     const unsubscribe = authEvents.onSessionExpired(() => {

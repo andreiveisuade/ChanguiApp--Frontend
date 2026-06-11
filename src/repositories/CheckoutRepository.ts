@@ -1,4 +1,4 @@
-import { apiFetch } from '@/utils/apiFetch';
+import httpClient from '@/config/clients';
 
 export interface CheckoutPreference {
   preference_id: string;
@@ -16,11 +16,11 @@ export const CheckoutRepository = {
    * Crea la preferencia de pago de Mercado Pago para el carrito activo.
    * POST /api/checkout — devuelve el init_point (URL hosted de Checkout Pro) y
    * el preference_id que identifica este checkout.
-   * Auth (bearer) y 401 los cubre apiFetch.
+   * Auth (bearer) y 401 los cubre el httpClient.
    */
   async createPreference(): Promise<CheckoutPreference> {
-    const response = await apiFetch('/api/checkout', { method: 'POST' });
-    return response.json();
+    const { data } = await httpClient.post<CheckoutPreference>('/api/checkout');
+    return data;
   },
 
   /**
@@ -29,10 +29,10 @@ export const CheckoutRepository = {
    * forma asíncrona, así que se consulta hasta que pase a 'completed'.
    */
   async getStatus(preferenceId: string): Promise<CheckoutStatus> {
-    const response = await apiFetch(
-      `/api/checkout/status?preference_id=${encodeURIComponent(preferenceId)}`
-    );
-    return response.json();
+    const { data } = await httpClient.get<CheckoutStatus>('/api/checkout/status', {
+      params: { preference_id: preferenceId },
+    });
+    return data;
   },
 };
 

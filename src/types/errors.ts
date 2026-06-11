@@ -1,5 +1,5 @@
 /**
- * Error lanzado por apiFetch cuando la sesión expiró o es inválida.
+ * Error lanzado por el httpClient cuando la sesión expiró o es inválida.
  *
  * Los ViewModels pueden detectarlo con `instanceof AuthSessionExpiredError`
  * para evitar mostrar mensajes de error al usuario (el auth guard del
