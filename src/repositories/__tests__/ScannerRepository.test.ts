@@ -1,31 +1,30 @@
 import { getProductByBarcode } from '../ScannerRepository';
-import AuthRepository from '@/repositories/AuthRepository';
+import httpClient from '@/config/clients';
 import * as ProductCatalogRepository from '@/repositories/ProductCatalogRepository';
 
-jest.mock('@/repositories/AuthRepository', () => ({
+jest.mock('@/config/clients', () => ({
   __esModule: true,
-  default: { getStoredSession: jest.fn() },
+  default: {
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+  },
 }));
 
 jest.mock('@/repositories/ProductCatalogRepository', () => ({
   getProductByBarcode: jest.fn(),
 }));
 
-const mockedGetSession = jest.mocked(AuthRepository.getStoredSession);
+const mockedGet = httpClient.get as jest.Mock;
 const mockedLocalLookup = jest.mocked(ProductCatalogRepository.getProductByBarcode);
+const axiosResponse = <T>(data: T, status = 200) => ({ data, status });
 
 describe('ScannerRepository.getProductByBarcode', () => {
-  const fetchMock = jest.fn();
-
   beforeEach(() => {
     jest.clearAllMocks();
-    global.fetch = fetchMock as unknown as typeof fetch;
     // Por defecto el cache local no tiene el producto → cae a la red.
     mockedLocalLookup.mockResolvedValue(null);
-    mockedGetSession.mockResolvedValue({
-      token: 'tk',
-      user: { id: 'u1', email: 'a@b.com', full_name: 'A', avatar_url: null, created_at: '2026-01-01' },
-    });
   });
 
   it('cache-first: si el producto está en el catálogo local lo devuelve sin pegarle a la red', async () => {
@@ -36,80 +35,44 @@ describe('ScannerRepository.getProductByBarcode', () => {
 
     expect(result).toEqual(local);
     expect(mockedLocalLookup).toHaveBeenCalledWith('779');
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(mockedGet).not.toHaveBeenCalled();
   });
 
   it('si el cache local falla, cae a la red sin romper el escaneo', async () => {
     mockedLocalLookup.mockRejectedValueOnce(new Error('sqlite down'));
     const product = { id: 'p1', name: 'Yerba', barcode: '779', brand: null, image_url: null, price: 1000 };
-    fetchMock.mockResolvedValueOnce({ status: 200, ok: true, json: async () => product });
+    mockedGet.mockResolvedValueOnce(axiosResponse(product, 200));
 
     const result = await getProductByBarcode('779');
 
     expect(result).toEqual(product);
-    expect(fetchMock).toHaveBeenCalled();
+    expect(mockedGet).toHaveBeenCalled();
   });
 
-  it('devuelve el producto y manda el header Authorization con el token', async () => {
+  it('devuelve el producto cuando el backend responde 200', async () => {
     const product = { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 };
-    fetchMock.mockResolvedValueOnce({ status: 200, ok: true, json: async () => product });
+    mockedGet.mockResolvedValueOnce(axiosResponse(product, 200));
 
     const result = await getProductByBarcode('779');
 
     expect(result).toEqual(product);
-    const [url, opts] = fetchMock.mock.calls[0];
-    expect(url).toContain('/api/products/barcode/779');
-    expect(opts.headers.Authorization).toBe('Bearer tk');
+    expect(mockedGet).toHaveBeenCalledWith(
+      '/api/products/barcode/779',
+      expect.objectContaining({ validateStatus: expect.any(Function) }),
+    );
   });
 
   it('devuelve null en 404 (código no está en el catálogo)', async () => {
-    fetchMock.mockResolvedValueOnce({ status: 404, ok: false, json: async () => ({}) });
+    mockedGet.mockResolvedValueOnce(axiosResponse({}, 404));
 
     const result = await getProductByBarcode('000');
 
     expect(result).toBeNull();
   });
 
-  it('lanza el mensaje del backend en error no-OK', async () => {
-    fetchMock.mockResolvedValueOnce({ status: 500, ok: false, json: async () => ({ message: 'boom server' }) });
+  it('propaga el error que tira el httpClient en otros status', async () => {
+    mockedGet.mockRejectedValueOnce(new Error('boom server'));
 
     await expect(getProductByBarcode('779')).rejects.toThrow('boom server');
-  });
-
-  it('usa errorData.error cuando el body no trae message', async () => {
-    fetchMock.mockResolvedValueOnce({ status: 500, ok: false, json: async () => ({ error: 'campo error' }) });
-
-    await expect(getProductByBarcode('779')).rejects.toThrow('campo error');
-  });
-
-  it('usa el mensaje default cuando el body no es JSON', async () => {
-    fetchMock.mockResolvedValueOnce({
-      status: 503,
-      ok: false,
-      json: async () => {
-        throw new Error('not json');
-      },
-    });
-
-    await expect(getProductByBarcode('779')).rejects.toThrow('Product lookup failed: status 503');
-  });
-
-  it('traduce AbortError a network timeout', async () => {
-    const abort = new Error('aborted');
-    abort.name = 'AbortError';
-    fetchMock.mockRejectedValueOnce(abort);
-
-    await expect(getProductByBarcode('779')).rejects.toThrow('network timeout');
-  });
-
-  it('funciona sin sesión guardada (sin header Authorization)', async () => {
-    mockedGetSession.mockResolvedValueOnce(null);
-    const product = { id: 'p1', name: 'Yerba', barcode: '779', brand: null, image_url: null, price: 1000 };
-    fetchMock.mockResolvedValueOnce({ status: 200, ok: true, json: async () => product });
-
-    await getProductByBarcode('779');
-
-    const [, opts] = fetchMock.mock.calls[0];
-    expect(opts.headers.Authorization).toBeUndefined();
   });
 });

@@ -1,11 +1,21 @@
 import ProfileRepository from '../ProfileRepository';
-import { apiFetch } from '@/utils/apiFetch';
+import httpClient from '@/config/clients';
 import { User } from '@/types/auth';
 
-jest.mock('@/utils/apiFetch', () => ({ apiFetch: jest.fn() }));
+jest.mock('@/config/clients', () => ({
+  __esModule: true,
+  default: {
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+  },
+}));
 
-const mockedFetch = jest.mocked(apiFetch);
-const jsonResponse = (data: unknown) => ({ json: async () => data }) as Response;
+const mockedGet = httpClient.get as jest.Mock;
+const mockedPut = httpClient.put as jest.Mock;
+const mockedDelete = httpClient.delete as jest.Mock;
+const axiosResponse = <T>(data: T) => ({ data });
 
 const user: User = {
   id: 'u1',
@@ -21,32 +31,29 @@ describe('ProfileRepository', () => {
   });
 
   it('getProfile hace GET al perfil y devuelve el usuario', async () => {
-    mockedFetch.mockResolvedValueOnce(jsonResponse(user));
+    mockedGet.mockResolvedValueOnce(axiosResponse(user));
 
     const result = await ProfileRepository.getProfile();
 
-    expect(mockedFetch).toHaveBeenCalledWith('/api/users/profile');
+    expect(mockedGet).toHaveBeenCalledWith('/api/users/profile');
     expect(result).toEqual(user);
   });
 
   it('updateProfile hace PUT con el payload y devuelve el usuario actualizado', async () => {
     const updated = { ...user, full_name: 'Andrei V' };
-    mockedFetch.mockResolvedValueOnce(jsonResponse(updated));
+    mockedPut.mockResolvedValueOnce(axiosResponse(updated));
 
     const result = await ProfileRepository.updateProfile({ full_name: 'Andrei V' });
 
-    expect(mockedFetch).toHaveBeenCalledWith('/api/users/profile', {
-      method: 'PUT',
-      body: JSON.stringify({ full_name: 'Andrei V' }),
-    });
+    expect(mockedPut).toHaveBeenCalledWith('/api/users/profile', { full_name: 'Andrei V' });
     expect(result).toEqual(updated);
   });
 
   it('deleteProfile hace DELETE', async () => {
-    mockedFetch.mockResolvedValueOnce(jsonResponse({}));
+    mockedDelete.mockResolvedValueOnce(axiosResponse({}));
 
     await ProfileRepository.deleteProfile();
 
-    expect(mockedFetch).toHaveBeenCalledWith('/api/users/profile', { method: 'DELETE' });
+    expect(mockedDelete).toHaveBeenCalledWith('/api/users/profile');
   });
 });

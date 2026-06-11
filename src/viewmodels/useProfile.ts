@@ -34,7 +34,7 @@ export const useProfile = (): UseProfileReturn => {
       const data = await ProfileRepository.getProfile();
       setProfile(data);
     } catch (err) {
-      // 401 / sesion invalida: apiFetch ya limpio el storage y emitio el evento.
+      // 401 / sesion invalida: el httpClient ya limpio el storage y emitio el evento.
       // El AuthContext va a limpiar estado y el guard del tabs layout redirige a login.
       if (err instanceof AuthSessionExpiredError) {
         return;
