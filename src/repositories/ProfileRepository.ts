@@ -1,4 +1,4 @@
-import { apiFetch } from '@/utils/apiFetch';
+import httpClient from '@/config/clients';
 import { User } from '@/types/auth';
 
 export type UpdateProfilePayload = {
@@ -9,23 +9,20 @@ export type UpdateProfilePayload = {
 const ProfileRepository = {
   /**
    * Obtiene el perfil del usuario autenticado.
-   * Auth (bearer token) y manejo de 401 lo cubre apiFetch.
+   * Auth (bearer token) y manejo de 401 lo cubre el httpClient.
    */
   async getProfile(): Promise<User> {
-    const response = await apiFetch('/api/users/profile');
-    return response.json();
+    const { data } = await httpClient.get<User>('/api/users/profile');
+    return data;
   },
 
   async updateProfile(payload: UpdateProfilePayload): Promise<User> {
-    const response = await apiFetch('/api/users/profile', {
-      method: 'PUT',
-      body: JSON.stringify(payload),
-    });
-    return response.json();
+    const { data } = await httpClient.put<User>('/api/users/profile', payload);
+    return data;
   },
 
   async deleteProfile(): Promise<void> {
-    await apiFetch('/api/users/profile', { method: 'DELETE' });
+    await httpClient.delete('/api/users/profile');
   },
 };
 

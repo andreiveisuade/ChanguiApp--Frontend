@@ -255,9 +255,41 @@
     "dismissError": "Close error message",
     "emptyTitle": "Nothing here",
     "emptySubtitle": "There's nothing here yet",
+    "retry": "Retry",
     "decrementQuantity": "Decrease quantity",
     "incrementQuantity": "Increase quantity",
     "quantityValue": "Quantity: {{value}}"
+  },
+  "historyScreen": {
+    "title": "History",
+    "greeting": "Your purchases, {{name}}",
+    "totalSpent": "Total spent",
+    "completed": "Completed purchases",
+    "searchPlaceholder": "Search by store or order number",
+    "searchA11y": "Search the purchase history",
+    "unknownStore": "Supermarket",
+    "emptyTitle": "You haven't made any purchases yet",
+    "emptySubtitle": "Once you complete a purchase, it'll show up here",
+    "filters": {
+      "thisWeek": "This week",
+      "thisMonth": "This month",
+      "thisYear": "This year"
+    },
+    "status": {
+      "pending": "Pending",
+      "completed": "Completed",
+      "failed": "Failed"
+    }
+  },
+  "purchaseDetail": {
+    "title": "Purchase detail",
+    "back": "Back to history",
+    "products_one": "{{count}} product",
+    "products_other": "{{count}} products",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "paymentStatus": "Payment status",
+    "notFound": "We couldn't find this purchase"
   },
   "lists": {
     "addItemPlaceholder": "Product name...",

@@ -1,4 +1,4 @@
-import { apiFetch } from '@/utils/apiFetch';
+import httpClient from '@/config/clients';
 import { CartWithItems, CartItemWithProduct, TaxSummary } from '@/types/domain';
 
 const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
@@ -22,6 +22,27 @@ interface RawCartItem {
   updated_at?: string;
   product?: RawProduct | null;
   products?: RawProduct | null;
+}
+
+interface RawCart {
+  id: string;
+  user_id: string;
+  store_id?: string;
+  status: string;
+  created_at?: string;
+  updated_at?: string;
+  cart_items?: RawCartItem[];
+}
+
+interface GetCartResponse {
+  cart: RawCart | null;
+  items?: RawCartItem[];
+  total?: number;
+  summary?: TaxSummary;
+}
+
+interface Store {
+  id: string;
 }
 
 /** Maps a raw backend cart item to the typed domain object. */
@@ -51,7 +72,7 @@ function mapRawItem(item: RawCartItem): CartItemWithProduct {
 export const CartRepository = {
   /**
    * Fetches the current active cart and its items.
-   * Auth (bearer token) y manejo de 401 lo cubre apiFetch.
+   * Auth (bearer token) y manejo de 401 lo cubre el httpClient.
    */
   async getCart(): Promise<{
     cart: CartWithItems | null;
@@ -59,10 +80,8 @@ export const CartRepository = {
     total: number;
     summary: TaxSummary;
   }> {
-    const response = await apiFetch('/api/cart');
-    const data = await response.json();
+    const { data } = await httpClient.get<GetCartResponse>('/api/cart');
 
-    // Map and normalize product relation name (could be product or products in backend JSON)
     const rawCart = data.cart;
     let mappedCart: CartWithItems | null = null;
 
@@ -97,10 +116,7 @@ export const CartRepository = {
    * PUT /api/cart/items/{id}
    */
   async updateItemQuantity(itemId: string, quantity: number): Promise<void> {
-    await apiFetch(`/api/cart/items/${itemId}`, {
-      method: 'PUT',
-      body: JSON.stringify({ quantity }),
-    });
+    await httpClient.put(`/api/cart/items/${itemId}`, { quantity });
   },
 
   /**
@@ -108,9 +124,7 @@ export const CartRepository = {
    * DELETE /api/cart/items/{id}
    */
   async deleteItem(itemId: string): Promise<void> {
-    await apiFetch(`/api/cart/items/${itemId}`, {
-      method: 'DELETE',
-    });
+    await httpClient.delete(`/api/cart/items/${itemId}`);
   },
 
   /**
@@ -122,8 +136,7 @@ export const CartRepository = {
 
     let storeId: string | undefined = undefined;
     if (!cart) {
-      const storesResponse = await apiFetch('/api/stores');
-      const stores = await storesResponse.json();
+      const { data: stores } = await httpClient.get<Store[]>('/api/stores');
       if (stores && stores.length > 0) {
         storeId = stores[0].id;
       }
@@ -138,10 +151,7 @@ export const CartRepository = {
       body.store_id = storeId;
     }
 
-    await apiFetch('/api/cart/items', {
-      method: 'POST',
-      body: JSON.stringify(body),
-    });
+    await httpClient.post('/api/cart/items', body);
   },
 };
 

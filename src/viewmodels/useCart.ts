@@ -37,7 +37,7 @@ export const useCart = (): UseCartReturn => {
       setTotal(data.total);
       setSummary(data.summary);
     } catch (err) {
-      // 401 / sesión inválida: apiFetch ya limpió el storage y emitió el evento.
+      // 401 / sesión inválida: el httpClient ya limpió el storage y emitió el evento.
       // El AuthContext va a limpiar estado y el guard del tabs layout redirige a login.
       // No exponemos el error al usuario para evitar flicker visual.
       if (err instanceof AuthSessionExpiredError) {
