@@ -19,11 +19,9 @@ export const HistoryHeader = ({ userName, onProfilePress }: HistoryHeaderProps):
     <SafeAreaView edges={['top']} style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.textContainer}>
+          <AppIcon name="carrito" size={28} color={colors.white} style={styles.cartIcon} />
           <AppText variant="Display" style={styles.title} numberOfLines={1}>
-            {t('historyScreen.title')}
-          </AppText>
-          <AppText variant="Body" style={styles.subtitle} numberOfLines={1}>
-            {t('historyScreen.greeting', { name: firstName })}
+            {t('historyScreen.title', { name: firstName })}
           </AppText>
         </View>
         <Pressable
@@ -57,12 +55,19 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     marginRight: spacing.md,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     fontFamily: fonts.display,
     fontSize: 28,
     fontWeight: '800',
     color: colors.white,
+    marginBottom: spacing.xs,
+    flexShrink: 1,
+  },
+  cartIcon: {
+    marginRight: spacing.sm,
     marginBottom: spacing.xs,
   },
   subtitle: {
