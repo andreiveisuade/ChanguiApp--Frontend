@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '@/i18n';
 
 export type FontScaleOption = 'small' | 'medium' | 'large' | 'xlarge';
-export type LanguageOption = 'es' | 'en';
+export type LanguageOption = 'es' | 'en' | 'pt';
 
 export const FONT_SCALES: Record<FontScaleOption, number> = {
   small: 0.85,
@@ -56,7 +56,8 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps):
         } else {
           // Si no hay guardado, usar el de i18n por defecto
           const currentLang = (i18n.language || 'es').substring(0, 2) as LanguageOption;
-          setLanguageState(currentLang === 'en' ? 'en' : 'es');
+          const supported: LanguageOption[] = ['es', 'en', 'pt'];
+          setLanguageState(supported.includes(currentLang) ? currentLang : 'es');
         }
       } catch (error) {
         console.error('Error loading accessibility settings:', error);
