@@ -11,8 +11,8 @@ jest.mock('@/components/atoms/AppText', () => {
 const makeItem = (overrides: Partial<PurchaseItem> = {}): PurchaseItem => ({
   id: '1',
   purchase_id: 'p1',
-  product_id: 'prod1',
   product_name: 'Fideos',
+  barcode: '7790000000001',
   quantity: 2,
   unit_price: 800,
   ...overrides,

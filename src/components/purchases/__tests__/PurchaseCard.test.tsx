@@ -13,9 +13,12 @@ jest.mock('@/components/atoms/AppIcon', () => {
   return { AppIcon: ({ name }: any) => <Text testID="app-icon">{name}</Text> };
 });
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string) => key }),
+}));
+
 const makePurchase = (overrides: Partial<Purchase> = {}): Purchase => ({
   id: '1',
-  user_id: 'u1',
   store_name: 'Coto',
   date: '2026-06-01',
   total: 12500,
@@ -36,7 +39,7 @@ describe('PurchaseCard Component', () => {
     );
 
     expect(getByText('Coto')).toBeTruthy();
-    expect(getByText('2026-06-01')).toBeTruthy();
+    expect(getByText('01/06/2026')).toBeTruthy();
     expect(getByText('$12.500')).toBeTruthy();
   });
 

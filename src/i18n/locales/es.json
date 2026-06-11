@@ -255,9 +255,41 @@
     "dismissError": "Cerrar mensaje de error",
     "emptyTitle": "No hay nada acá",
     "emptySubtitle": "Todavía no hay contenido para mostrar",
+    "retry": "Reintentar",
     "decrementQuantity": "Reducir cantidad",
     "incrementQuantity": "Aumentar cantidad",
     "quantityValue": "Cantidad: {{value}}"
+  },
+  "historyScreen": {
+    "title": "Historial",
+    "greeting": "Tus compras, {{name}}",
+    "totalSpent": "Total gastado",
+    "completed": "Compras completadas",
+    "searchPlaceholder": "Buscar por tienda o número de orden",
+    "searchA11y": "Buscar en el historial de compras",
+    "unknownStore": "Supermercado",
+    "emptyTitle": "Todavía no hiciste ninguna compra",
+    "emptySubtitle": "Cuando completes una compra, va a aparecer acá",
+    "filters": {
+      "thisWeek": "Esta semana",
+      "thisMonth": "Este mes",
+      "thisYear": "Este año"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "completed": "Completada",
+      "failed": "Fallida"
+    }
+  },
+  "purchaseDetail": {
+    "title": "Detalle de compra",
+    "back": "Volver al historial",
+    "products_one": "{{count}} producto",
+    "products_other": "{{count}} productos",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "paymentStatus": "Estado del pago",
+    "notFound": "No encontramos esta compra"
   },
   "lists": {
     "addItemPlaceholder": "Nombre del producto...",

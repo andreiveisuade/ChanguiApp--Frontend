@@ -8,6 +8,7 @@ export const ROUTES = {
     history: '/(tabs)/history',
     settings: '/(tabs)/settings',
   },
+  purchaseDetail: '/purchase-detail',
   checkout: {
     confirmation: '/checkout/confirmation',
   },
