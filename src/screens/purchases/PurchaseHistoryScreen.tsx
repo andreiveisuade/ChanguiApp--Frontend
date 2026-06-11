@@ -52,8 +52,9 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
   }, [purchases, search, filter]);
 
   const summary = useMemo(() => {
-    const totalSpent = filtered.reduce((acc, p) => acc + p.total, 0);
-    const completedCount = filtered.filter((p) => p.status === 'completed').length;
+    const completed = filtered.filter((p) => p.status === 'completed');
+    const totalSpent = completed.reduce((acc, p) => acc + p.total, 0);
+    const completedCount = completed.length;
     return { totalSpent, completedCount };
   }, [filtered]);
 
