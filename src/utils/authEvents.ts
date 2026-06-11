@@ -1,7 +1,7 @@
 /**
  * Emitter para eventos de autenticación.
  *
- * Permite que la capa Repository (apiFetch) notifique a la capa ViewModel
+ * Permite que la capa de red (httpClient) notifique a la capa ViewModel
  * (AuthContext) cuando la sesión expira, sin acoplamiento directo.
  */
 

@@ -1,10 +1,19 @@
 import CheckoutRepository from '../CheckoutRepository';
-import { apiFetch } from '@/utils/apiFetch';
+import httpClient from '@/config/clients';
 
-jest.mock('@/utils/apiFetch', () => ({ apiFetch: jest.fn() }));
+jest.mock('@/config/clients', () => ({
+  __esModule: true,
+  default: {
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+  },
+}));
 
-const mockedFetch = jest.mocked(apiFetch);
-const jsonResponse = (data: unknown) => ({ json: async () => data }) as Response;
+const mockedGet = httpClient.get as jest.Mock;
+const mockedPost = httpClient.post as jest.Mock;
+const axiosResponse = <T>(data: T) => ({ data });
 
 describe('CheckoutRepository', () => {
   beforeEach(() => {
@@ -12,20 +21,24 @@ describe('CheckoutRepository', () => {
   });
 
   it('createPreference hace POST y devuelve init_point + preference_id', async () => {
-    mockedFetch.mockResolvedValueOnce(jsonResponse({ preference_id: 'pref-1', init_point: 'https://mp.com/init' }));
+    mockedPost.mockResolvedValueOnce(
+      axiosResponse({ preference_id: 'pref-1', init_point: 'https://mp.com/init' }),
+    );
 
     const result = await CheckoutRepository.createPreference();
 
-    expect(mockedFetch).toHaveBeenCalledWith('/api/checkout', { method: 'POST' });
+    expect(mockedPost).toHaveBeenCalledWith('/api/checkout');
     expect(result).toEqual({ preference_id: 'pref-1', init_point: 'https://mp.com/init' });
   });
 
-  it('getStatus consulta el estado con el preference_id encodeado', async () => {
-    mockedFetch.mockResolvedValueOnce(jsonResponse({ status: 'completed' }));
+  it('getStatus consulta el estado pasando el preference_id como param', async () => {
+    mockedGet.mockResolvedValueOnce(axiosResponse({ status: 'completed' }));
 
     const result = await CheckoutRepository.getStatus('pref/1 2');
 
-    expect(mockedFetch).toHaveBeenCalledWith('/api/checkout/status?preference_id=pref%2F1%202');
+    expect(mockedGet).toHaveBeenCalledWith('/api/checkout/status', {
+      params: { preference_id: 'pref/1 2' },
+    });
     expect(result).toEqual({ status: 'completed' });
   });
 });
