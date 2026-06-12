@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   badge: {
     borderRadius: radii.sm,
-    paddingHorizontal: 8,
+    paddingHorizontal: spacing.sm,
     paddingVertical: 2,
   },
   badgeText: {

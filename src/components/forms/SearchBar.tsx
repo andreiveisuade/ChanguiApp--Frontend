@@ -7,7 +7,7 @@ import {
   TextInputProps, 
   ViewStyle 
 } from 'react-native';
-import { colors, fontSize, iconSize } from '@/constants/theme';
+import { colors, fontSize, iconSize, radii } from '@/constants/theme';
 import { AppIcon } from '../atoms/AppIcon';
 
 interface SearchBarProps extends TextInputProps {
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF', // Fondo blanco para resaltar sobre el fondo #FFF8F8
     minHeight: 56,
-    borderRadius: 12,
+    borderRadius: radii.md,
     borderWidth: 1,
     borderColor: '#E0E0E0',
     paddingHorizontal: 14,

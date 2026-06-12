@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   filterButton: {
     alignItems: 'center',
     backgroundColor: colors.inputBackground,
-    borderRadius: 18,
+    borderRadius: radii.lg,
     height: 36,
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
