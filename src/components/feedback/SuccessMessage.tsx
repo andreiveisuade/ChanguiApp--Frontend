@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, radii, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, spacing } from '@/constants/theme';
 
 type SuccessMessageProps = {
   message?: string | null;
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.success,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     lineHeight: 20,
   },
 });

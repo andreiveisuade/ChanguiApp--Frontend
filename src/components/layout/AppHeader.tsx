@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ChanguiAppLogo from '@/../assets/logos/changuiapp-logo.svg';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, fonts, iconSize, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, iconSize, spacing, touchTarget } from '@/constants/theme';
 
 type AppHeaderProps = {
   onBack?: () => void;
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   title: {
     color: colors.textPrimary,
     fontFamily: fonts.display,
-    fontSize: 22,
+    fontSize: fontSize.h1,
     fontWeight: '800',
   },
 });

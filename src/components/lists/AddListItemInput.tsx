@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
 interface AddListItemInputProps {
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     flex: 1,
     fontFamily: fonts.body,
-    fontSize: 15,
+    fontSize: fontSize.input,
     minHeight: 48,
     paddingHorizontal: spacing.lg,
   },

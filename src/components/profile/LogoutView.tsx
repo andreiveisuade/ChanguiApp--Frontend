@@ -6,7 +6,7 @@ import { AppIcon } from '@/components/atoms/AppIcon';
 import AvatarImage from '@/components/profile/AvatarImage';
 import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { spacing, radii, iconSize } from '@/constants/theme';
+import { spacing, radii, iconSize, fontSize } from '@/constants/theme';
 import { User } from '@/types/auth';
 
 interface LogoutViewProps {
@@ -110,13 +110,13 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: '800',
     color: '#111827',
-    fontSize: 26,
+    fontSize: fontSize.h1,
     textAlign: 'center',
     marginBottom: spacing.sm,
   },
   subtitle: {
     color: '#6B7280',
-    fontSize: 15,
+    fontSize: fontSize.h3,
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   userEmail: {
     color: '#6B7280',
-    fontSize: 13,
+    fontSize: fontSize.body,
     marginTop: 2,
   },
   infoBox: {

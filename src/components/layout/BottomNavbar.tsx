@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
-import { colors, iconSize } from '@/constants/theme';
+import { colors, fontSize, iconSize } from '@/constants/theme';
 import { AppIcon } from '../atoms/AppIcon';
 import { AppText } from '../atoms/AppText';
 
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   tabLabel: {
-    fontSize: 10,
+    fontSize: fontSize.label,
     marginTop: 2,
     textTransform: 'none',
     fontFamily: 'Inter-Medium',
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   scannerLabel: {
-    fontSize: 10,
+    fontSize: fontSize.label,
     marginTop: 4,
     color: colors.textSecondary,
     fontFamily: 'Inter-Medium',

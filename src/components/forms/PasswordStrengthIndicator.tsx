@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, radii, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, spacing } from '@/constants/theme';
 
 type Strength = 'weak' | 'medium' | 'strong';
 
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   label: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 12,
+    fontSize: fontSize.label,
   },
 });
 

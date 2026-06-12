@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, fonts, iconSize, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, iconSize, spacing } from '@/constants/theme';
 
 type OnboardingSlideProps = {
   icon: string;
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   title: {
     color: colors.textPrimary,
     fontFamily: fonts.display,
-    fontSize: 28,
+    fontSize: fontSize.greeting,
     fontWeight: '800',
     marginBottom: spacing.lg,
     textAlign: 'center',
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.h3,
     lineHeight: 26,
     maxWidth: 320,
     textAlign: 'center',

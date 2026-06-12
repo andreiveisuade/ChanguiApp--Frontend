@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { PaymentStatus, Purchase } from '@/types/domain';
-import { colors, radii, spacing, iconSize } from '@/constants/theme';
+import { colors, radii, spacing, iconSize, fontSize } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { formatARS } from '@/utils/currency';
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   badgeText: {
-    fontSize: 11,
+    fontSize: fontSize.label,
   },
   row: {
     alignItems: 'center',

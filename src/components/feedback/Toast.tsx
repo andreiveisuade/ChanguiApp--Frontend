@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';
-import { colors, fonts, radii, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, spacing } from '@/constants/theme';
 
 type ToastType = 'success' | 'error' | 'info';
 
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.white,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     lineHeight: 20,
     textAlign: 'center',
   },

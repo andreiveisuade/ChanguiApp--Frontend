@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { colors, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, fontSize, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
 import { UserFriendlyError } from '@/types/errors';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -74,13 +74,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Poppins-Bold',
-    fontSize: 16,
+    fontSize: fontSize.h3,
     color: '#C1121F', // colors.error
     marginBottom: spacing.xs,
   },
   message: {
     fontFamily: 'Inter-Regular',
-    fontSize: 14,
+    fontSize: fontSize.body,
     color: '#C1121F', // colors.error for readability and WCAG AA contrast (6.5:1 on #FFD1D0)
     lineHeight: 20,
   },
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   actionText: {
     fontFamily: 'Inter-Bold',
     color: colors.white, // #FFFFFF
-    fontSize: 14,
+    fontSize: fontSize.body,
   },
 });
 

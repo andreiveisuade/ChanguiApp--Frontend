@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
-import { colors, fonts, opacity, radii, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, opacity, radii, touchTarget } from '@/constants/theme';
 
 type DestructiveButtonProps = {
   title: string;
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.white,
     fontFamily: fonts.body,
-    fontSize: 18,
+    fontSize: fontSize.button,
     fontWeight: '600',
   },
 });

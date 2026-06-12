@@ -14,7 +14,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import OnboardingFooter from '@/components/onboarding/OnboardingFooter';
 import OnboardingSlide from '@/components/onboarding/OnboardingSlide';
-import { colors, fonts, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, spacing, touchTarget } from '@/constants/theme';
 import { STORAGE_KEYS } from '@/constants/storage';
 import { ROUTES } from '@/constants/routes';
 
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   skipText: {
     color: colors.primary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.h3,
     fontWeight: '700',
   },
 });

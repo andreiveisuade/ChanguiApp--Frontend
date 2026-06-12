@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, spacing } from '@/constants/theme';
 
 const FRAME_SIZE = 250;
 const CORNER_SIZE = 32;
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   hint: {
     color: colors.white,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     marginTop: spacing.xl,
     opacity: 0.9,
     textAlign: 'center',

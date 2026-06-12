@@ -7,7 +7,7 @@ import {
   TextInputProps, 
   ViewStyle 
 } from 'react-native';
-import { colors, iconSize } from '@/constants/theme';
+import { colors, fontSize, iconSize } from '@/constants/theme';
 import { AppIcon } from '../atoms/AppIcon';
 
 interface SearchBarProps extends TextInputProps {
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontFamily: 'Inter-Regular', // Consistencia con los inputs de tu equipo
-    fontSize: 15,
+    fontSize: fontSize.input,
     color: colors.textPrimary,
     height: '100%',
     paddingVertical: 0, // Corrige desalineaciones en Android

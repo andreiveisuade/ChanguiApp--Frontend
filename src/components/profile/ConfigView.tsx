@@ -5,7 +5,7 @@ import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import ProfileButton from '@/components/profile/ProfileButton';
 import { useAccessibility, FontScaleOption, LanguageOption, FONT_SCALES } from '@/context/AccessibilityContext';
-import { colors, spacing, radii, iconSize } from '@/constants/theme';
+import { colors, spacing, radii, iconSize, fontSize } from '@/constants/theme';
 
 interface ConfigViewProps {
   onBack: () => void;
@@ -145,7 +145,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
                   variant="Body"
                   style={[
                     styles.fontSizePrefix,
-                    { fontSize: 16 * scaleFactor }
+                    { fontSize: fontSize.h3 * scaleFactor }
                   ]}
                 >
                   Aa
@@ -172,7 +172,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
             variant="Body"
             style={[
               styles.previewText,
-              { fontSize: 14 * FONT_SCALES[tempFontScaleName] }
+              { fontSize: fontSize.body * FONT_SCALES[tempFontScaleName] }
             ]}
           >
             {t('profile.previewText', {
@@ -208,13 +208,13 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontWeight: '800',
     color: '#111827',
-    fontSize: 24,
+    fontSize: fontSize.h1,
     marginBottom: spacing.xs,
     marginTop: spacing.md,
   },
   screenSubtitle: {
     color: '#6B7280',
-    fontSize: 14,
+    fontSize: fontSize.body,
     marginBottom: spacing.xl,
   },
   section: {
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontWeight: '700',
     color: '#111827',
-    fontSize: 17,
+    fontSize: fontSize.h3,
   },
   optionCard: {
     backgroundColor: colors.white,
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   },
   flagEmoji: {
     marginRight: spacing.sm,
-    fontSize: 22,
+    fontSize: fontSize.h1,
   },
   fontSizePrefix: {
     marginRight: spacing.sm,
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   previewLabel: {
     color: '#6B7280',
     fontWeight: '700',
-    fontSize: 11,
+    fontSize: fontSize.label,
     marginBottom: spacing.xs,
     textTransform: 'uppercase',
   },

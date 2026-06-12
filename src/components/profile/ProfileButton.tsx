@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing, radii, iconSize } from '@/constants/theme';
+import { colors, spacing, radii, iconSize, fontSize } from '@/constants/theme';
 
 export type ProfileButtonVariant = 'primary' | 'secondary' | 'danger' | 'warning' | 'disabled';
 
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     marginRight: spacing.sm,
   },
   textBase: {
-    fontSize: 16,
+    fontSize: fontSize.h3,
     fontWeight: '600',
   },
   // Primary variant

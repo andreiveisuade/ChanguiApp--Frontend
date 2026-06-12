@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { spacing, radii, iconSize } from '@/constants/theme';
+import { spacing, radii, iconSize, fontSize } from '@/constants/theme';
 
 export type InfoBoxVariant = 'info' | 'warning' | 'danger';
 
@@ -77,13 +77,13 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
-    fontSize: 13,
+    fontSize: fontSize.body,
     lineHeight: 18,
     fontWeight: '400',
   },
   boldText: {
     fontWeight: 'bold',
-    fontSize: 13,
+    fontSize: fontSize.body,
   },
   infoContainer: {
     backgroundColor: '#EBF3FE',

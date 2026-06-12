@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
-import { colors, fonts, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, touchTarget } from '@/constants/theme';
 
 type TextLinkButtonProps = {
   title: string;
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.primary,
     fontFamily: fonts.body,
-    fontSize: 15,
+    fontSize: fontSize.h3,
     fontWeight: '700',
   },
 });

@@ -5,7 +5,7 @@ import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { colors, spacing, radii, fonts, iconSize } from '@/constants/theme';
+import { colors, spacing, radii, fonts, iconSize, fontSize } from '@/constants/theme';
 
 interface DeleteAccountViewProps {
   onDelete: () => Promise<void>;
@@ -165,13 +165,13 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: '800',
     color: '#111827',
-    fontSize: 26,
+    fontSize: fontSize.h1,
     textAlign: 'center',
     marginBottom: spacing.sm,
   },
   subtitle: {
     color: '#6B7280',
-    fontSize: 15,
+    fontSize: fontSize.h3,
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   listHeader: {
     fontWeight: '700',
     color: '#111827',
-    fontSize: 16,
+    fontSize: fontSize.h3,
     marginBottom: spacing.md,
   },
   listItemCard: {
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   },
   listItemText: {
     color: '#4B5563',
-    fontSize: 14,
+    fontSize: fontSize.body,
     fontWeight: '500',
   },
   breakBox: {
@@ -219,19 +219,19 @@ const styles = StyleSheet.create({
   breakTitle: {
     fontWeight: '700',
     color: '#1E40AF',
-    fontSize: 15,
+    fontSize: fontSize.h3,
     marginBottom: spacing.xs,
   },
   breakText: {
     color: '#1E3A8A',
-    fontSize: 13,
+    fontSize: fontSize.body,
     lineHeight: 18,
     marginBottom: spacing.sm,
   },
   breakLink: {
     color: '#2563EB',
     fontWeight: '700',
-    fontSize: 13,
+    fontSize: fontSize.body,
   },
   confirmSection: {
     width: '100%',
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   },
   confirmLabel: {
     color: '#374151',
-    fontSize: 14,
+    fontSize: fontSize.body,
     fontWeight: '600',
     marginBottom: spacing.sm,
   },
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     borderColor: '#10B981',
   },
   input: {
-    fontSize: 15,
+    fontSize: fontSize.input,
     fontFamily: fonts.body,
     color: '#111827',
     paddingVertical: spacing.sm,

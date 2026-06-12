@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ChanguiAppLogo from '@/../assets/logos/changuiapp-logo.svg';
-import { colors, fonts, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, spacing } from '@/constants/theme';
 
 export function SplashSlide(): React.JSX.Element {
   const { t } = useTranslation();
@@ -44,14 +44,14 @@ const styles = StyleSheet.create({
   title: {
     color: colors.white,
     fontFamily: fonts.display,
-    fontSize: 36,
+    fontSize: fontSize.display,
     fontWeight: '800',
     marginBottom: spacing.sm,
   },
   subtitle: {
     color: colors.white,
     fontFamily: fonts.body,
-    fontSize: 18,
+    fontSize: fontSize.h2,
   },
 });
 

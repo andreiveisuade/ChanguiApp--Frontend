@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
-import { colors, fonts, radii, spacing, iconSize } from '@/constants/theme';
+import { colors, fonts, radii, spacing, iconSize, fontSize } from '@/constants/theme';
 import HistoryHeader from '@/components/layout/HistoryHeader';
 import { PurchaseCard } from '@/components/purchases/PurchaseCard';
 import useProfile from '@/viewmodels/useProfile';
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   summaryValue: {
     color: colors.textPrimary,
     fontFamily: fonts.display,
-    fontSize: 24,
+    fontSize: fontSize.h1,
     fontWeight: '800',
   },
   searchContainer: {
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     flex: 1,
     fontFamily: fonts.body,
-    fontSize: 15,
+    fontSize: fontSize.input,
     padding: 0,
   },
   filtersRow: {
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   filterText: {
     color: colors.textPrimary,
     fontFamily: fonts.body,
-    fontSize: 13,
+    fontSize: fontSize.body,
   },
   filterTextActive: {
     color: colors.white,

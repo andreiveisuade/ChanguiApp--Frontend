@@ -13,7 +13,7 @@ import PasswordInput from '@/components/forms/PasswordInput';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
 import AuthContainer from '@/components/layout/AuthContainer';
 import useAuth from '@/viewmodels/useAuth';
-import { colors, fonts, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, spacing, touchTarget, fontSize } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
 import { isValidEmail } from '@/utils/validators';
 
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   title: {
     color: colors.textPrimary,
     fontFamily: fonts.display,
-    fontSize: 32,
+    fontSize: fontSize.display,
     fontWeight: '800',
     lineHeight: 39,
     marginBottom: spacing.md,
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.h3,
     lineHeight: 24,
   },
   logo: {
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   devResetText: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 13,
+    fontSize: fontSize.body,
   },
 });
 

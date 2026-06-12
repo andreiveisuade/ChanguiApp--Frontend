@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, spacing, touchTarget } from '@/constants/theme';
 import { UserFriendlyError } from '@/types/errors';
 
 type ErrorMessageProps = {
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.error,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     lineHeight: 20,
   },
   titleText: {
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     color: colors.error,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     lineHeight: 20,
   },
   closeButton: {
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   closeText: {
     color: colors.error,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     fontWeight: '800',
   },
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, spacing } from '@/constants/theme';
 
 type AppLogoProps = {
   title: string;
@@ -34,13 +34,13 @@ const styles = StyleSheet.create({
   markText: {
     color: colors.white,
     fontFamily: fonts.display,
-    fontSize: 24,
+    fontSize: fontSize.h1,
     fontWeight: '800',
   },
   title: {
     color: colors.primary,
     fontFamily: fonts.display,
-    fontSize: 34,
+    fontSize: fontSize.display,
     fontWeight: '800',
   },
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, spacing } from '@/constants/theme';
 
 type DividerProps = {
   label: string;
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   label: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     fontWeight: '600',
   },
 });

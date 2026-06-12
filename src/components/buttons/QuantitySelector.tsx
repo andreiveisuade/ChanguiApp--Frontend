@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, fonts, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
 
 interface QuantitySelectorProps {
   value: number;
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   value: {
     color: colors.textPrimary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.h3,
     fontWeight: '600',
     minWidth: 32,
     textAlign: 'center',

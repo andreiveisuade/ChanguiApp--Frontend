@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, radii, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, spacing } from '@/constants/theme';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import SecondaryButton from '@/components/buttons/SecondaryButton';
 
@@ -85,14 +85,14 @@ const styles = StyleSheet.create({
   title: {
     color: colors.textPrimary,
     fontFamily: fonts.display,
-    fontSize: 20,
+    fontSize: fontSize.h2,
     fontWeight: '700',
     textAlign: 'center',
   },
   message: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 15,
+    fontSize: fontSize.h3,
     lineHeight: 22,
     textAlign: 'center',
   },

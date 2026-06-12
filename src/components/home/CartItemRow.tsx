@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { CartItemWithProduct } from '@/types/domain';
-import { colors, spacing, iconSize } from '@/constants/theme';
+import { colors, fontSize, spacing, iconSize } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { formatARS } from '@/utils/currency';
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   productName: {
-    fontSize: 15,
+    fontSize: fontSize.h3,
     fontWeight: '500',
     marginBottom: 4,
   },

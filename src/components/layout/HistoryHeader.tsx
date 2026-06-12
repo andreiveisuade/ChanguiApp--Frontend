@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, iconSize, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, iconSize, spacing, touchTarget } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: fonts.display,
-    fontSize: 28,
+    fontSize: fontSize.greeting,
     fontWeight: '800',
     color: colors.white,
     marginBottom: spacing.xs,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.h3,
     color: 'rgba(255, 255, 255, 0.8)',
   },
   avatarButton: {

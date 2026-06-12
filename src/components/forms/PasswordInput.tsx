@@ -4,7 +4,7 @@ import { AppIcon } from '@/components/atoms/AppIcon';
 import FormLabel from '@/components/forms/FormLabel';
 import InlineError from '@/components/forms/InlineError';
 import PasswordStrengthIndicator from '@/components/forms/PasswordStrengthIndicator';
-import { colors, fonts, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
 
 type PasswordInputProps = {
   value: string;
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     flex: 1,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.input,
     minHeight: 54,
   },
   toggle: {

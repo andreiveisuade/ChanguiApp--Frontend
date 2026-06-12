@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing, radii, iconSize } from '@/constants/theme';
+import { colors, spacing, radii, iconSize, fontSize } from '@/constants/theme';
 
 interface SettingsCardProps {
   title: string;
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   },
   description: {
     color: '#6B7280',
-    fontSize: 13,
+    fontSize: fontSize.body,
     marginTop: 2,
   },
   arrow: {

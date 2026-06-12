@@ -5,7 +5,7 @@ import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import AvatarImage from '@/components/profile/AvatarImage';
 import SettingsCard from '@/components/profile/SettingsCard';
-import { spacing, radii, iconSize } from '@/constants/theme';
+import { spacing, radii, iconSize, fontSize } from '@/constants/theme';
 import { User } from '@/types/auth';
 
 interface ProfileMainViewProps {
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   userName: {
     fontWeight: '800',
     color: '#111827',
-    fontSize: 22,
+    fontSize: fontSize.h1,
   },
   emailContainer: {
     flexDirection: 'row',
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   userEmail: {
     color: '#6B7280',
-    fontSize: 14,
+    fontSize: fontSize.body,
   },
   section: {
     marginBottom: spacing.lg,
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   sectionLabel: {
     color: '#6B7280',
     fontWeight: '700',
-    fontSize: 12,
+    fontSize: fontSize.label,
     letterSpacing: 1,
     marginBottom: spacing.sm,
     paddingLeft: spacing.xs,

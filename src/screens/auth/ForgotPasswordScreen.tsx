@@ -8,7 +8,7 @@ import FormLabel from '@/components/forms/FormLabel';
 import AppHeader from '@/components/layout/AppHeader';
 import AuthContainer from '@/components/layout/AuthContainer';
 import useAuth from '@/viewmodels/useAuth';
-import { colors, fonts, radii, spacing, touchTarget, iconSize } from '@/constants/theme';
+import { colors, fonts, radii, spacing, touchTarget, iconSize, fontSize } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
 
 export function ForgotPasswordScreen(): React.JSX.Element {
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   backText: {
     color: colors.primary,
     fontFamily: fonts.body,
-    fontSize: 15,
+    fontSize: fontSize.h3,
     fontWeight: '700',
   },
   hero: {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   title: {
     color: colors.textPrimary,
     fontFamily: fonts.display,
-    fontSize: 28,
+    fontSize: fontSize.greeting,
     fontWeight: '800',
     lineHeight: 34,
     marginBottom: spacing.md,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.h3,
     lineHeight: 24,
   },
   mailCircle: {
@@ -141,14 +141,14 @@ const styles = StyleSheet.create({
     borderRadius: radii.md,
     color: colors.textPrimary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.input,
     minHeight: 56,
     paddingHorizontal: spacing.lg,
   },
   info: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     lineHeight: 22,
     marginTop: spacing.xl,
     textAlign: 'center',

@@ -7,7 +7,7 @@ import AvatarImage from '@/components/profile/AvatarImage';
 import ProfileInput from '@/components/profile/ProfileInput';
 import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { colors, spacing, iconSize } from '@/constants/theme';
+import { colors, spacing, iconSize, fontSize } from '@/constants/theme';
 import { User } from '@/types/auth';
 
 interface EditProfileViewProps {
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontWeight: '800',
     color: '#111827',
-    fontSize: 24,
+    fontSize: fontSize.h1,
     marginBottom: spacing.xl,
     marginTop: spacing.md,
   },
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     color: '#DC4040',
     fontWeight: '600',
     marginTop: spacing.sm,
-    fontSize: 14,
+    fontSize: fontSize.body,
   },
   form: {
     width: '100%',

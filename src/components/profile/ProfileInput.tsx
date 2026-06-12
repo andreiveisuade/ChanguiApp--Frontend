@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput, StyleProp, ViewStyle } from 'react-native'
 import { AppIcon } from '@/components/atoms/AppIcon';
 import FormLabel from '@/components/forms/FormLabel';
 import InlineError from '@/components/forms/InlineError';
-import { colors, spacing, radii, fonts, iconSize } from '@/constants/theme';
+import { colors, spacing, radii, fonts, iconSize, fontSize } from '@/constants/theme';
 
 interface ProfileInputProps {
   label: string;
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 15,
+    fontSize: fontSize.input,
     fontFamily: fonts.body,
     color: '#111827',
     paddingVertical: spacing.sm,
