@@ -1,0 +1,324 @@
+{
+  "app_name": "ChanguiApp",
+  "scan": "Escanear produto",
+  "pay": "Pagar",
+  "cart": "Meu carrinho",
+  "history": "Histórico",
+  "login": "Entrar",
+  "register": "Criar conta",
+  "logout": "Sair",
+  "select_store": "Selecionar supermercado",
+  "total": "Total",
+  "add_to_cart": "Adicionar ao carrinho",
+  "empty_cart": "Carrinho vazio",
+  "checkout": "Ir para o pagamento",
+  "lang_es": "Español",
+  "lang_en": "English",
+  "lang_pt": "Português",
+  "home": {
+    "title": "Início",
+    "greeting": "Olá, {{name}}!",
+    "continueShopping": "Continue com suas compras",
+    "activeCart": "Carrinho ativo",
+    "products_one": "{{count}} produto",
+    "products_other": "{{count}} produtos",
+    "total": "Total",
+    "emptyCart": "Seu carrinho está vazio",
+    "emptyCartSubtitle": "Escaneie um produto para começar",
+    "errorLoading": "Não foi possível carregar o carrinho",
+    "defaultUser": "Usuário",
+    "fallbackProductName": "Produto",
+    "placeholder": "Seu módulo Scan & Go está pronto para continuar."
+  },
+  "nav": {
+    "home": "Início",
+    "cart": "Carrinho",
+    "scanner": "Escanear",
+    "history": "Histórico",
+    "settings": "Configurações",
+    "hint": {
+      "home": "Ir para a tela inicial",
+      "cart": "Ver o conteúdo do seu carrinho",
+      "scanner": "Escanear um produto",
+      "history": "Ver seu histórico de compras",
+      "settings": "Abrir configurações da conta"
+    }
+  },
+  "cartScreen": {
+    "detail": "Detalhe do carrinho",
+    "updatedNow": "Atualizado agora",
+    "subtotal": "Subtotal",
+    "checkout": "Ir para o pagamento",
+    "checkoutHint": "Pague seu carrinho com Mercado Pago",
+    "greeting": "Olá, {{name}}"
+  },
+  "checkout": {
+    "confirmingTitle": "Confirmando seu pagamento",
+    "confirmingSubtitle": "Isso pode levar alguns segundos.",
+    "successTitle": "Pagamento confirmado!",
+    "successSubtitle": "Sua compra foi registrada no seu histórico.",
+    "pendingTitle": "Pagamento em processamento",
+    "pendingSubtitle": "Estamos aguardando a confirmação do Mercado Pago. Você vai vê-la no seu histórico.",
+    "timeoutTitle": "Não conseguimos confirmar o pagamento",
+    "timeoutSubtitle": "Se você concluiu o pagamento, pode levar alguns minutos para aparecer no seu histórico.",
+    "viewHistory": "Ver meu histórico",
+    "viewHistoryHint": "Abre o histórico de compras",
+    "goHome": "Voltar ao início",
+    "goHomeHint": "Volta para a tela inicial",
+    "backToCart": "Voltar ao carrinho",
+    "backToCartHint": "Volta ao carrinho",
+    "retry": "Tentar novamente",
+    "retryHint": "Verifica novamente o status do pagamento"
+  },
+  "auth": {
+    "login": {
+      "title": "Entrar",
+      "email": "Email",
+      "password": "Senha",
+      "submit": "Entrar",
+      "noAccount": "Não tem uma conta?",
+      "register": "Cadastre-se",
+      "google": "Continuar com o Google",
+      "or": "ou",
+      "welcomeTitle": "Bem-vindo ao ChanguiApp",
+      "subtitle": "Acesse para sincronizar seu carrinho e aproveitar preços em tempo real.",
+      "forgotPassword": "Esqueceu sua senha?",
+      "createAccount": "Criar conta nova"
+    },
+    "register": {
+      "title": "Criar conta",
+      "fullName": "Nome completo",
+      "email": "Email",
+      "password": "Senha",
+      "confirmPassword": "Confirmar senha",
+      "submit": "Criar conta",
+      "hasAccount": "Já tem uma conta?",
+      "login": "Entre",
+      "subtitle": "Preencha seus dados para começar a economizar no mercado."
+    },
+    "common": {
+      "emailPlaceholder": "nome@email.com",
+      "showPassword": "Mostrar",
+      "hidePassword": "Ocultar",
+      "emailLabel": "Endereço de email"
+    },
+    "passwordStrength": {
+      "weak": "Senha fraca",
+      "medium": "Senha média",
+      "strong": "Senha forte"
+    },
+    "accessibility": {
+      "dismissError": "Fechar mensagem de erro",
+      "loginHint": "Envia suas credenciais para entrar",
+      "registerHint": "Cria uma conta nova",
+      "googleHint": "Entre usando o Google",
+      "goToRegisterHint": "Ir para a tela de cadastro",
+      "goToLoginHint": "Ir para a tela de login",
+      "goToForgotPasswordHint": "Ir para a tela de recuperação de senha",
+      "logoutHint": "Encerra a sessão atual",
+      "goToProfile": "Ir para o meu perfil",
+      "goToProfileHint": "Abre a tela de configurações da sua conta"
+    },
+    "errors": {
+      "invalidEmail": "O email não é válido",
+      "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
+      "passwordMismatch": "As senhas não coincidem",
+      "nameTooShort": "O nome deve ter pelo menos 2 caracteres",
+      "emailAlreadyUsed": "Este email já está cadastrado",
+      "invalidCredentials": "Email ou senha incorretos",
+      "networkError": "Sem conexão. Verifique sua internet.",
+      "googleError": "Não foi possível entrar com o Google",
+      "unknown": "Ocorreu um erro. Tente novamente."
+    }
+  },
+  "onboarding": {
+    "slide1": {
+      "title": "Escaneie produtos",
+      "text": "Use sua câmera para escanear códigos de barras e adicionar produtos ao seu carrinho enquanto faz compras"
+    },
+    "slide2": {
+      "title": "Controle seus gastos",
+      "text": "Veja o total da sua compra em tempo real e mantenha seu orçamento sob controle"
+    },
+    "slide3": {
+      "title": "Tudo pronto para começar!",
+      "text": "Descubra uma nova forma de fazer suas compras no supermercado"
+    },
+    "splash": {
+      "tagline": "Sua compra mais inteligente",
+      "cta": "Começar"
+    },
+    "next": "Próximo",
+    "skip": "Pular",
+    "finish": "Começar"
+  },
+  "scanner": {
+    "addToCart": "Adicionar ao carrinho",
+    "addToCartHint": "Adiciona o produto ao carrinho de compras",
+    "productNotFound": "Produto não encontrado",
+    "productNotFoundSubtitle": "Não encontramos este código de barras no catálogo",
+    "tryAgain": "Tentar novamente",
+    "price": "Preço",
+    "brand": "Marca",
+    "scanHint": "Aponte o código de barras para o quadro",
+    "permission": {
+      "title": "Permissão de câmera",
+      "message": "Precisamos acessar a câmera para escanear códigos de barras.",
+      "allow": "Permitir câmera",
+      "allowHint": "Abre a caixa de diálogo de permissões da câmera"
+    },
+    "consulting": "Consultando catálogo...",
+    "scanAgain": "Escanear novamente",
+    "scanAgainHint": "Reinicia o scanner para ler outro código",
+    "productFound": "Produto encontrado",
+    "quantity": "Quantidade",
+    "subtotal": "Subtotal",
+    "scanAnother": "Escanear outro",
+    "scanAnotherHint": "Volte ao scanner para ler outro código",
+    "backHint": "Voltar ao scanner",
+    "barcodeNotInCatalog": "O código {{barcode}} ainda não está no nosso catálogo.",
+    "dismissError": "Fechar mensagem"
+  },
+  "profile": {
+    "edit": "Editar",
+    "editField": "Editar campo",
+    "avatarFallback": "Avatar do perfil",
+    "name": "Nome",
+    "email": "Email",
+    "avatarUrl": "URL do avatar",
+    "namePlaceholder": "Seu nome completo",
+    "avatarUrlPlaceholder": "https://...",
+    "deleteAccount": "Excluir conta",
+    "deleteConfirmTitle": "Excluir sua conta?",
+    "deleteConfirmBody": "Esta ação não pode ser desfeita. Você vai perder todos os seus dados.",
+    "deleteFinalTitle": "Confirmação final",
+    "deleteFinalBody": "Você tem certeza absoluta? Esta ação é definitiva.",
+    "deleteConfirmBtn": "Excluir definitivamente",
+    "editTitle": "Editar dados pessoais",
+    "changePhoto": "Alterar foto",
+    "infoBoxBold": "Importante: ",
+    "infoBoxText": "Certifique-se de que seus dados estejam corretos. Algumas alterações podem exigir verificação.",
+    "sections": {
+      "personalInfo": "INFORMAÇÕES PESSOAIS",
+      "preferences": "PREFERÊNCIAS",
+      "account": "CONTA"
+    },
+    "menu": {
+      "editData": "Editar dados",
+      "editDataDesc": "Nome, email, telefone",
+      "config": "Configurações",
+      "configDesc": "Idioma, tamanho da fonte",
+      "logout": "Sair",
+      "logoutDesc": "Sair da sua conta",
+      "deleteAccount": "Excluir conta",
+      "deleteAccountDesc": "Excluir permanentemente"
+    },
+    "configTitle": "Configurações",
+    "configSubtitle": "Personalize a aparência e o idioma do aplicativo",
+    "languageSection": "Idioma",
+    "fontSizeSection": "Tamanho da fonte",
+    "fontSizes": {
+      "small": "Pequeno",
+      "medium": "Médio",
+      "large": "Grande",
+      "xlarge": "Muito grande"
+    },
+    "preview": "Pré-visualização",
+    "previewText": "Este é um texto de exemplo para visualizar o tamanho da fonte selecionado.",
+    "logoutConfirmTitle": "Sair?",
+    "logoutConfirmSubtitle": "Você poderá entrar novamente quando quiser",
+    "logoutBoxBold": "Importante: ",
+    "logoutBoxText": "Certifique-se de ter salvado todas as suas alterações antes de sair.",
+    "deleteConfirmSubtitle": "Esta ação é permanente e não pode ser desfeita",
+    "deleteBoxBold": "Atenção! Esta ação é irreversível. ",
+    "deleteBoxText": "Ao excluir sua conta, você perderá permanentemente:",
+    "willBeDeleted": "Será excluído:",
+    "deleteItems": {
+      "history": "Todo o seu histórico de compras",
+      "info": "Suas informações pessoais e preferências",
+      "payment": "Métodos de pagamento salvos"
+    },
+    "needABreakTitle": "Precisa de uma pausa?",
+    "needABreakText": "Em vez de excluir sua conta, você pode simplesmente sair e voltar quando quiser.",
+    "needABreakLink": "Sair em vez disso →",
+    "confirmDeletePrompt": "Para confirmar, digite: ",
+    "confirmDeletePlaceholder": "Digite a frase exata",
+    "deleteCancelBtn": "Cancelar e voltar"
+  },
+  "common": {
+    "ok": "Entendi",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "add": "Adicionar",
+    "save": "Salvar",
+    "continue": "Continuar",
+    "dismissError": "Fechar mensagem de erro",
+    "emptyTitle": "Não há nada aqui",
+    "emptySubtitle": "Ainda não há conteúdo para mostrar",
+    "retry": "Tentar novamente",
+    "decrementQuantity": "Reduzir quantidade",
+    "incrementQuantity": "Aumentar quantidade",
+    "quantityValue": "Quantidade: {{value}}"
+  },
+  "historyScreen": {
+    "title": "Histórico",
+    "greeting": "Suas compras, {{name}}",
+    "totalSpent": "Total gasto",
+    "completed": "Compras concluídas",
+    "searchPlaceholder": "Buscar por loja ou número do pedido",
+    "searchA11y": "Buscar no histórico de compras",
+    "unknownStore": "Supermercado",
+    "emptyTitle": "Você ainda não fez nenhuma compra",
+    "emptySubtitle": "Quando você concluir uma compra, ela vai aparecer aqui",
+    "filters": {
+      "thisWeek": "Esta semana",
+      "thisMonth": "Este mês",
+      "thisYear": "Este ano"
+    },
+    "status": {
+      "pending": "Pendente",
+      "completed": "Concluída",
+      "failed": "Falhou"
+    }
+  },
+  "purchaseDetail": {
+    "title": "Detalhe da compra",
+    "back": "Voltar ao histórico",
+    "products_one": "{{count}} produto",
+    "products_other": "{{count}} produtos",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "paymentStatus": "Status do pagamento",
+    "notFound": "Não encontramos esta compra"
+  },
+  "lists": {
+    "addItemPlaceholder": "Nome do produto...",
+    "progress": "{{done}} de {{total}} itens",
+    "addItem": "Adicionar item",
+    "markPurchased": "Marcar como comprado",
+    "markUnpurchased": "Marcar como não comprado"
+  },
+  "purchases": {
+    "total": "Total",
+    "date": "Data",
+    "status": "Status",
+    "quantity": "Quantidade"
+  },
+  "pricing": {
+    "priceWithoutTax": "Preço sem imposto",
+    "iva": "Imposto ({{rate}})",
+    "total": "Total"
+  },
+  "forgotPassword": {
+    "title": "Esqueceu sua senha?",
+    "subtitle": "Não se preocupe, enviaremos instruções para redefini-la.",
+    "email": "Endereço de email",
+    "submit": "Enviar instruções",
+    "sending": "Enviando...",
+    "info": "Você receberá um email com um link para redefinir sua senha.",
+    "back": "Voltar ao login",
+    "sentTitle": "Verifique seu email",
+    "sentMessage": "Se {{email}} tiver uma conta, você receberá um link para redefinir sua senha nos próximos minutos."
+  }
+}

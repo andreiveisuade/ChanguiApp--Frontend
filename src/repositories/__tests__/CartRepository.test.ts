@@ -94,6 +94,95 @@ describe('CartRepository', () => {
     });
   });
 
+  describe('cálculo de IVA (fallback cuando el backend no manda summary)', () => {
+    it('sin summary ni total: calcula el total y descompone el IVA al 21% por defecto', async () => {
+      mockedGet.mockResolvedValueOnce(
+        axiosResponse({
+          cart: null,
+          items: [
+            {
+              id: 'i1',
+              cart_id: 'c1',
+              product_id: 'p1',
+              quantity: 1,
+              unit_price: 1210,
+              product: { id: 'p1', name: 'Yerba', barcode: '779', brand: null, image_url: null, price: 1210 },
+            },
+          ],
+        }),
+      );
+
+      const result = await CartRepository.getCart();
+
+      expect(result.total).toBe(1210); // calculado desde unit_price * quantity
+      expect(result.summary.taxes).toHaveLength(1);
+      expect(result.summary.taxes[0].rate).toBe(21);
+      expect(result.summary.taxes[0].label).toBe('IVA 21%');
+      expect(result.summary.subtotal_net).toBeCloseTo(1000, 4); // 1210 / 1.21
+      expect(result.summary.taxes[0].amount).toBeCloseTo(210, 4);
+      // El neto + el IVA reconstruyen el total.
+      expect(result.summary.subtotal_net + result.summary.taxes[0].amount).toBeCloseTo(1210, 4);
+    });
+
+    it('sin summary: usa el tax del producto (rate/net/amount del backend) y agrupa por tasa', async () => {
+      mockedGet.mockResolvedValueOnce(
+        axiosResponse({
+          cart: null,
+          items: [
+            {
+              id: 'i1',
+              cart_id: 'c1',
+              product_id: 'p1',
+              quantity: 2,
+              unit_price: 110.5,
+              product: {
+                id: 'p1',
+                name: 'Leche',
+                barcode: '1',
+                brand: null,
+                image_url: null,
+                price: 110.5,
+                tax: { category: 'IVA', rate: 10.5, net_price: 100, tax_amount: 10.5 },
+              },
+            },
+          ],
+        }),
+      );
+
+      const result = await CartRepository.getCart();
+
+      expect(result.total).toBe(221); // 110.5 * 2
+      expect(result.summary.taxes).toHaveLength(1);
+      expect(result.summary.taxes[0]).toEqual({ rate: 10.5, label: 'IVA 10.5%', base: 200, amount: 21 });
+      expect(result.summary.subtotal_net).toBe(200);
+    });
+
+    it('respeta el summary del backend cuando viene con valores (no recalcula)', async () => {
+      const backendSummary = { subtotal_net: 826.4, taxes: [{ rate: 21, label: 'IVA 21%', base: 826.4, amount: 173.6 }], total: 1000 };
+      mockedGet.mockResolvedValueOnce(
+        axiosResponse({
+          cart: null,
+          items: [
+            {
+              id: 'i1',
+              cart_id: 'c1',
+              product_id: 'p1',
+              quantity: 1,
+              unit_price: 1000,
+              product: { id: 'p1', name: 'X', barcode: '1', brand: null, image_url: null, price: 1000 },
+            },
+          ],
+          total: 1000,
+          summary: backendSummary,
+        }),
+      );
+
+      const result = await CartRepository.getCart();
+
+      expect(result.summary).toEqual(backendSummary);
+    });
+  });
+
   describe('mutaciones', () => {
     it('updateItemQuantity hace PUT con la cantidad', async () => {
       mockedPut.mockResolvedValueOnce(axiosResponse({}));
