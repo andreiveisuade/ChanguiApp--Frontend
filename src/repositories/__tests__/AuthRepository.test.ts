@@ -30,7 +30,10 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 }));
 
 jest.mock('expo-auth-session', () => ({ makeRedirectUri: jest.fn(() => 'changuiapp://redirect') }));
-jest.mock('expo-linking', () => ({ parse: jest.fn() }));
+jest.mock('expo-linking', () => ({
+  parse: jest.fn(),
+  addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+}));
 jest.mock('expo-web-browser', () => ({
   maybeCompleteAuthSession: jest.fn(),
   openAuthSessionAsync: jest.fn(),
@@ -147,10 +150,14 @@ describe('AuthRepository', () => {
     });
 
     it('lanza si el usuario cancela el browser', async () => {
+      jest.useFakeTimers();
       mockedSignInOAuth.mockResolvedValueOnce({ data: { url: 'https://google/oauth' }, error: null } as never);
       mockedOpenAuth.mockResolvedValueOnce({ type: 'cancel' } as never);
 
-      await expect(AuthRepository.loginWithGoogle()).rejects.toThrow('Google OAuth cancelled');
+      const assertion = expect(AuthRepository.loginWithGoogle()).rejects.toThrow('Google OAuth cancelled');
+      await jest.advanceTimersByTimeAsync(2000);
+      await assertion;
+      jest.useRealTimers();
     });
 
     it('lanza el error de supabase en signInWithOAuth', async () => {

@@ -139,13 +139,37 @@ export const AuthRepository = {
       throw new Error('Google OAuth URL missing');
     }
 
-    const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
+    // El redirect de vuelta puede llegar por dos caminos: el resultado de
+    // openAuthSessionAsync (caso normal) o el listener de deep link. En Android,
+    // el intent del scheme intercepta el redirect y reabre la app, devolviendo
+    // 'dismiss' en openAuthSessionAsync; el ?code= llega por Linking.
+    const redirectUrl = await new Promise<string | null>((resolve) => {
+      let settled = false;
+      const finish = (url: string | null): void => {
+        if (settled) return;
+        settled = true;
+        subscription.remove();
+        resolve(url);
+      };
+      const subscription = Linking.addEventListener('url', ({ url }) => finish(url));
+      WebBrowser.openAuthSessionAsync(data.url, redirectTo)
+        .then((res) => {
+          if (res.type === 'success') {
+            finish(res.url);
+          } else {
+            // 'dismiss'/'cancel': damos una ventana corta por si el deep link
+            // todavía está en camino; si no llega, se cancela.
+            setTimeout(() => finish(null), 2000);
+          }
+        })
+        .catch(() => finish(null));
+    });
 
-    if (result.type !== 'success') {
+    if (!redirectUrl) {
       throw new Error('Google OAuth cancelled');
     }
 
-    const parsedUrl = Linking.parse(result.url);
+    const parsedUrl = Linking.parse(redirectUrl);
     const code = typeof parsedUrl.queryParams?.code === 'string' ? parsedUrl.queryParams.code : null;
 
     if (!code) {

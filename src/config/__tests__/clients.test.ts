@@ -76,10 +76,22 @@ describe('httpClient interceptors', () => {
       ).rejects.toThrow('bad request');
     });
 
-    it('fallback al status cuando el body no trae message ni error', async () => {
+    it('503 sin body: mensaje amigable de servicio no disponible', async () => {
       await expect(
         responseRejected({ response: { status: 503, data: {} } }),
-      ).rejects.toThrow('Request failed with status 503');
+      ).rejects.toThrow('El servicio no está disponible. Reintentá en unos momentos.');
+    });
+
+    it('5xx sin body: mensaje amigable de error de servidor', async () => {
+      await expect(
+        responseRejected({ response: { status: 500, data: {} } }),
+      ).rejects.toThrow('Hubo un error en el servidor. Reintentá más tarde.');
+    });
+
+    it('4xx sin body: fallback al status', async () => {
+      await expect(
+        responseRejected({ response: { status: 404, data: {} } }),
+      ).rejects.toThrow('Request failed with status 404');
     });
   });
 });

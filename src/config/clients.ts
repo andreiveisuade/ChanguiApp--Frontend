@@ -48,11 +48,18 @@ httpClient.interceptors.response.use(
       throw new AuthSessionExpiredError();
     }
 
+    const status = error.response.status;
     const data = error.response.data as { message?: string; error?: string } | undefined;
-    const message =
-      data?.message ??
-      data?.error ??
-      `Request failed with status ${error.response.status}`;
+    // Si el backend manda un mensaje, lo respetamos. Si no (ej: 503 con body
+    // vacío del cold start de Render), evitamos el técnico "Request failed
+    // with status N" y mostramos algo entendible.
+    const fallback =
+      status === 503
+        ? 'El servicio no está disponible. Reintentá en unos momentos.'
+        : status >= 500
+          ? 'Hubo un error en el servidor. Reintentá más tarde.'
+          : `Request failed with status ${status}`;
+    const message = data?.message ?? data?.error ?? fallback;
     throw new Error(message);
   },
 );
