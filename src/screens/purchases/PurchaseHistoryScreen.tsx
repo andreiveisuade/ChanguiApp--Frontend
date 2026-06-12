@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
@@ -6,7 +6,7 @@ import { colors, fonts, radii, spacing, iconSize, fontSize } from '@/constants/t
 import HistoryHeader from '@/components/layout/HistoryHeader';
 import { PurchaseCard } from '@/components/purchases/PurchaseCard';
 import useProfile from '@/viewmodels/useProfile';
-import { usePurchaseHistory } from '@/viewmodels/usePurchaseHistory';
+import { usePurchaseHistory, DATE_FILTERS } from '@/viewmodels/usePurchaseHistory';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
@@ -14,53 +14,22 @@ import { ROUTES } from '@/constants/routes';
 import { Purchase } from '@/types/domain';
 import { formatARS } from '@/utils/currency';
 
-const FILTERS = ['thisWeek', 'thisMonth', 'thisYear'] as const;
-type DateFilter = (typeof FILTERS)[number];
-
-/** Filtra por ventana temporal usando created_at (lo único confiable que da el listado). */
-function withinFilter(dateIso: string, filter: DateFilter): boolean {
-  const date = new Date(dateIso);
-  if (Number.isNaN(date.getTime())) return false;
-  const now = new Date();
-  if (filter === 'thisWeek') {
-    // Semana calendario (desde el lunes), coherente con thisMonth/thisYear.
-    const startOfWeek = new Date(now);
-    startOfWeek.setHours(0, 0, 0, 0);
-    const daysFromMonday = (now.getDay() + 6) % 7; // 0 = lunes ... 6 = domingo
-    startOfWeek.setDate(now.getDate() - daysFromMonday);
-    return date >= startOfWeek;
-  }
-  if (filter === 'thisMonth') {
-    return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-  }
-  return date.getFullYear() === now.getFullYear();
-}
-
 export function PurchaseHistoryScreen(): React.JSX.Element {
   const { t } = useTranslation();
   const router = useRouter();
   const { profile } = useProfile();
-  const { purchases, isLoading, error, refresh } = usePurchaseHistory();
-
-  const [search, setSearch] = useState<string>('');
-  const [filter, setFilter] = useState<DateFilter>('thisYear');
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return purchases.filter((p) => {
-      if (!withinFilter(p.date, filter)) return false;
-      if (!q) return true;
-      const store = (p.store_name ?? '').toLowerCase();
-      return store.includes(q) || String(p.id).toLowerCase().includes(q);
-    });
-  }, [purchases, search, filter]);
-
-  const summary = useMemo(() => {
-    const completed = filtered.filter((p) => p.status === 'completed');
-    const totalSpent = completed.reduce((acc, p) => acc + p.total, 0);
-    const completedCount = completed.length;
-    return { totalSpent, completedCount };
-  }, [filtered]);
+  const {
+    purchases,
+    filtered,
+    summary,
+    search,
+    setSearch,
+    filter,
+    setFilter,
+    isLoading,
+    error,
+    refresh,
+  } = usePurchaseHistory();
 
   const userName = profile?.full_name ?? t('home.defaultUser');
 
@@ -134,7 +103,7 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
             </View>
 
             <View style={styles.filtersRow}>
-              {FILTERS.map((option) => {
+              {DATE_FILTERS.map((option) => {
                 const active = filter === option;
                 return (
                   <Pressable
