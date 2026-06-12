@@ -128,6 +128,9 @@
       "invalidCredentials": "Email or password is incorrect",
       "networkError": "No connection. Check your internet.",
       "googleError": "Could not sign in with Google",
+      "serverWaking": "The server is starting up. Wait a few seconds and try again.",
+      "tooManyAttempts": "Too many attempts. Wait a few minutes and try again.",
+      "serverError": "Server error. Please try again in a moment.",
       "unknown": "Something went wrong. Try again."
     }
   },
