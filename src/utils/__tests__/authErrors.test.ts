@@ -37,4 +37,26 @@ describe('mapAuthError', () => {
   it('acepta objetos error-like con message', () => {
     expect(mapAuthError({ message: 'email already used' }).field).toBe('email');
   });
+
+  it('mapea por status: 429 rate limit, 503 cold start, 5xx server error', () => {
+    expect(mapAuthError({ status: 429, message: '' }).message).toBe('auth.errors.tooManyAttempts');
+    expect(mapAuthError({ status: 503, message: '' }).message).toBe('auth.errors.serverWaking');
+    expect(mapAuthError({ status: 500, message: '' }).message).toBe('auth.errors.serverError');
+  });
+
+  it('mapea 409/401 por status aunque el mensaje del backend venga en español', () => {
+    expect(mapAuthError({ status: 409, message: 'El email ya está registrado' })).toEqual({
+      message: 'auth.errors.emailAlreadyUsed',
+      field: 'email',
+    });
+    expect(mapAuthError({ status: 401, message: 'Credenciales inválidas' }).message).toBe(
+      'auth.errors.invalidCredentials',
+    );
+  });
+
+  it('el status tiene prioridad sobre el texto del mensaje', () => {
+    expect(mapAuthError({ status: 503, message: 'Authentication request failed' }).message).toBe(
+      'auth.errors.serverWaking',
+    );
+  });
 });
