@@ -53,8 +53,11 @@ export function OnboardingScreen(): React.JSX.Element {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handleFinish = async (): Promise<void> => {
-    await OnboardingRepository.markCompleted();
-    router.replace(ROUTES.auth.login);
+    try {
+      await OnboardingRepository.markCompleted();
+    } finally {
+      router.replace(ROUTES.auth.login);
+    }
   };
 
   const handleNext = (): void => {
