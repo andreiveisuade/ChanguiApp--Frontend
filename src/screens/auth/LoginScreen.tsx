@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -15,6 +14,7 @@ import AuthContainer from '@/components/layout/AuthContainer';
 import useAuth from '@/viewmodels/useAuth';
 import { colors, fonts, spacing, touchTarget, fontSize } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
+import { clearAllStorage } from '@/utils/storage';
 import { isValidEmail } from '@/utils/validators';
 
 export function LoginScreen(): React.JSX.Element {
@@ -110,7 +110,7 @@ export function LoginScreen(): React.JSX.Element {
       {__DEV__ && (
         <Pressable
           onPress={async () => {
-            await AsyncStorage.clear();
+            await clearAllStorage();
             router.replace(ROUTES.root);
           }}
           style={styles.devReset}

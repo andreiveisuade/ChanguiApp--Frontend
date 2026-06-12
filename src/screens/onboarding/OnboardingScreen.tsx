@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
@@ -15,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import OnboardingFooter from '@/components/onboarding/OnboardingFooter';
 import OnboardingSlide from '@/components/onboarding/OnboardingSlide';
 import { colors, fonts, fontSize, spacing, touchTarget } from '@/constants/theme';
-import { STORAGE_KEYS } from '@/constants/storage';
+import OnboardingRepository from '@/repositories/OnboardingRepository';
 import { ROUTES } from '@/constants/routes';
 
 type Slide = {
@@ -54,7 +53,7 @@ export function OnboardingScreen(): React.JSX.Element {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const handleFinish = async (): Promise<void> => {
-    await AsyncStorage.setItem(STORAGE_KEYS.onboardingCompleted, 'true');
+    await OnboardingRepository.markCompleted();
     router.replace(ROUTES.auth.login);
   };
 
