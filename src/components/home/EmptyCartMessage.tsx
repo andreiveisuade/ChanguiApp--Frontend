@@ -5,21 +5,14 @@ import { colors, spacing } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
-interface EmptyCartMessageProps {
-  message?: string;
-}
-
-export const EmptyCartMessage = ({ message }: EmptyCartMessageProps) => {
+export const EmptyCartMessage = () => {
   const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
       <View style={styles.iconCircle}>
-        <AppIcon name="carrito" size={48} color={colors.secondary} />
+        <AppIcon name="carrito" size={56} color={colors.secondary} />
       </View>
-      <AppText variant="H2" style={styles.title}>
-        {message || t('home.emptyCart')}
-      </AppText>
       <AppText variant="Body" style={styles.subtitle}>
         {t('home.emptyCartSubtitle')}
       </AppText>
@@ -36,19 +29,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xl,
   },
   iconCircle: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
+    width: 108,
+    height: 108,
+    borderRadius: 54,
     backgroundColor: colors.surface,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: spacing.lg,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: spacing.xs,
   },
   subtitle: {
     textAlign: 'center',

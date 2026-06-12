@@ -22,9 +22,6 @@ export const HomeHeader = ({ userName, onProfilePress }: HomeHeaderProps) => {
           <AppText variant="Display" style={styles.greeting} numberOfLines={1}>
             {t('home.greeting', { name: firstName })}
           </AppText>
-          <AppText variant="Body" style={styles.subtitle}>
-            {t('home.continueShopping')}
-          </AppText>
         </View>
         <Pressable
           onPress={onProfilePress}
@@ -63,12 +60,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '800',
     color: colors.white,
-    marginBottom: spacing.xs,
-  },
-  subtitle: {
-    fontFamily: fonts.body,
-    fontSize: 16,
-    color: 'rgba(255, 255, 255, 0.8)',
   },
   avatarButton: {
     width: touchTarget.minWidth,

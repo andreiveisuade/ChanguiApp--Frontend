@@ -28,10 +28,9 @@ export const CartSummaryCard = ({ itemCount, total, isLoading }: CartSummaryCard
     <View style={styles.container}>
       <View style={styles.leftSection}>
         <View style={styles.iconContainer}>
-          <AppIcon name="carrito" size={24} color={colors.white} />
+          <AppIcon name="carrito" size={28} color={colors.white} />
         </View>
         <View style={styles.infoContainer}>
-          <AppText variant="Label">{t('home.activeCart')}</AppText>
           {isLoading ? (
             <ActivityIndicator size="small" color={colors.primary} style={styles.spinner} />
           ) : (
@@ -68,9 +67,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
+    width: 52,
+    height: 52,
+    borderRadius: 14,
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
