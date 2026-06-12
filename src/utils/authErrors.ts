@@ -52,7 +52,29 @@ const ERROR_RULES: AuthErrorRule[] = [
   },
 ];
 
+const getStatus = (error: unknown): number | undefined =>
+  isErrorLike(error) && typeof error.status === 'number' ? error.status : undefined;
+
+type StatusError = { messageKey: string; field: NonNullable<AuthError['field']> };
+
+// Mapeo por HTTP status: independiente del idioma del mensaje del backend
+// (que viene en español) y con prioridad sobre el match por keyword.
+const statusError = (status: number): StatusError | null => {
+  if (status === 409) return { messageKey: 'auth.errors.emailAlreadyUsed', field: 'email' };
+  if (status === 401) return { messageKey: 'auth.errors.invalidCredentials', field: 'general' };
+  if (status === 429) return { messageKey: 'auth.errors.tooManyAttempts', field: 'general' };
+  if (status === 503) return { messageKey: 'auth.errors.serverWaking', field: 'general' };
+  if (status >= 500) return { messageKey: 'auth.errors.serverError', field: 'general' };
+  return null;
+};
+
 export const mapAuthError = (error: unknown): AuthError => {
+  const status = getStatus(error);
+  const mapped = status !== undefined ? statusError(status) : null;
+  if (mapped) {
+    return { message: i18n.t(mapped.messageKey), field: mapped.field };
+  }
+
   const message = getMessage(error).toLowerCase();
   const rule = ERROR_RULES.find((r) => r.keywords.some((kw) => message.includes(kw)));
 

@@ -128,6 +128,9 @@
       "invalidCredentials": "Email ou senha incorretos",
       "networkError": "Sem conexão. Verifique sua internet.",
       "googleError": "Não foi possível entrar com o Google",
+      "serverWaking": "O servidor está iniciando. Aguarde alguns segundos e tente novamente.",
+      "tooManyAttempts": "Muitas tentativas. Aguarde alguns minutos e tente novamente.",
+      "serverError": "Erro no servidor. Tente novamente em instantes.",
       "unknown": "Ocorreu um erro. Tente novamente."
     }
   },
