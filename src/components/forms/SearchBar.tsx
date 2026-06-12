@@ -59,16 +59,16 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF', // Fondo blanco para resaltar sobre el fondo #FFF8F8
+    backgroundColor: colors.white, // Fondo blanco para resaltar sobre el background
     minHeight: 56,
     borderRadius: radii.md,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: colors.border,
     paddingHorizontal: 14,
     width: '100%',
     marginVertical: 10,
     // Sombra sutil para mantener el estilo de las tarjetas de la Home
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.03,
     shadowRadius: 4,

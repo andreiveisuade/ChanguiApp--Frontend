@@ -7,6 +7,8 @@ import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
 import { colors, spacing, radii, fonts, iconSize, fontSize } from '@/constants/theme';
 
+export const CONFIRM_PHRASE = 'ELIMINAR MI CUENTA';
+
 interface DeleteAccountViewProps {
   onDelete: () => Promise<void>;
   onCancel: () => void;
@@ -23,7 +25,6 @@ export function DeleteAccountView({
   const { t } = useTranslation();
   const [confirmationText, setConfirmationText] = useState<string>('');
 
-  const CONFIRM_PHRASE = 'ELIMINAR MI CUENTA';
   const isConfirmed = confirmationText.trim() === CONFIRM_PHRASE;
 
   const handleDelete = () => {
@@ -42,7 +43,7 @@ export function DeleteAccountView({
       {/* Icono central de papelera */}
       <View style={styles.centerIconWrapper}>
         <View style={styles.iconCircle}>
-          <AppIcon name="eliminar" size={iconSize.xxl} color="#EF4444" />
+          <AppIcon name="eliminar" size={iconSize.xxl} color={colors.danger} />
         </View>
       </View>
 
@@ -74,7 +75,7 @@ export function DeleteAccountView({
 
         {listItems.map((item, idx) => (
           <View key={idx} style={styles.listItemCard}>
-            <AppIcon name={item.icon} size={iconSize.smd} color="#6B7280" style={styles.listItemIcon} />
+            <AppIcon name={item.icon} size={iconSize.smd} color={colors.textMuted} style={styles.listItemIcon} />
             <AppText variant="Body" style={styles.listItemText}>
               {item.text}
             </AppText>
@@ -113,7 +114,7 @@ export function DeleteAccountView({
             value={confirmationText}
             onChangeText={setConfirmationText}
             placeholder={t('profile.confirmDeletePlaceholder', { defaultValue: 'Escribe la frase exacta' })}
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor={colors.textPlaceholder}
             autoCapitalize="characters"
             style={styles.input}
           />
@@ -142,7 +143,7 @@ export function DeleteAccountView({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: spacing.lg,
-    paddingBottom: 40,
+    paddingBottom: spacing.xxxl,
   },
   centerIconWrapper: {
     alignItems: 'center',
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#FEE2E2', // Muy claro rojo
+    backgroundColor: colors.dangerSurfaceStrong, // Muy claro rojo
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -164,13 +165,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: '800',
-    color: '#111827',
+    color: colors.textDark,
     fontSize: fontSize.h1,
     textAlign: 'center',
     marginBottom: spacing.sm,
   },
   subtitle: {
-    color: '#6B7280',
+    color: colors.textMuted,
     fontSize: fontSize.h3,
     textAlign: 'center',
     lineHeight: 22,
@@ -185,16 +186,16 @@ const styles = StyleSheet.create({
   },
   listHeader: {
     fontWeight: '700',
-    color: '#111827',
+    color: colors.textDark,
     fontSize: fontSize.h3,
     marginBottom: spacing.md,
   },
   listItemCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surfaceSubtle,
     borderWidth: 1,
-    borderColor: '#F3F4F6',
+    borderColor: colors.surfaceMuted,
     borderRadius: radii.md,
     padding: spacing.md,
     marginBottom: spacing.sm,
@@ -203,14 +204,14 @@ const styles = StyleSheet.create({
     marginRight: spacing.md,
   },
   listItemText: {
-    color: '#4B5563',
+    color: colors.textSlateMuted,
     fontSize: fontSize.body,
     fontWeight: '500',
   },
   breakBox: {
-    backgroundColor: '#EFF6FF', // Celeste muy claro
+    backgroundColor: colors.infoBlueSurface, // Celeste muy claro
     borderWidth: 1,
-    borderColor: '#DBEAFE',
+    borderColor: colors.infoBlueBorder,
     borderRadius: radii.md,
     padding: spacing.lg,
     width: '100%',
@@ -218,18 +219,18 @@ const styles = StyleSheet.create({
   },
   breakTitle: {
     fontWeight: '700',
-    color: '#1E40AF',
+    color: colors.infoBlueText,
     fontSize: fontSize.h3,
     marginBottom: spacing.xs,
   },
   breakText: {
-    color: '#1E3A8A',
+    color: colors.infoBlueTextDark,
     fontSize: fontSize.body,
     lineHeight: 18,
     marginBottom: spacing.sm,
   },
   breakLink: {
-    color: '#2563EB',
+    color: colors.infoBlue,
     fontWeight: '700',
     fontSize: fontSize.body,
   },
@@ -238,18 +239,18 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl,
   },
   confirmLabel: {
-    color: '#374151',
+    color: colors.textSlate,
     fontSize: fontSize.body,
     fontWeight: '600',
     marginBottom: spacing.sm,
   },
   confirmPhraseBold: {
     fontWeight: '800',
-    color: '#DC4040',
+    color: colors.primary,
   },
   inputContainer: {
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.borderMuted,
     borderRadius: radii.md,
     backgroundColor: colors.white,
     paddingHorizontal: spacing.md,
@@ -257,12 +258,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inputContainerConfirmed: {
-    borderColor: '#10B981',
+    borderColor: colors.successStrong,
   },
   input: {
     fontSize: fontSize.input,
     fontFamily: fonts.body,
-    color: '#111827',
+    color: colors.textDark,
     paddingVertical: spacing.sm,
   },
   actions: {

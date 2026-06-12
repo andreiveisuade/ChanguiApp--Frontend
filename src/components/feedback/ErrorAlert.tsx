@@ -75,13 +75,13 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Poppins-Bold',
     fontSize: fontSize.h3,
-    color: '#C1121F', // colors.error
+    color: colors.error,
     marginBottom: spacing.xs,
   },
   message: {
     fontFamily: 'Inter-Regular',
     fontSize: fontSize.body,
-    color: '#C1121F', // colors.error for readability and WCAG AA contrast (6.5:1 on #FFD1D0)
+    color: colors.error, // WCAG AA contrast (6.5:1 on errorSurface)
     lineHeight: 20,
   },
   closeButton: {
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     minWidth: touchTarget.minWidth, // 44
   },
   actionButton: {
-    backgroundColor: '#C1121F', // #C1121F
+    backgroundColor: colors.error,
     borderRadius: radii.sm, // 8
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,

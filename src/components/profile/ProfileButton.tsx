@@ -30,7 +30,7 @@ export function ProfileButton({
       return {
         button: styles.disabledButton,
         text: styles.disabledText,
-        iconColor: '#9CA3AF',
+        iconColor: colors.textPlaceholder,
       };
     }
 
@@ -39,7 +39,7 @@ export function ProfileButton({
         return {
           button: styles.secondaryButton,
           text: styles.secondaryText,
-          iconColor: '#374151',
+          iconColor: colors.textSlate,
         };
       case 'danger':
         return {
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   // Primary variant
   primaryButton: {
-    backgroundColor: '#DC4040', // Red/Orange primary branding
+    backgroundColor: colors.primary, // Red/Orange primary branding
   },
   primaryText: {
     color: colors.white,
@@ -137,31 +137,31 @@ const styles = StyleSheet.create({
   secondaryButton: {
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.borderMuted,
   },
   secondaryText: {
-    color: '#374151',
+    color: colors.textSlate,
   },
   // Danger variant
   dangerButton: {
-    backgroundColor: '#DC4040', // Red
+    backgroundColor: colors.primary, // Red
   },
   dangerText: {
     color: colors.white,
   },
   // Warning variant (e.g. orange for Cerrar sesión button)
   warningButton: {
-    backgroundColor: '#EA580C', // Orange
+    backgroundColor: colors.accentOrange, // Orange
   },
   warningText: {
     color: colors.white,
   },
   // Disabled variant
   disabledButton: {
-    backgroundColor: '#E5E7EB',
+    backgroundColor: colors.border,
   },
   disabledText: {
-    color: '#9CA3AF',
+    color: colors.textPlaceholder,
   },
 });
 
