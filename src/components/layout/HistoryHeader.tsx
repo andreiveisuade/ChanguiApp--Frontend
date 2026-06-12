@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, iconSize, spacing, touchTarget } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -19,7 +19,7 @@ export const HistoryHeader = ({ userName, onProfilePress }: HistoryHeaderProps):
     <SafeAreaView edges={['top']} style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.textContainer}>
-          <AppIcon name="carrito" size={28} color={colors.white} style={styles.cartIcon} />
+          <AppIcon name="carrito" size={iconSize.lgl} color={colors.white} style={styles.cartIcon} />
           <AppText variant="Display" style={styles.title} numberOfLines={1}>
             {t('historyScreen.title', { name: firstName })}
           </AppText>
@@ -31,7 +31,7 @@ export const HistoryHeader = ({ userName, onProfilePress }: HistoryHeaderProps):
           accessibilityHint={t('auth.accessibility.goToProfileHint')}
           accessibilityRole="button"
         >
-          <AppIcon name="perfil" size={24} color={colors.textPrimary} />
+          <AppIcon name="perfil" size={iconSize.mdl} color={colors.textPrimary} />
         </Pressable>
       </View>
     </SafeAreaView>

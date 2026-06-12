@@ -7,7 +7,7 @@ import {
   TextInputProps, 
   ViewStyle 
 } from 'react-native';
-import { colors } from '@/constants/theme';
+import { colors, iconSize } from '@/constants/theme';
 import { AppIcon } from '../atoms/AppIcon';
 
 interface SearchBarProps extends TextInputProps {
@@ -25,7 +25,7 @@ export const SearchBar = ({
     <View style={[styles.container, containerStyle]}>
       <AppIcon
         name="buscar"
-        size={22}
+        size={iconSize.md}
         color={colors.textSecondary}
         style={styles.searchIcon}
       />
@@ -48,7 +48,7 @@ export const SearchBar = ({
           accessibilityLabel="Limpiar búsqueda"
           accessibilityRole="button"
         >
-          <AppIcon name="cerrar" size={20} color={colors.textSecondary} />
+          <AppIcon name="cerrar" size={iconSize.smd} color={colors.textSecondary} />
         </TouchableOpacity>
       ) : null}
     </View>

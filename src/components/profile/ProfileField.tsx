@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { colors, spacing, touchTarget } from '@/constants/theme';
+import { colors, spacing, touchTarget, iconSize } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -31,7 +31,7 @@ export function ProfileField({
           hitSlop={8}
           style={({ pressed }) => [styles.editButton, pressed && styles.editPressed]}
         >
-          <AppIcon name="editar" size={18} color={colors.primary} />
+          <AppIcon name="editar" size={iconSize.sm} color={colors.primary} />
         </Pressable>
       ) : null}
     </View>

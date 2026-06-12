@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
 interface AddListItemInputProps {
@@ -44,7 +44,7 @@ export function AddListItemInput({ onAdd }: AddListItemInputProps): React.JSX.El
           pressed && styles.buttonPressed,
         ]}
       >
-        <AppIcon name="mas" size={22} color={colors.white} />
+        <AppIcon name="mas" size={iconSize.md} color={colors.white} />
       </Pressable>
     </View>
   );

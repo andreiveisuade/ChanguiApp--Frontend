@@ -44,10 +44,12 @@ export const radii = {
   sm: 8,
   md: 12,
   lg: 18,
+  xl: 32,
 } as const;
 
 export const fontSize = {
   display: 32,
+  greeting: 28,
   h1: 24,
   h2: 18,
   h3: 16,
@@ -66,4 +68,40 @@ export const touchTarget = {
 export const opacity = {
   disabled: 0.5,
   pressed: 0.86,
+} as const;
+
+export const iconSize = {
+  xs: 16,
+  sm: 18,
+  smd: 20,
+  md: 22,
+  mdl: 24,
+  lg: 26,
+  lgl: 28,
+  xl: 30,
+  xxl: 32,
+  xxxl: 40,
+  xxxxl: 42,
+  hero: 48,
+  heroSm: 56,
+  heroMd: 72,
+  heroLg: 80,
+  heroXl: 96,
+  heroXxl: 120,
+} as const;
+
+export const componentSize = {
+  avatarButton: 44,
+  cartIconBox: 52,
+  emptyStateCircle: 108,
+} as const;
+
+export const shadow = {
+  card: {
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
 } as const;

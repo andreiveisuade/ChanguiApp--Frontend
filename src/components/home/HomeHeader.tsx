@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, spacing, radii, touchTarget, iconSize, shadow } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -30,7 +30,7 @@ export const HomeHeader = ({ userName, onProfilePress }: HomeHeaderProps) => {
           accessibilityHint={t('auth.accessibility.goToProfileHint')}
           accessibilityRole="button"
         >
-          <AppIcon name="perfil" size={24} color={colors.textPrimary} />
+          <AppIcon name="perfil" size={iconSize.mdl} color={colors.textPrimary} />
         </Pressable>
       </View>
     </SafeAreaView>
@@ -40,8 +40,8 @@ export const HomeHeader = ({ userName, onProfilePress }: HomeHeaderProps) => {
 const styles = StyleSheet.create({
   safeArea: {
     backgroundColor: colors.primary,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
+    borderBottomLeftRadius: radii.xl,
+    borderBottomRightRadius: radii.xl,
   },
   container: {
     flexDirection: 'row',
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.xl,
-    paddingBottom: 48,
+    paddingBottom: spacing.xl * 2,
   },
   textContainer: {
     flex: 1,
@@ -57,22 +57,18 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontFamily: fonts.display,
-    fontSize: 28,
+    fontSize: fontSize.greeting,
     fontWeight: '800',
     color: colors.white,
   },
   avatarButton: {
     width: touchTarget.minWidth,
     height: touchTarget.minHeight,
-    borderRadius: 22,
+    borderRadius: touchTarget.minWidth / 2,
     backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: colors.textPrimary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    ...shadow.card,
   },
 });
 

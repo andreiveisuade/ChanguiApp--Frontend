@@ -6,7 +6,7 @@ import { AppIcon } from '@/components/atoms/AppIcon';
 import AvatarImage from '@/components/profile/AvatarImage';
 import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { spacing, radii } from '@/constants/theme';
+import { spacing, radii, iconSize } from '@/constants/theme';
 import { User } from '@/types/auth';
 
 interface LogoutViewProps {
@@ -26,7 +26,7 @@ export function LogoutView({ user, onLogout, onCancel }: LogoutViewProps): React
       {/* Icono central de logout */}
       <View style={styles.centerIconWrapper}>
         <View style={styles.iconCircle}>
-          <AppIcon name="salir" size={32} color="#EA580C" />
+          <AppIcon name="salir" size={iconSize.xxl} color="#EA580C" />
         </View>
       </View>
 

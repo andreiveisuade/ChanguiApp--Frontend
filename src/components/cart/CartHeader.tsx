@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing, touchTarget } from '@/constants/theme';
+import { colors, iconSize, spacing, touchTarget } from '@/constants/theme';
 
 interface CartHeaderProps {
   userName: string;
@@ -19,7 +19,7 @@ export function CartHeader({ userName, onProfilePress }: CartHeaderProps): React
     <SafeAreaView edges={['top']} style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.left}>
-          <AppIcon name="carrito" size={24} color={colors.textPrimary} />
+          <AppIcon name="carrito" size={iconSize.mdl} color={colors.textPrimary} />
           <AppText variant="H1">{t('cartScreen.greeting', { name: firstName })}</AppText>
         </View>
 
@@ -30,7 +30,7 @@ export function CartHeader({ userName, onProfilePress }: CartHeaderProps): React
           accessibilityLabel={t('auth.accessibility.goToProfile')}
           accessibilityHint={t('auth.accessibility.goToProfileHint')}
         >
-          <AppIcon name="perfil" size={24} color={colors.textPrimary} />
+          <AppIcon name="perfil" size={iconSize.mdl} color={colors.textPrimary} />
         </Pressable>
       </View>
     </SafeAreaView>

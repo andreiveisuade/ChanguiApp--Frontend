@@ -5,7 +5,7 @@ import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import AvatarImage from '@/components/profile/AvatarImage';
 import SettingsCard from '@/components/profile/SettingsCard';
-import { spacing, radii } from '@/constants/theme';
+import { spacing, radii, iconSize } from '@/constants/theme';
 import { User } from '@/types/auth';
 
 interface ProfileMainViewProps {
@@ -29,7 +29,7 @@ export function ProfileMainView({ user, onNavigate }: ProfileMainViewProps): Rea
             {fullName}
           </AppText>
           <View style={styles.emailContainer}>
-            <AppIcon name="mail" size={16} color="#6B7280" style={styles.emailIcon} />
+            <AppIcon name="mail" size={iconSize.xs} color="#6B7280" style={styles.emailIcon} />
             <AppText variant="Body" style={styles.userEmail}>
               {email}
             </AppText>

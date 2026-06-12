@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing, radii } from '@/constants/theme';
+import { colors, spacing, radii, iconSize } from '@/constants/theme';
 
 interface SettingsCardProps {
   title: string;
@@ -29,7 +29,7 @@ export function SettingsCard({
       accessibilityLabel={`${title}, ${description}`}
     >
       <View style={[styles.iconWrapper, { backgroundColor: iconBgColor }]}>
-        <AppIcon name={iconName} size={20} color={iconColor} />
+        <AppIcon name={iconName} size={iconSize.smd} color={iconColor} />
       </View>
       <View style={styles.textWrapper}>
         <AppText variant="H3" style={styles.title}>
@@ -39,7 +39,7 @@ export function SettingsCard({
           {description}
         </AppText>
       </View>
-      <AppIcon name="chevron-derecha" size={20} color="#9CA3AF" style={styles.arrow} />
+      <AppIcon name="chevron-derecha" size={iconSize.smd} color="#9CA3AF" style={styles.arrow} />
     </Pressable>
   );
 }

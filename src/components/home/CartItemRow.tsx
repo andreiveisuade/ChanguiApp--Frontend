@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { CartItemWithProduct } from '@/types/domain';
-import { colors, spacing } from '@/constants/theme';
+import { colors, spacing, iconSize } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { formatARS } from '@/utils/currency';
@@ -30,7 +30,7 @@ export const CartItemRow = ({ item, isLast = false }: CartItemRowProps) => {
             resizeMode="cover"
           />
         ) : (
-          <AppIcon name="package" size={24} color={colors.textSecondary} />
+          <AppIcon name="package" size={iconSize.mdl} color={colors.textSecondary} />
         )}
       </View>
 

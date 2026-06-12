@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing, radii } from '@/constants/theme';
+import { colors, spacing, radii, iconSize } from '@/constants/theme';
 
 export type ProfileButtonVariant = 'primary' | 'secondary' | 'danger' | 'warning' | 'disabled';
 
@@ -84,11 +84,11 @@ export function ProfileButton({
       ) : (
         <View style={styles.content}>
           {iconName ? (
-            <AppIcon 
-              name={iconName} 
-              size={18} 
-              color={currentStyles.iconColor} 
-              style={styles.icon} 
+            <AppIcon
+              name={iconName}
+              size={iconSize.sm}
+              color={currentStyles.iconColor}
+              style={styles.icon}
             />
           ) : null}
           <AppText variant="Body" style={[styles.textBase, currentStyles.text]}>

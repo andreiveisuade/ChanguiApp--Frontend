@@ -7,7 +7,7 @@ import AvatarImage from '@/components/profile/AvatarImage';
 import ProfileInput from '@/components/profile/ProfileInput';
 import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { colors, spacing } from '@/constants/theme';
+import { colors, spacing, iconSize } from '@/constants/theme';
 import { User } from '@/types/auth';
 
 interface EditProfileViewProps {
@@ -57,7 +57,7 @@ export function EditProfileView({
         >
           <AvatarImage uri={editAvatarUrl.trim() || null} fullName={editName} size={120} />
           <View style={styles.cameraBadge}>
-            <AppIcon name="camara" size={16} color="#6B7280" />
+            <AppIcon name="camara" size={iconSize.xs} color="#6B7280" />
           </View>
         </Pressable>
         <Pressable onPress={() => setShowUrlInput(!showUrlInput)}>

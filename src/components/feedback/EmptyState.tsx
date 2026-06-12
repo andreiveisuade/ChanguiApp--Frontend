@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { colors, spacing } from '@/constants/theme';
+import { colors, iconSize, spacing } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -24,7 +24,7 @@ export function EmptyState({
     <View style={styles.container}>
       {icon ? (
         <View style={styles.iconCircle}>
-          <AppIcon name={icon} size={40} color={colors.textSecondary} />
+          <AppIcon name={icon} size={iconSize.xxxl} color={colors.textSecondary} />
         </View>
       ) : null}
       <AppText variant="H2" style={styles.centered}>

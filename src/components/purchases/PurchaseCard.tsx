@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { PaymentStatus, Purchase } from '@/types/domain';
-import { colors, radii, spacing } from '@/constants/theme';
+import { colors, radii, spacing, iconSize } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { formatARS } from '@/utils/currency';
@@ -45,7 +45,7 @@ export function PurchaseCard({ purchase, onPress }: PurchaseCardProps): React.JS
         <AppText variant="Body">{formatPurchaseDate(purchase.date)}</AppText>
         <View style={styles.totalRow}>
           <AppText variant="Price">{formatARS(purchase.total)}</AppText>
-          <AppIcon name="chevron-derecha" size={18} color={colors.textSecondary} />
+          <AppIcon name="chevron-derecha" size={iconSize.sm} color={colors.textSecondary} />
         </View>
       </View>
     </Pressable>

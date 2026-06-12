@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
-import { colors } from '@/constants/theme';
+import { colors, iconSize } from '@/constants/theme';
 import { AppIcon } from '../atoms/AppIcon';
 import { AppText } from '../atoms/AppText';
 
@@ -74,7 +74,7 @@ export const BottomNavbar = ({ state, navigation }: BottomTabBarProps) => {
               accessibilityState={{ selected: isFocused }}
             >
               <View style={styles.scannerButton}>
-                <AppIcon name={iconName} size={26} color="#FFFFFF" />
+                <AppIcon name={iconName} size={iconSize.lg} color="#FFFFFF" />
               </View>
               <AppText variant="Label" style={styles.scannerLabel}>
                 {label}
@@ -97,7 +97,7 @@ export const BottomNavbar = ({ state, navigation }: BottomTabBarProps) => {
           >
             <AppIcon
               name={iconName}
-              size={22}
+              size={iconSize.md}
               color={isFocused ? colors.primary : colors.textSecondary}
             />
             <AppText

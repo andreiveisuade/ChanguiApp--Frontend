@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, fonts, spacing } from '@/constants/theme';
+import { colors, fonts, iconSize, spacing } from '@/constants/theme';
 
 type OnboardingSlideProps = {
   icon: string;
@@ -19,7 +19,7 @@ export function OnboardingSlide({
   return (
     <View style={[styles.container, { width }]}>
       <View style={styles.iconCircle}>
-        <AppIcon color={colors.white} name={icon} size={42} />
+        <AppIcon color={colors.white} name={icon} size={iconSize.xxxxl} />
       </View>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.text}>{text}</Text>

@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, StyleSheet, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
-import { colors, fonts, radii, spacing } from '@/constants/theme';
+import { colors, fonts, radii, spacing, iconSize } from '@/constants/theme';
 import HistoryHeader from '@/components/layout/HistoryHeader';
 import { PurchaseCard } from '@/components/purchases/PurchaseCard';
 import useProfile from '@/viewmodels/useProfile';
@@ -122,7 +122,7 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
             </View>
 
             <View style={styles.searchContainer}>
-              <AppIcon name="buscar" size={18} color={colors.textSecondary} />
+              <AppIcon name="buscar" size={iconSize.sm} color={colors.textSecondary} />
               <TextInput
                 accessibilityLabel={t('historyScreen.searchA11y')}
                 placeholder={t('historyScreen.searchPlaceholder')}

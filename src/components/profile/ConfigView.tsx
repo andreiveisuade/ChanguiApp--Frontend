@@ -5,7 +5,7 @@ import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import ProfileButton from '@/components/profile/ProfileButton';
 import { useAccessibility, FontScaleOption, LanguageOption, FONT_SCALES } from '@/context/AccessibilityContext';
-import { colors, spacing, radii } from '@/constants/theme';
+import { colors, spacing, radii, iconSize } from '@/constants/theme';
 
 interface ConfigViewProps {
   onBack: () => void;
@@ -48,7 +48,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
       {/* Sección 1: Idioma */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <AppIcon name="idioma" size={20} color="#374151" style={styles.sectionIcon} />
+          <AppIcon name="idioma" size={iconSize.smd} color="#374151" style={styles.sectionIcon} />
           <AppText variant="H2" style={styles.sectionTitle}>
             {t('profile.languageSection', { defaultValue: 'Idioma' })}
           </AppText>
@@ -71,7 +71,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
             </AppText>
           </View>
           {tempLanguage === 'es' && (
-            <AppIcon name="check-circulo" size={22} color="#10B981" />
+            <AppIcon name="check-circulo" size={iconSize.md} color="#10B981" />
           )}
         </Pressable>
 
@@ -92,7 +92,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
             </AppText>
           </View>
           {tempLanguage === 'en' && (
-            <AppIcon name="check-circulo" size={22} color="#10B981" />
+            <AppIcon name="check-circulo" size={iconSize.md} color="#10B981" />
           )}
         </Pressable>
 
@@ -113,7 +113,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
             </AppText>
           </View>
           {tempLanguage === 'pt' && (
-            <AppIcon name="check-circulo" size={22} color="#10B981" />
+            <AppIcon name="check-circulo" size={iconSize.md} color="#10B981" />
           )}
         </Pressable>
       </View>
@@ -121,7 +121,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
       {/* Sección 2: Tamaño de Fuente */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <AppIcon name="fuente" size={20} color="#374151" style={styles.sectionIcon} />
+          <AppIcon name="fuente" size={iconSize.smd} color="#374151" style={styles.sectionIcon} />
           <AppText variant="H2" style={styles.sectionTitle}>
             {t('profile.fontSizeSection', { defaultValue: 'Tamaño de fuente' })}
           </AppText>
@@ -155,7 +155,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
                 </AppText>
               </View>
               {isSelected && (
-                <AppIcon name="check-circulo" size={22} color="#10B981" />
+                <AppIcon name="check-circulo" size={iconSize.md} color="#10B981" />
               )}
             </Pressable>
           );

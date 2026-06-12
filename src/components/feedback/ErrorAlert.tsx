@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { colors, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
 import { UserFriendlyError } from '@/types/errors';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -35,7 +35,7 @@ export const ErrorAlert = ({
             style={styles.closeButton}
             hitSlop={8}
           >
-            <AppIcon name="cerrar" size={20} color={colors.error} />
+            <AppIcon name="cerrar" size={iconSize.smd} color={colors.error} />
           </Pressable>
         )}
       </View>

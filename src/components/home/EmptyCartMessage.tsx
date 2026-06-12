@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { colors, spacing } from '@/constants/theme';
+import { colors, spacing, iconSize, componentSize } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -11,7 +11,7 @@ export const EmptyCartMessage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.iconCircle}>
-        <AppIcon name="carrito" size={56} color={colors.secondary} />
+        <AppIcon name="carrito" size={iconSize.heroSm} color={colors.secondary} />
       </View>
       <AppText variant="Body" style={styles.subtitle}>
         {t('home.emptyCartSubtitle')}
@@ -29,9 +29,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xl,
   },
   iconCircle: {
-    width: 108,
-    height: 108,
-    borderRadius: 54,
+    width: componentSize.emptyStateCircle,
+    height: componentSize.emptyStateCircle,
+    borderRadius: componentSize.emptyStateCircle / 2,
     backgroundColor: colors.surface,
     justifyContent: 'center',
     alignItems: 'center',

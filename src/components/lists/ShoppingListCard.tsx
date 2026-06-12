@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ShoppingList } from '@/types/domain';
-import { colors, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -27,7 +27,7 @@ export function ShoppingListCard({
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
       <View style={styles.header}>
-        <AppIcon name="lista" size={22} color={colors.primary} />
+        <AppIcon name="lista" size={iconSize.md} color={colors.primary} />
         <AppText variant="H3" style={styles.name} numberOfLines={1}>
           {list.name}
         </AppText>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
 
 interface QuantitySelectorProps {
   value: number;
@@ -38,7 +38,7 @@ export function QuantitySelector({
       >
         <AppIcon
           name="menos"
-          size={20}
+          size={iconSize.smd}
           color={canDecrement ? colors.primary : colors.textSecondary}
         />
       </Pressable>
@@ -60,7 +60,7 @@ export function QuantitySelector({
       >
         <AppIcon
           name="mas"
-          size={20}
+          size={iconSize.smd}
           color={canIncrement ? colors.primary : colors.textSecondary}
         />
       </Pressable>

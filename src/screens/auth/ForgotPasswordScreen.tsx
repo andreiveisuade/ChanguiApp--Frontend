@@ -8,7 +8,7 @@ import FormLabel from '@/components/forms/FormLabel';
 import AppHeader from '@/components/layout/AppHeader';
 import AuthContainer from '@/components/layout/AuthContainer';
 import useAuth from '@/viewmodels/useAuth';
-import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, radii, spacing, touchTarget, iconSize } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
 
 export function ForgotPasswordScreen(): React.JSX.Element {
@@ -30,7 +30,7 @@ export function ForgotPasswordScreen(): React.JSX.Element {
       <AuthContainer>
         <AppHeader />
         <View style={styles.mailCircle}>
-          <AppIcon color={colors.mailIcon} name="mail" size={42} />
+          <AppIcon color={colors.mailIcon} name="mail" size={iconSize.xxxxl} />
         </View>
         <View style={styles.hero}>
           <Text style={styles.title}>{t('forgotPassword.sentTitle')}</Text>
@@ -54,7 +54,7 @@ export function ForgotPasswordScreen(): React.JSX.Element {
         onPress={() => router.replace(ROUTES.auth.login)}
         style={styles.backLink}
       >
-        <AppIcon color={colors.primary} name="atras" size={18} />
+        <AppIcon color={colors.primary} name="atras" size={iconSize.sm} />
         <Text style={styles.backText}>{t('forgotPassword.back')}</Text>
       </Pressable>
       <View style={styles.hero}>
@@ -62,7 +62,7 @@ export function ForgotPasswordScreen(): React.JSX.Element {
         <Text style={styles.subtitle}>{t('forgotPassword.subtitle')}</Text>
       </View>
       <View style={styles.mailCircle}>
-        <AppIcon color={colors.mailIcon} name="mail" size={42} />
+        <AppIcon color={colors.mailIcon} name="mail" size={iconSize.xxxxl} />
       </View>
       <View style={styles.inputGroup}>
         <FormLabel>{t('forgotPassword.email')}</FormLabel>

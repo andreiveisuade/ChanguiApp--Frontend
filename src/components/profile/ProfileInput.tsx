@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput, StyleProp, ViewStyle } from 'react-native'
 import { AppIcon } from '@/components/atoms/AppIcon';
 import FormLabel from '@/components/forms/FormLabel';
 import InlineError from '@/components/forms/InlineError';
-import { colors, spacing, radii, fonts } from '@/constants/theme';
+import { colors, spacing, radii, fonts, iconSize } from '@/constants/theme';
 
 interface ProfileInputProps {
   label: string;
@@ -42,7 +42,7 @@ export function ProfileInput({
       >
         <AppIcon
           name={iconName}
-          size={20}
+          size={iconSize.smd}
           color={editable ? '#9CA3AF' : '#D1D5DB'}
           style={styles.icon}
         />

@@ -5,7 +5,7 @@ import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { colors, spacing, radii, fonts } from '@/constants/theme';
+import { colors, spacing, radii, fonts, iconSize } from '@/constants/theme';
 
 interface DeleteAccountViewProps {
   onDelete: () => Promise<void>;
@@ -42,7 +42,7 @@ export function DeleteAccountView({
       {/* Icono central de papelera */}
       <View style={styles.centerIconWrapper}>
         <View style={styles.iconCircle}>
-          <AppIcon name="eliminar" size={32} color="#EF4444" />
+          <AppIcon name="eliminar" size={iconSize.xxl} color="#EF4444" />
         </View>
       </View>
 
@@ -74,7 +74,7 @@ export function DeleteAccountView({
 
         {listItems.map((item, idx) => (
           <View key={idx} style={styles.listItemCard}>
-            <AppIcon name={item.icon} size={20} color="#6B7280" style={styles.listItemIcon} />
+            <AppIcon name={item.icon} size={iconSize.smd} color="#6B7280" style={styles.listItemIcon} />
             <AppText variant="Body" style={styles.listItemText}>
               {item.text}
             </AppText>
