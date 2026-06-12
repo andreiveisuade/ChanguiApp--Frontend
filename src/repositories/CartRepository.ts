@@ -1,7 +1,8 @@
+import { CartWithItems, CartItemWithProduct, TaxBreakdown, TaxLine, TaxSummary } from '@/types/domain';
 import httpClient from '@/config/clients';
-import { CartWithItems, CartItemWithProduct, TaxSummary } from '@/types/domain';
 
 const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
+const DEFAULT_TAX_RATE = 21;
 
 interface RawProduct {
   id: string;
@@ -10,6 +11,7 @@ interface RawProduct {
   brand: string | null;
   image_url: string | null;
   price: number;
+  tax?: TaxBreakdown;
 }
 
 interface RawCartItem {
@@ -64,8 +66,50 @@ function mapRawItem(item: RawCartItem): CartItemWithProduct {
           brand: rawProduct.brand,
           image_url: rawProduct.image_url,
           price: rawProduct.price,
+          tax: rawProduct.tax,
         }
       : null,
+  };
+}
+
+function calculateItemsTotal(items: CartItemWithProduct[]): number {
+  return items.reduce((sum, item) => sum + item.unit_price * item.quantity, 0);
+}
+
+function hasSummaryValues(summary: TaxSummary | undefined): summary is TaxSummary {
+  if (!summary) return false;
+
+  return (
+    summary.subtotal_net > 0 ||
+    summary.total > 0 ||
+    summary.taxes.some((tax) => tax.base > 0 || tax.amount > 0)
+  );
+}
+
+function buildSummaryFromItems(items: CartItemWithProduct[], total: number): TaxSummary {
+  if (items.length === 0 || total <= 0) return EMPTY_SUMMARY;
+
+  const groupedTaxes = new Map<number, TaxLine>();
+  let subtotalNet = 0;
+
+  items.forEach((item) => {
+    const lineTotal = item.unit_price * item.quantity;
+    const productTax = item.product?.tax;
+    const rate = productTax?.rate ?? DEFAULT_TAX_RATE;
+    const netAmount = productTax ? productTax.net_price * item.quantity : lineTotal / (1 + rate / 100);
+    const taxAmount = productTax ? productTax.tax_amount * item.quantity : lineTotal - netAmount;
+    const current = groupedTaxes.get(rate) ?? { rate, label: `IVA ${rate}%`, base: 0, amount: 0 };
+
+    current.base += netAmount;
+    current.amount += taxAmount;
+    groupedTaxes.set(rate, current);
+    subtotalNet += netAmount;
+  });
+
+  return {
+    subtotal_net: subtotalNet,
+    taxes: Array.from(groupedTaxes.values()),
+    total,
   };
 }
 
@@ -102,12 +146,18 @@ export const CartRepository = {
 
     const rawItems: RawCartItem[] = data.items ?? [];
     const mappedItems = rawItems.map(mapRawItem);
+    const itemsForTotals = mappedItems.length > 0 ? mappedItems : mappedCart?.cart_items ?? [];
+    const calculatedTotal = calculateItemsTotal(itemsForTotals);
+    const total = typeof data.total === 'number' && data.total > 0 ? data.total : calculatedTotal;
+    const summary = hasSummaryValues(data.summary)
+      ? data.summary
+      : buildSummaryFromItems(itemsForTotals, total);
 
     return {
       cart: mappedCart,
       items: mappedItems,
-      total: typeof data.total === 'number' ? data.total : 0,
-      summary: (data.summary as TaxSummary) ?? EMPTY_SUMMARY,
+      total,
+      summary,
     };
   },
 
