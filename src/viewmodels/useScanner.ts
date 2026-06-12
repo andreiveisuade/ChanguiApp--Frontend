@@ -2,11 +2,13 @@ import { useState, useRef } from 'react';
 import { Vibration } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getProductByBarcode } from '@/repositories/ScannerRepository';
+import { ErrorTranslationService } from '@/services/ErrorTranslationService';
+import { UserFriendlyError } from '@/types/errors';
 
 export type UseScannerReturn = {
   scanned: boolean;
   loading: boolean;
-  errorMessage: string | null;
+  errorMessage: UserFriendlyError | null;
   handleBarcodeScanned: (event: { data: string }) => Promise<void>;
   resetScanner: () => void;
   clearError: () => void;
@@ -16,8 +18,8 @@ export const useScanner = (): UseScannerReturn => {
   const router = useRouter();
   const [scanned, setScanned] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  
+  const [errorMessage, setErrorMessage] = useState<UserFriendlyError | null>(null);
+
   // Synchronous lock ref to prevent multiple triggers in rapid succession
   const isScanningRef = useRef<boolean>(false);
 
@@ -42,8 +44,7 @@ export const useScanner = (): UseScannerReturn => {
     } catch (err) {
       // Error real (red, timeout, 5xx): mostramos el mensaje en pantalla.
       // El usuario puede reintentar con el boton "Escanear nuevamente".
-      const message = err instanceof Error ? err.message : 'Unknown error';
-      setErrorMessage(message);
+      setErrorMessage(ErrorTranslationService.translate(err));
     } finally {
       setLoading(false);
     }

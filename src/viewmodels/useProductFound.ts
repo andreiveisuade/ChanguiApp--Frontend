@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Product } from '@/types/domain';
 import CartRepository from '@/repositories/CartRepository';
+import { ErrorTranslationService } from '@/services/ErrorTranslationService';
+import { UserFriendlyError } from '@/types/errors';
 
 export type UseProductFoundReturn = {
   product: Product | null;
@@ -16,7 +18,7 @@ export type UseProductFoundReturn = {
   goToScanner: () => void;
   goToCart: () => Promise<void>;
   isLoading: boolean;
-  errorMessage: string | null;
+  errorMessage: UserFriendlyError | null;
   clearError: () => void;
 };
 
@@ -38,7 +40,7 @@ export const useProductFound = (): UseProductFoundReturn => {
 
   const [quantity, setQuantity] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<UserFriendlyError | null>(null);
 
   const subtotal = product ? product.price * quantity : 0;
   // El backend ya devuelve el desglose unitario; acá sólo se multiplica por
@@ -63,7 +65,7 @@ export const useProductFound = (): UseProductFoundReturn => {
       await CartRepository.addItem(product.id, quantity, product.price);
       router.replace('/(tabs)/cart');
     } catch (err) {
-      setErrorMessage(err instanceof Error ? err.message : 'Error al agregar al carrito');
+      setErrorMessage(ErrorTranslationService.translate(err));
     } finally {
       setIsLoading(false);
     }

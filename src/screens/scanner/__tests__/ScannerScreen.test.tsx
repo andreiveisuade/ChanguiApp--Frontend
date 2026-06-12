@@ -110,7 +110,7 @@ describe('ScannerScreen', () => {
 
   it('con errorMessage: muestra el banner de error y permite cerrarlo', () => {
     mockedUseScanner.mockReturnValue(
-      buildScannerState({ errorMessage: 'network timeout' }) as any,
+      buildScannerState({ errorMessage: { title: 'Error', message: 'network timeout', code: 'GENERIC' } }) as any,
     );
 
     const { getByText, getByRole } = render(<ScannerScreen />);

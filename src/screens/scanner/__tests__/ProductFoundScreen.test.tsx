@@ -146,7 +146,7 @@ describe('ProductFoundScreen', () => {
 
     it('con errorMessage muestra el banner de error', () => {
       mockedUseProductFound.mockReturnValue(
-        buildState({ errorMessage: 'fallo agregar' }),
+        buildState({ errorMessage: { title: 'Error', message: 'fallo agregar', code: 'GENERIC' } }),
       );
       const { getByText } = render(<ProductFoundScreen />);
 
@@ -157,7 +157,7 @@ describe('ProductFoundScreen', () => {
 
     it('cerrar el error invoca clearError', () => {
       mockedUseProductFound.mockReturnValue(
-        buildState({ errorMessage: 'fallo agregar' }),
+        buildState({ errorMessage: { title: 'Error', message: 'fallo agregar', code: 'GENERIC' } }),
       );
       const { getByText } = render(<ProductFoundScreen />);
       // el boton de cerrar del ErrorMessage renderiza una "X"
