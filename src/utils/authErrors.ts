@@ -52,7 +52,24 @@ const ERROR_RULES: AuthErrorRule[] = [
   },
 ];
 
+const getStatus = (error: unknown): number | undefined =>
+  isErrorLike(error) && typeof error.status === 'number' ? error.status : undefined;
+
+// Errores transitorios del servidor: el status manda sobre el texto del mensaje.
+const statusMessageKey = (status: number): string | null => {
+  if (status === 429) return 'auth.errors.tooManyAttempts';
+  if (status === 503) return 'auth.errors.serverWaking';
+  if (status >= 500) return 'auth.errors.serverError';
+  return null;
+};
+
 export const mapAuthError = (error: unknown): AuthError => {
+  const status = getStatus(error);
+  const statusKey = status !== undefined ? statusMessageKey(status) : null;
+  if (statusKey) {
+    return { message: i18n.t(statusKey), field: 'general' };
+  }
+
   const message = getMessage(error).toLowerCase();
   const rule = ERROR_RULES.find((r) => r.keywords.some((kw) => message.includes(kw)));
 

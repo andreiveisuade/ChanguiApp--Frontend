@@ -37,4 +37,16 @@ describe('mapAuthError', () => {
   it('acepta objetos error-like con message', () => {
     expect(mapAuthError({ message: 'email already used' }).field).toBe('email');
   });
+
+  it('mapea por status: 429 rate limit, 503 cold start, 5xx server error', () => {
+    expect(mapAuthError({ status: 429, message: '' }).message).toBe('auth.errors.tooManyAttempts');
+    expect(mapAuthError({ status: 503, message: '' }).message).toBe('auth.errors.serverWaking');
+    expect(mapAuthError({ status: 500, message: '' }).message).toBe('auth.errors.serverError');
+  });
+
+  it('el status tiene prioridad sobre el texto del mensaje', () => {
+    expect(mapAuthError({ status: 503, message: 'Authentication request failed' }).message).toBe(
+      'auth.errors.serverWaking',
+    );
+  });
 });

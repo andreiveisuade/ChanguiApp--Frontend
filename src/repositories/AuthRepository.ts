@@ -107,7 +107,9 @@ const requestAuth = async (
           : isObjectRecord(payload) && typeof payload.error === 'string'
             ? payload.error
             : 'Authentication request failed';
-      throw new Error(errorMessage);
+      const httpError = new Error(errorMessage) as Error & { status?: number };
+      httpError.status = response.status;
+      throw httpError;
     }
 
     return normalizeAuthSession(payload);
