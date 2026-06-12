@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as AuthSession from 'expo-auth-session';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import supabase from '@/config/supabase';
+import { authClient } from '@/config/clients';
 import { AuthSession as StoredAuthSession, User } from '@/types/auth';
-import { API_URL, API_TIMEOUT_MS, DEEP_LINKS } from '@/constants/api';
+import { DEEP_LINKS } from '@/constants/api';
 import { STORAGE_KEYS } from '@/constants/storage';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -85,41 +87,27 @@ const requestAuth = async (
   endpoint: 'login' | 'register',
   body: ObjectRecord,
 ): Promise<StoredAuthSession> => {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
-
   try {
-    const response = await fetch(`${API_URL}/api/auth/${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-      signal: controller.signal,
-    });
-
-    const payload: unknown = await response.json().catch(() => null);
-
-    if (!response.ok) {
-      const errorMessage =
-        isObjectRecord(payload) && typeof payload.message === 'string'
-          ? payload.message
-          : isObjectRecord(payload) && typeof payload.error === 'string'
-            ? payload.error
-            : 'Authentication request failed';
-      const httpError = new Error(errorMessage) as Error & { status?: number };
-      httpError.status = response.status;
-      throw httpError;
-    }
-
-    return normalizeAuthSession(payload);
+    const { data } = await authClient.post(`/api/auth/${endpoint}`, body);
+    return normalizeAuthSession(data);
   } catch (err) {
-    if (err instanceof Error && err.name === 'AbortError') {
+    if (axios.isAxiosError(err)) {
+      if (err.response) {
+        const payload: unknown = err.response.data;
+        const errorMessage =
+          isObjectRecord(payload) && typeof payload.message === 'string'
+            ? payload.message
+            : isObjectRecord(payload) && typeof payload.error === 'string'
+              ? payload.error
+              : 'Authentication request failed';
+        const httpError = new Error(errorMessage) as Error & { status?: number };
+        httpError.status = err.response.status;
+        throw httpError;
+      }
+      // Sin respuesta del servidor: red caída o timeout.
       throw new Error('network timeout', { cause: err });
     }
     throw err;
-  } finally {
-    clearTimeout(timeoutId);
   }
 };
 

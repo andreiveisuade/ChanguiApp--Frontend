@@ -12,6 +12,16 @@ const httpClient = axios.create({
   },
 });
 
+// Cliente axios para login/register: sin el interceptor de sesión, porque en
+// esos endpoints todavía no hay token. Comparte baseURL y timeout.
+export const authClient = axios.create({
+  baseURL: API_URL,
+  timeout: API_TIMEOUT_MS,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 httpClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const session = await AuthRepository.getStoredSession();
