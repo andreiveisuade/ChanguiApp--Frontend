@@ -15,6 +15,7 @@ export const colors = {
   errorSurface: '#FFD1D0',
   successSurface: '#DCEEDC',
   overlay: 'rgba(0, 0, 0, 0.28)',
+  debugPanel: 'rgba(17, 17, 17, 0.88)',
   googleBlue: '#4285F4',
   googleRed: '#EA4335',
   googleYellow: '#FBBC05',

@@ -1,6 +1,6 @@
 import React, { useSyncExternalStore } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppText } from '@/components/atoms/AppText';
 import { colors, spacing, radii, fontSize, opacity } from '@/constants/theme';
 import { API_URL } from '@/constants/api';
@@ -8,76 +8,79 @@ import { debugStore } from '@/utils/debugStore';
 import useAuth from '@/viewmodels/useAuth';
 
 /**
- * Overlay de debug. Se renderiza en el root y solo aparece cuando el store está
- * activado (easter egg: 5 taps en "¡Hola, ...!"). Muestra el usuario actual,
- * la API y un historial de logs scrolleable. Funciona en release.
+ * Consola de debug translúcida. Se renderiza en el root y solo aparece cuando el
+ * store está activado (easter egg: 5 taps en "¡Hola, ...!"). No es modal: queda
+ * flotando arriba mientras se navega y deja pasar los toques fuera del panel
+ * (pointerEvents="box-none"). Se cierra con la X. Funciona en release.
  */
 export const DebugOverlay = (): React.JSX.Element | null => {
   const enabled = useSyncExternalStore(debugStore.subscribe, debugStore.isEnabled);
   const logs = useSyncExternalStore(debugStore.subscribe, debugStore.getLogs);
   const { user } = useAuth();
+  const insets = useSafeAreaInsets();
 
   if (!enabled) {
     return null;
   }
 
   return (
-    <Modal transparent visible animationType="fade" onRequestClose={debugStore.disable}>
-      <SafeAreaView style={styles.backdrop} edges={['top', 'bottom']}>
-        <View style={styles.panel}>
-          <View style={styles.header}>
-            <AppText variant="H2" style={styles.title}>
-              Debug
-            </AppText>
-            <View style={styles.actions}>
-              <Pressable onPress={debugStore.clear} style={styles.actionBtn}>
-                <AppText style={styles.actionText}>Limpiar</AppText>
-              </Pressable>
-              <Pressable onPress={debugStore.disable} style={styles.actionBtn}>
-                <AppText style={styles.actionText}>Cerrar</AppText>
-              </Pressable>
-            </View>
+    <View style={styles.root} pointerEvents="box-none">
+      <View style={[styles.panel, { marginTop: insets.top + spacing.sm }]}>
+        <View style={styles.header}>
+          <AppText style={styles.title}>Debug</AppText>
+          <View style={styles.actions}>
+            <Pressable onPress={debugStore.clear} hitSlop={spacing.sm} style={styles.actionBtn}>
+              <AppText style={styles.actionText}>limpiar</AppText>
+            </Pressable>
+            <Pressable
+              onPress={debugStore.disable}
+              hitSlop={spacing.sm}
+              style={styles.closeBtn}
+              accessibilityLabel="Cerrar debug"
+            >
+              <AppText style={styles.closeText}>✕</AppText>
+            </Pressable>
           </View>
-
-          <View style={styles.info}>
-            <AppText style={styles.infoLine}>user.id: {user?.id ?? '(sin sesión)'}</AppText>
-            <AppText style={styles.infoLine}>email: {user?.email ?? '-'}</AppText>
-            <AppText style={styles.infoLine}>nombre: {user?.full_name || '-'}</AppText>
-            <AppText style={styles.infoLine}>API: {API_URL}</AppText>
-          </View>
-
-          <ScrollView style={styles.logs} contentContainerStyle={styles.logsContent}>
-            {logs.length === 0 ? (
-              <AppText style={styles.empty}>Sin logs todavía…</AppText>
-            ) : (
-              logs.map((entry) => (
-                <AppText
-                  key={entry.id}
-                  style={[styles.logLine, entry.level === 'error' ? styles.logError : null]}
-                >
-                  {entry.time} · {entry.message}
-                </AppText>
-              ))
-            )}
-          </ScrollView>
         </View>
-      </SafeAreaView>
-    </Modal>
+
+        <View style={styles.info}>
+          <AppText style={styles.infoLine}>user.id: {user?.id ?? '(sin sesión)'}</AppText>
+          <AppText style={styles.infoLine}>email: {user?.email ?? '-'}</AppText>
+          <AppText style={styles.infoLine}>nombre: {user?.full_name || '-'}</AppText>
+          <AppText style={styles.infoLine}>API: {API_URL}</AppText>
+        </View>
+
+        <ScrollView style={styles.logs} contentContainerStyle={styles.logsContent}>
+          {logs.length === 0 ? (
+            <AppText style={styles.empty}>Sin logs todavía…</AppText>
+          ) : (
+            logs.map((entry) => (
+              <AppText
+                key={entry.id}
+                style={[styles.logLine, entry.level === 'error' ? styles.logError : null]}
+              >
+                {entry.time} · {entry.message}
+              </AppText>
+            ))
+          )}
+        </ScrollView>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: colors.overlay,
-    justifyContent: 'flex-end',
-    padding: spacing.md,
+  root: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 9999,
+    elevation: 9999,
   },
   panel: {
-    backgroundColor: colors.textPrimary,
+    marginHorizontal: spacing.md,
+    backgroundColor: colors.debugPanel,
     borderRadius: radii.lg,
     padding: spacing.md,
-    maxHeight: '75%',
+    maxHeight: '55%',
   },
   header: {
     flexDirection: 'row',
@@ -92,17 +95,25 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   actionBtn: {
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    marginLeft: spacing.sm,
-    borderRadius: radii.sm,
-    backgroundColor: colors.primary,
+    marginRight: spacing.sm,
   },
   actionText: {
-    color: colors.white,
+    color: colors.secondary,
     fontSize: fontSize.label,
+    fontWeight: '700',
+  },
+  closeBtn: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  closeText: {
+    color: colors.white,
+    fontSize: fontSize.h3,
     fontWeight: '700',
   },
   info: {
