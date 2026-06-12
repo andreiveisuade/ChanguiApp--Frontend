@@ -1,4 +1,3 @@
-import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
   FlatList,
@@ -14,8 +13,7 @@ import { useTranslation } from 'react-i18next';
 import OnboardingFooter from '@/components/onboarding/OnboardingFooter';
 import OnboardingSlide from '@/components/onboarding/OnboardingSlide';
 import { colors, fonts, fontSize, spacing, touchTarget } from '@/constants/theme';
-import OnboardingRepository from '@/repositories/OnboardingRepository';
-import { ROUTES } from '@/constants/routes';
+import { useOnboarding } from '@/viewmodels/useOnboarding';
 
 type Slide = {
   id: string;
@@ -46,23 +44,15 @@ const SLIDES: Slide[] = [
 ];
 
 export function OnboardingScreen(): React.JSX.Element {
-  const router = useRouter();
   const { t } = useTranslation();
   const { width } = useWindowDimensions();
+  const { completeOnboarding } = useOnboarding();
   const listRef = useRef<FlatList<Slide>>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  const handleFinish = async (): Promise<void> => {
-    try {
-      await OnboardingRepository.markCompleted();
-    } finally {
-      router.replace(ROUTES.auth.login);
-    }
-  };
-
   const handleNext = (): void => {
     if (currentIndex === SLIDES.length - 1) {
-      void handleFinish();
+      void completeOnboarding();
       return;
     }
 
@@ -86,7 +76,7 @@ export function OnboardingScreen(): React.JSX.Element {
         <Pressable
           accessibilityHint={t('onboarding.skip')}
           accessibilityRole="button"
-          onPress={handleFinish}
+          onPress={completeOnboarding}
           style={styles.skipButton}
         >
           <Text style={styles.skipText}>{t('onboarding.skip')}</Text>
@@ -106,7 +96,7 @@ export function OnboardingScreen(): React.JSX.Element {
         current={currentIndex}
         isLast={currentIndex === SLIDES.length - 1}
         onNext={handleNext}
-        onSkip={handleFinish}
+        onSkip={completeOnboarding}
         total={SLIDES.length}
       />
     </SafeAreaView>
