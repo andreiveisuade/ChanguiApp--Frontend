@@ -31,7 +31,7 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
     refresh,
   } = usePurchaseHistory();
 
-  const userName = profile?.full_name ?? t('home.defaultUser');
+  const userName = profile?.full_name || t('home.defaultUser');
 
   const goToDetail = (purchase: Purchase): void => {
     router.push({ pathname: ROUTES.purchaseDetail, params: { id: String(purchase.id) } });

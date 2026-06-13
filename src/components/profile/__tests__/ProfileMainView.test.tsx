@@ -56,11 +56,11 @@ describe('ProfileMainView Component', () => {
     expect(getByText('andrei@uade.edu.ar')).toBeTruthy();
   });
 
-  it('renders empty strings when user is null', () => {
+  it('renders the default name when user is null', () => {
     const { getByText } = render(<ProfileMainView user={null} onNavigate={mockOnNavigate} />);
 
-    // Avatar renders with empty full name
-    expect(getByText('avatar:')).toBeTruthy();
+    // Sin usuario, el nombre cae al default (home.defaultUser → "Usuario")
+    expect(getByText('avatar:home.defaultUser')).toBeTruthy();
   });
 
   it('navigates to edit when edit card is pressed', () => {

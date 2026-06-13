@@ -18,7 +18,7 @@ interface LogoutViewProps {
 export function LogoutView({ user, onLogout, onCancel }: LogoutViewProps): React.JSX.Element {
   const { t } = useTranslation();
 
-  const fullName = user?.full_name ?? '';
+  const fullName = user?.full_name || t('home.defaultUser');
   const email = user?.email ?? '';
 
   return (

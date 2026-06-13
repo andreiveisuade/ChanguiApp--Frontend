@@ -24,7 +24,7 @@ export default function HomeRoute(): React.JSX.Element {
     router.push(ROUTES.tabs.settings);
   };
 
-  const userName = user?.full_name ?? t('home.defaultUser');
+  const userName = user?.full_name || t('home.defaultUser');
 
   return (
     <View style={styles.container}>

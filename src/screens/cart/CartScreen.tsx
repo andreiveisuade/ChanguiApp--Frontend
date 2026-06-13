@@ -22,7 +22,7 @@ export default function CartScreen(): React.JSX.Element {
   const { items, summary, isLoading, error, refresh, updateQuantity, removeItem } = useCart();
   const { startCheckout, isStarting, error: checkoutError, clearError } = useCheckout();
 
-  const userName = user?.full_name ?? t('home.defaultUser');
+  const userName = user?.full_name || t('home.defaultUser');
 
   const handlePay = async () => {
     const result = await startCheckout();

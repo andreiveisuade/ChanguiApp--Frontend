@@ -16,7 +16,7 @@ interface ProfileMainViewProps {
 export function ProfileMainView({ user, onNavigate }: ProfileMainViewProps): React.JSX.Element {
   const { t } = useTranslation();
 
-  const fullName = user?.full_name ?? '';
+  const fullName = user?.full_name || t('home.defaultUser');
   const email = user?.email ?? '';
 
   return (
