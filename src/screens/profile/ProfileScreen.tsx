@@ -108,7 +108,7 @@ export default function ProfileScreen(): React.JSX.Element {
     }
   };
 
-  const userName = profile?.full_name ?? t('home.defaultUser', { defaultValue: 'Usuario' });
+  const userName = profile?.full_name || t('home.defaultUser', { defaultValue: 'Usuario' });
 
   return (
     <View style={styles.container}>

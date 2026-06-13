@@ -7,7 +7,7 @@ import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { PrimaryButton } from '@/components/buttons/PrimaryButton';
 import { SecondaryButton } from '@/components/buttons/SecondaryButton';
-import { colors, spacing } from '@/constants/theme';
+import { colors, spacing, iconSize } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
 import useCheckoutStatus, { CheckoutStatus } from '@/viewmodels/useCheckoutStatus';
 
@@ -57,7 +57,7 @@ export default function CheckoutConfirmationScreen(): React.JSX.Element | null {
 
   return (
     <ScreenWrapper style={styles.centered}>
-      <AppIcon name={icon.name} size={72} color={icon.color} />
+      <AppIcon name={icon.name} size={iconSize.heroMd} color={icon.color} />
       <AppText variant="H1" style={styles.title}>
         {t(`checkout.${status}Title`)}
       </AppText>

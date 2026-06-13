@@ -44,6 +44,14 @@ describe('mapAuthError', () => {
     expect(mapAuthError({ status: 500, message: '' }).message).toBe('auth.errors.serverError');
   });
 
+  it('para 400 muestra el detalle de validación del backend, o un genérico si falta', () => {
+    expect(mapAuthError({ status: 400, message: 'La password debe tener al menos 6 caracteres' })).toEqual({
+      message: 'La password debe tener al menos 6 caracteres',
+      field: 'general',
+    });
+    expect(mapAuthError({ status: 400, message: '' }).message).toBe('auth.errors.invalidData');
+  });
+
   it('mapea 409/401 por status aunque el mensaje del backend venga en español', () => {
     expect(mapAuthError({ status: 409, message: 'El email ya está registrado' })).toEqual({
       message: 'auth.errors.emailAlreadyUsed',

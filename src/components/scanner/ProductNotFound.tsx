@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { colors, spacing } from '@/constants/theme';
+import { colors, spacing, iconSize } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import SecondaryButton from '@/components/buttons/SecondaryButton';
@@ -16,7 +16,7 @@ export function ProductNotFound({ onRetry }: ProductNotFoundProps): React.JSX.El
   return (
     <View style={styles.container}>
       <View style={styles.iconCircle}>
-        <AppIcon name="alerta" size={40} color={colors.error} />
+        <AppIcon name="alerta" size={iconSize.xxxl} color={colors.error} />
       </View>
       <AppText variant="H2" style={styles.centered}>{t('scanner.productNotFound')}</AppText>
       <AppText variant="Body" style={styles.centered}>{t('scanner.productNotFoundSubtitle')}</AppText>

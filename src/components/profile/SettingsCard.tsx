@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing, radii } from '@/constants/theme';
+import { colors, spacing, radii, iconSize, fontSize } from '@/constants/theme';
 
 interface SettingsCardProps {
   title: string;
@@ -29,7 +29,7 @@ export function SettingsCard({
       accessibilityLabel={`${title}, ${description}`}
     >
       <View style={[styles.iconWrapper, { backgroundColor: iconBgColor }]}>
-        <AppIcon name={iconName} size={20} color={iconColor} />
+        <AppIcon name={iconName} size={iconSize.smd} color={iconColor} />
       </View>
       <View style={styles.textWrapper}>
         <AppText variant="H3" style={styles.title}>
@@ -39,7 +39,7 @@ export function SettingsCard({
           {description}
         </AppText>
       </View>
-      <AppIcon name="chevron-derecha" size={20} color="#9CA3AF" style={styles.arrow} />
+      <AppIcon name="chevron-derecha" size={iconSize.smd} color={colors.textPlaceholder} style={styles.arrow} />
     </Pressable>
   );
 }
@@ -49,12 +49,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: radii.md,
     borderWidth: 1,
-    borderColor: '#F3F4F6',
+    borderColor: colors.surfaceMuted,
     padding: spacing.md,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: spacing.md,
-    shadowColor: '#000000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.03,
     shadowRadius: 2,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   cardPressed: {
     opacity: 0.85,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surfaceSubtle,
   },
   iconWrapper: {
     width: 42,
@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: '600',
-    color: '#111827',
+    color: colors.textDark,
   },
   description: {
-    color: '#6B7280',
-    fontSize: 13,
+    color: colors.textMuted,
+    fontSize: fontSize.body,
     marginTop: 2,
   },
   arrow: {

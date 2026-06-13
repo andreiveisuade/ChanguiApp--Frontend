@@ -94,6 +94,20 @@ describe('AuthRepository', () => {
       await expect(AuthRepository.login('a@b.com', 'x')).rejects.toThrow('credenciales inválidas');
     });
 
+    it('extrae el msg de validación de express-validator ({errors:[...]})', async () => {
+      mockedPost.mockRejectedValueOnce({
+        isAxiosError: true,
+        response: {
+          status: 400,
+          data: { errors: [{ msg: 'La password debe tener al menos 6 caracteres', path: 'password' }] },
+        },
+      });
+
+      await expect(AuthRepository.login('a@b.com', 'x')).rejects.toThrow(
+        'La password debe tener al menos 6 caracteres',
+      );
+    });
+
     it('traduce error de red (sin respuesta) a network timeout', async () => {
       mockedPost.mockRejectedValueOnce({ isAxiosError: true, request: {}, response: undefined });
 

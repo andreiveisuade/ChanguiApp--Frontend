@@ -3,7 +3,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { colors, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, radii, spacing, touchTarget, iconSize } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
@@ -50,11 +50,11 @@ export function PurchaseDetailScreen(): React.JSX.Element {
         <View style={styles.metaCard}>
           <AppText variant="H2" style={styles.store}>{storeName}</AppText>
           <View style={styles.metaRow}>
-            <AppIcon name="calendario" size={16} color={colors.textSecondary} />
+            <AppIcon name="calendario" size={iconSize.xs} color={colors.textSecondary} />
             <AppText variant="Body">{formatPurchaseDate(purchase.date)}</AppText>
           </View>
           <View style={styles.metaRow}>
-            <AppIcon name="tarjeta" size={16} color={colors.textSecondary} />
+            <AppIcon name="tarjeta" size={iconSize.xs} color={colors.textSecondary} />
             <AppText variant="Body">
               {t('purchaseDetail.paymentStatus')}: {t(`historyScreen.status.${purchase.status}`)}
             </AppText>
@@ -107,7 +107,7 @@ export function PurchaseDetailScreen(): React.JSX.Element {
             accessibilityRole="button"
             accessibilityLabel={t('purchaseDetail.back')}
           >
-            <AppIcon name="atras" size={22} color={colors.textPrimary} />
+            <AppIcon name="atras" size={iconSize.md} color={colors.textPrimary} />
           </Pressable>
           <AppText variant="H2" style={styles.headerTitle}>{t('purchaseDetail.title')}</AppText>
         </View>

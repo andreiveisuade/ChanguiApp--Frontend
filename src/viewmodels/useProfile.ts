@@ -3,6 +3,7 @@ import ProfileRepository, { UpdateProfilePayload } from '@/repositories/ProfileR
 import { AuthSessionExpiredError } from '@/types/errors';
 import { User } from '@/types/auth';
 import useAuth from '@/viewmodels/useAuth';
+import { logger } from '@/utils/debugStore';
 
 export type ProfileError = {
   message: string;
@@ -40,6 +41,7 @@ export const useProfile = (): UseProfileReturn => {
         return;
       }
       const message = err instanceof Error ? err.message : 'Unknown error';
+      logger.error(`getProfile: ${message}`);
       setError({ message });
     } finally {
       setIsLoading(false);

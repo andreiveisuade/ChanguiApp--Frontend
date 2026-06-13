@@ -7,7 +7,7 @@ import AvatarImage from '@/components/profile/AvatarImage';
 import ProfileInput from '@/components/profile/ProfileInput';
 import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { colors, spacing } from '@/constants/theme';
+import { colors, spacing, iconSize, fontSize } from '@/constants/theme';
 import { User } from '@/types/auth';
 
 interface EditProfileViewProps {
@@ -57,7 +57,7 @@ export function EditProfileView({
         >
           <AvatarImage uri={editAvatarUrl.trim() || null} fullName={editName} size={120} />
           <View style={styles.cameraBadge}>
-            <AppIcon name="camara" size={16} color="#6B7280" />
+            <AppIcon name="camara" size={iconSize.xs} color={colors.textMuted} />
           </View>
         </Pressable>
         <Pressable onPress={() => setShowUrlInput(!showUrlInput)}>
@@ -130,12 +130,12 @@ export function EditProfileView({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: spacing.lg,
-    paddingBottom: 40,
+    paddingBottom: spacing.xxxl,
   },
   screenTitle: {
     fontWeight: '800',
-    color: '#111827',
-    fontSize: 24,
+    color: colors.textDark,
+    fontSize: fontSize.h1,
     marginBottom: spacing.xl,
     marginTop: spacing.md,
   },
@@ -152,23 +152,23 @@ const styles = StyleSheet.create({
     right: 2,
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.borderMuted,
     width: 32,
     height: 32,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
   },
   changePhotoText: {
-    color: '#DC4040',
+    color: colors.primary,
     fontWeight: '600',
     marginTop: spacing.sm,
-    fontSize: 14,
+    fontSize: fontSize.body,
   },
   form: {
     width: '100%',

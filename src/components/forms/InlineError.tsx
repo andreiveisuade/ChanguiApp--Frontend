@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { colors, fonts, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, spacing } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 
 type InlineErrorProps = {
@@ -30,14 +30,14 @@ const styles = StyleSheet.create({
   icon: {
     color: colors.error,
     fontFamily: fonts.body,
-    fontSize: 13,
+    fontSize: fontSize.body,
     fontWeight: '800',
   },
   message: {
     color: colors.error,
     flex: 1,
     fontFamily: fonts.body,
-    fontSize: 13,
+    fontSize: fontSize.body,
     lineHeight: 18,
   },
 });

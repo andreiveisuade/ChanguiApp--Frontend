@@ -9,6 +9,8 @@ export const ROUTES = {
     settings: '/(tabs)/settings',
   },
   purchaseDetail: '/purchase-detail',
+  lists: '/lists',
+  listDetail: '/list-detail',
   checkout: {
     confirmation: '/checkout/confirmation',
   },
