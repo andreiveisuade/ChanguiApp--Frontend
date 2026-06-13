@@ -120,6 +120,15 @@ Para cada feature: la cadena MVVM del frontend y la cadena por capas del backend
 
 ---
 
+### 3.8 Listas de compras (3er CRUD — persistencia LOCAL en SQLite, offline)
+**Frontend (corre 100% en el dispositivo, sin backend)**
+- View: `src/screens/lists/ListsScreen.tsx` + `src/screens/lists/ListDetailScreen.tsx`; entrada "Mis listas" en `app/(tabs)/home.tsx`; rutas `app/lists.tsx` y `app/list-detail.tsx`
+- ViewModel: `src/viewmodels/useLists.ts` + `src/viewmodels/useListDetail.ts`
+- Repository: `src/repositories/ListRepository.ts` → **SQLite local (`expo-sqlite`, base `changuiapp.db`)**, mismo patrón que `ProductCatalogRepository`
+- Model: `src/types/domain.ts` (`ShoppingList`, `ShoppingListItem`); componentes `src/components/lists/` (ShoppingListCard, ListItemRow, AddListItemInput)
+
+CRUD completo local: crear lista · listar con progreso · agregar ítems · **tachar (`purchased`)** · borrar lista. **Demuestra el objetivo de persistencia LOCAL** de la consigna (objetivo 4), complementando Carrito/Perfil/Historial que usan persistencia server vía REST. Funciona offline. Para la defensa: el `Repository` aísla la fuente de datos — los ViewModels/pantallas no saben si es SQLite o HTTP (patrón Repository de manual).
+
 ## 4. Narrativa end-to-end para la defensa: "el usuario escanea un producto"
 
 El mejor guion para mostrar las dos arquitecturas de punta a punta (de `ARQUITECTURA.md §4`):
@@ -149,9 +158,10 @@ Derivado de `ChanguiApp--Backend/docs/Plan_de_Pruebas.md §8`. Probar cada uno p
 **Carrito** — GET vacío (`{cart:null, total:0}`) · POST item (201) · duplicado→upsert · PUT quantity 0→borra · DELETE item ajeno (403)
 **Checkout** — POST con carrito (preference_id+init_point) · sin carrito/vacío (400) · webhook aprobado→completed+cart cerrado · rechazado→failed
 **Historial** — GET lista DESC · filtro `?status=completed` · detalle propio (200) · detalle ajeno (404, ownership)
+**Listas (local SQLite, offline)** — crear lista · agregar ítem · tachar ítem (`purchased`) · borrar lista · **persiste tras cerrar la app** (probar sin conexión)
 
 **Flujo crítico completo:** registro → login → escanear → agregar al carrito + ver total/IVA → checkout MP sandbox → ver historial.
 
 ### Aclaraciones de alcance (importante para no quedar mal en la defensa)
-- **Listas de compras:** está el Model (`domain.ts` `ShoppingList`) y componentes de UI, pero **no hay** screen/ViewModel/Repository ni rutas en el backend. Es la única capa Model sin las demás conectadas. Si la profe pregunta: feature esbozada, fuera del MVP de esta entrega.
+- **Listas de compras (3er CRUD):** implementado como **CRUD local en SQLite** (`ListRepository` sobre `expo-sqlite`), a propósito sin backend — cubre el requisito de persistencia local + modo offline. Es uno de los 3 CRUD obligatorios (Carrito + Perfil server, Listas local). Ver §3.8.
 - **Supermercados (`/api/stores`):** implementado en backend pero declarado fuera de alcance en el `Plan_de_Pruebas`. Testeo opcional.
