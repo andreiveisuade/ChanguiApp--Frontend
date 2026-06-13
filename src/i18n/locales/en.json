@@ -131,6 +131,7 @@
       "serverWaking": "The server is starting up. Wait a few seconds and try again.",
       "tooManyAttempts": "Too many attempts. Wait a few minutes and try again.",
       "serverError": "Server error. Please try again in a moment.",
+      "invalidData": "Please check the information you entered.",
       "unknown": "Something went wrong. Try again."
     }
   },

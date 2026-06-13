@@ -70,6 +70,15 @@ const statusError = (status: number): StatusError | null => {
 
 export const mapAuthError = (error: unknown): AuthError => {
   const status = getStatus(error);
+
+  // 400 = validación de express-validator en el backend. El detalle ya viene
+  // localizado (español) y es específico del campo, así que lo mostramos tal
+  // cual; si faltara, caemos a un mensaje genérico.
+  if (status === 400) {
+    const detail = getMessage(error);
+    return { message: detail || i18n.t('auth.errors.invalidData'), field: 'general' };
+  }
+
   const mapped = status !== undefined ? statusError(status) : null;
   if (mapped) {
     return { message: i18n.t(mapped.messageKey), field: mapped.field };

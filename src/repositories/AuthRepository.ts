@@ -83,6 +83,24 @@ const normalizeAuthSession = (payload: unknown): StoredAuthSession => {
   };
 };
 
+/**
+ * Extrae el mensaje de error del backend contemplando los tres formatos:
+ * { message }, { error } y el { errors: [{ msg }] } de express-validator (400).
+ */
+const extractApiErrorMessage = (payload: unknown): string | null => {
+  if (!isObjectRecord(payload)) {
+    return null;
+  }
+  const direct = getString(payload, 'message') ?? getString(payload, 'error');
+  if (direct) {
+    return direct;
+  }
+  if (Array.isArray(payload.errors) && payload.errors.length > 0 && isObjectRecord(payload.errors[0])) {
+    return getString(payload.errors[0], 'msg');
+  }
+  return null;
+};
+
 const requestAuth = async (
   endpoint: 'login' | 'register',
   body: ObjectRecord,
@@ -94,12 +112,7 @@ const requestAuth = async (
     if (axios.isAxiosError(err)) {
       if (err.response) {
         const payload: unknown = err.response.data;
-        const errorMessage =
-          isObjectRecord(payload) && typeof payload.message === 'string'
-            ? payload.message
-            : isObjectRecord(payload) && typeof payload.error === 'string'
-              ? payload.error
-              : 'Authentication request failed';
+        const errorMessage = extractApiErrorMessage(payload) ?? 'Authentication request failed';
         const httpError = new Error(errorMessage) as Error & { status?: number };
         httpError.status = err.response.status;
         throw httpError;

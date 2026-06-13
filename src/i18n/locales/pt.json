@@ -131,6 +131,7 @@
       "serverWaking": "O servidor está iniciando. Aguarde alguns segundos e tente novamente.",
       "tooManyAttempts": "Muitas tentativas. Aguarde alguns minutos e tente novamente.",
       "serverError": "Erro no servidor. Tente novamente em instantes.",
+      "invalidData": "Verifique os dados inseridos.",
       "unknown": "Ocorreu um erro. Tente novamente."
     }
   },
