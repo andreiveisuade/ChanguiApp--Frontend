@@ -1,97 +1,98 @@
-import ListRepository from '../ListRepository';
-import httpClient from '@/config/clients';
-
-jest.mock('@/config/clients', () => ({
-  __esModule: true,
-  default: {
-    get: jest.fn(),
-    post: jest.fn(),
-    put: jest.fn(),
-    delete: jest.fn(),
-  },
+jest.mock('expo-crypto', () => ({
+  randomUUID: jest.fn(() => 'uuid-fixed'),
 }));
 
-const mockedGet = httpClient.get as jest.Mock;
-const mockedPost = httpClient.post as jest.Mock;
-const mockedPut = httpClient.put as jest.Mock;
-const mockedDelete = httpClient.delete as jest.Mock;
-const res = <T>(data: T) => ({ data });
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { __mockDb: mockDb } = require('expo-sqlite');
+import ListRepository from '../ListRepository';
 
-describe('ListRepository', () => {
-  beforeEach(() => jest.clearAllMocks());
+describe('ListRepository (SQLite local)', () => {
+  afterEach(() => jest.clearAllMocks());
 
-  it('getLists mapea raw->domain y computa el progreso', async () => {
-    mockedGet.mockResolvedValueOnce(
-      res([
-        {
-          id: 'l1',
-          name: 'Súper',
-          items: [
-            { id: 'i1', list_id: 'l1', product_name: 'Leche', barcode: null, quantity: 2, purchased: true },
-            { id: 'i2', list_id: 'l1', product_name: 'Pan', barcode: null, quantity: 1, purchased: false },
-          ],
-        },
-      ])
-    );
+  it('getLists devuelve las listas con su progreso (total/done)', async () => {
+    mockDb.getAllAsync.mockResolvedValueOnce([
+      { id: 'l1', name: 'Súper', created_at: '2026-06-13T10:00:00.000Z' },
+    ]);
+    mockDb.getFirstAsync.mockResolvedValueOnce({ total: 2, done: 1 });
+
     const lists = await ListRepository.getLists();
-    expect(mockedGet).toHaveBeenCalledWith('/api/lists');
+
     expect(lists).toEqual([
-      { id: 'l1', name: 'Súper', total_items: 2, done_items: 1, created_at: undefined },
+      { id: 'l1', name: 'Súper', total_items: 2, done_items: 1, created_at: '2026-06-13T10:00:00.000Z' },
     ]);
   });
 
-  it('getList mapea la lista y los items (product_name -> name)', async () => {
-    mockedGet.mockResolvedValueOnce(
-      res({
-        id: 'l1',
-        name: 'Súper',
-        items: [
-          { id: 'i1', list_id: 'l1', product_name: 'Leche', barcode: null, quantity: 2, purchased: false },
-        ],
-      })
-    );
+  it('getList devuelve la lista y mapea items (purchased int->bool)', async () => {
+    mockDb.getFirstAsync.mockResolvedValueOnce({
+      id: 'l1',
+      name: 'Súper',
+      created_at: '2026-06-13T10:00:00.000Z',
+    });
+    mockDb.getAllAsync.mockResolvedValueOnce([
+      { id: 'i1', list_id: 'l1', name: 'Leche', quantity: 2, purchased: 1, created_at: 'x' },
+      { id: 'i2', list_id: 'l1', name: 'Pan', quantity: 1, purchased: 0, created_at: 'y' },
+    ]);
+
     const { list, items } = await ListRepository.getList('l1');
-    expect(mockedGet).toHaveBeenCalledWith('/api/lists/l1');
-    expect(list.total_items).toBe(1);
+
+    expect(list.total_items).toBe(2);
+    expect(list.done_items).toBe(1);
     expect(items[0]).toEqual({
       id: 'i1',
       list_id: 'l1',
       name: 'Leche',
       quantity: 2,
-      purchased: false,
-      created_at: undefined,
+      purchased: true,
+      created_at: 'x',
     });
   });
 
-  it('createList hace POST con name', async () => {
-    mockedPost.mockResolvedValueOnce(res({ id: 'l2', name: 'Nueva', items: [] }));
+  it('createList inserta y devuelve la lista con id generado', async () => {
     const r = await ListRepository.createList('Nueva');
-    expect(mockedPost).toHaveBeenCalledWith('/api/lists', { name: 'Nueva' });
-    expect(r.name).toBe('Nueva');
+
+    const [sql, id, name] = mockDb.runAsync.mock.calls[0];
+    expect(sql).toContain('INSERT INTO lists');
+    expect(id).toBe('uuid-fixed');
+    expect(name).toBe('Nueva');
+    expect(r).toMatchObject({ id: 'uuid-fixed', name: 'Nueva', total_items: 0, done_items: 0 });
   });
 
-  it('addItem hace POST con product_name; quantity null -> 1', async () => {
-    mockedPost.mockResolvedValueOnce(
-      res({ id: 'i9', list_id: 'l1', product_name: 'Huevos', barcode: null, quantity: null, purchased: false })
-    );
+  it('addItem inserta el item con quantity 1 y purchased 0', async () => {
     const item = await ListRepository.addItem('l1', 'Huevos');
-    expect(mockedPost).toHaveBeenCalledWith('/api/lists/l1/items', { product_name: 'Huevos' });
-    expect(item.name).toBe('Huevos');
-    expect(item.quantity).toBe(1);
+
+    const [sql, id, listId, name] = mockDb.runAsync.mock.calls[0];
+    expect(sql).toContain('INSERT INTO list_items');
+    expect(id).toBe('uuid-fixed');
+    expect(listId).toBe('l1');
+    expect(name).toBe('Huevos');
+    expect(item).toMatchObject({ id: 'uuid-fixed', list_id: 'l1', name: 'Huevos', quantity: 1, purchased: false });
   });
 
-  it('setPurchased hace PUT con purchased', async () => {
-    mockedPut.mockResolvedValueOnce(
-      res({ id: 'i1', list_id: 'l1', product_name: 'Leche', barcode: null, quantity: 1, purchased: true })
-    );
+  it('setPurchased actualiza y devuelve el item mapeado', async () => {
+    mockDb.getFirstAsync.mockResolvedValueOnce({
+      id: 'i1',
+      list_id: 'l1',
+      name: 'Leche',
+      quantity: 1,
+      purchased: 1,
+      created_at: 'x',
+    });
+
     const item = await ListRepository.setPurchased('l1', 'i1', true);
-    expect(mockedPut).toHaveBeenCalledWith('/api/lists/l1/items/i1', { purchased: true });
+
+    const [sql, purchased, itemId, listId] = mockDb.runAsync.mock.calls[0];
+    expect(sql).toContain('UPDATE list_items SET purchased');
+    expect(purchased).toBe(1);
+    expect(itemId).toBe('i1');
+    expect(listId).toBe('l1');
     expect(item.purchased).toBe(true);
   });
 
-  it('deleteList hace DELETE', async () => {
-    mockedDelete.mockResolvedValueOnce(res({ deleted: true }));
+  it('deleteList borra items y luego la lista', async () => {
     await ListRepository.deleteList('l1');
-    expect(mockedDelete).toHaveBeenCalledWith('/api/lists/l1');
+
+    expect(mockDb.runAsync).toHaveBeenCalledTimes(2);
+    expect(mockDb.runAsync.mock.calls[0][0]).toContain('DELETE FROM list_items');
+    expect(mockDb.runAsync.mock.calls[1][0]).toContain('DELETE FROM lists');
   });
 });
