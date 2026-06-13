@@ -6,9 +6,10 @@ import { AppIcon } from '@/components/atoms/AppIcon';
 
 interface AddListItemInputProps {
   onAdd: (name: string) => void;
+  placeholder?: string;
 }
 
-export function AddListItemInput({ onAdd }: AddListItemInputProps): React.JSX.Element {
+export function AddListItemInput({ onAdd, placeholder }: AddListItemInputProps): React.JSX.Element {
   const { t } = useTranslation();
   const [value, setValue] = useState('');
 
@@ -26,7 +27,7 @@ export function AddListItemInput({ onAdd }: AddListItemInputProps): React.JSX.El
       <TextInput
         value={value}
         onChangeText={setValue}
-        placeholder={t('lists.addItemPlaceholder')}
+        placeholder={placeholder ?? t('lists.addItemPlaceholder')}
         placeholderTextColor={colors.textSecondary}
         style={styles.input}
         returnKeyType="done"

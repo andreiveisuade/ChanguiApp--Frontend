@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, ScrollView, View, RefreshControl } from 'react-native';
+import { StyleSheet, ScrollView, View, RefreshControl, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import useAuth from '@/viewmodels/useAuth';
 import useCart from '@/viewmodels/useCart';
@@ -9,7 +9,9 @@ import CartSummaryCard from '@/components/home/CartSummaryCard';
 import CartItemRow from '@/components/home/CartItemRow';
 import EmptyCartMessage from '@/components/home/EmptyCartMessage';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
-import { colors, spacing } from '@/constants/theme';
+import { AppText } from '@/components/atoms/AppText';
+import { AppIcon } from '@/components/atoms/AppIcon';
+import { colors, spacing, iconSize } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
 
 export default function HomeRoute(): React.JSX.Element {
@@ -42,6 +44,18 @@ export default function HomeRoute(): React.JSX.Element {
           />
         }
       >
+        <Pressable
+          onPress={() => router.push(ROUTES.lists)}
+          style={styles.listsEntry}
+          accessibilityRole="button"
+          accessibilityLabel={t('lists.title')}
+        >
+          <AppIcon name="lista" size={iconSize.md} color={colors.primary} />
+          <AppText variant="H3" style={styles.listsEntryText}>
+            {t('lists.title')}
+          </AppText>
+        </Pressable>
+
         {error ? (
           <View style={styles.errorContainer}>
             <ErrorMessage
@@ -94,6 +108,24 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 100,
+  },
+  listsEntry: {
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    borderRadius: 16,
+    elevation: 2,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginHorizontal: spacing.xl,
+    marginTop: spacing.lg,
+    padding: spacing.lg,
+    shadowColor: colors.textPrimary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+  },
+  listsEntryText: {
+    textTransform: 'none',
   },
   mainCard: {
     backgroundColor: colors.white,
