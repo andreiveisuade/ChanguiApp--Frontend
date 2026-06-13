@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { colors, fonts, radii, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, spacing } from '@/constants/theme';
 import { FormLabel } from '@/components/forms/FormLabel';
 import { InlineError } from '@/components/forms/InlineError';
 
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     color: colors.textPrimary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.input,
     minHeight: 56,
     paddingHorizontal: spacing.lg,
     paddingVertical: 0,

@@ -3,7 +3,7 @@ import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { QuantitySelector } from '@/components/buttons/QuantitySelector';
-import { colors, radii, spacing } from '@/constants/theme';
+import { colors, iconSize, radii, spacing } from '@/constants/theme';
 import { formatARS } from '@/utils/currency';
 
 interface CartItemProps {
@@ -37,7 +37,7 @@ export function CartItem({
             resizeMode="cover"
           />
         ) : (
-          <AppIcon name="package" size={28} color={colors.textSecondary} />
+          <AppIcon name="package" size={iconSize.lgl} color={colors.textSecondary} />
         )}
       </View>
 
@@ -64,7 +64,7 @@ export function CartItem({
           accessibilityRole="button"
           accessibilityLabel="Eliminar producto del carrito"
         >
-          <AppIcon name="eliminar" size={24} color={colors.primary} />
+          <AppIcon name="eliminar" size={iconSize.mdl} color={colors.primary} />
         </Pressable>
       </View>
     </View>

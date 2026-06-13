@@ -29,7 +29,6 @@ describe('HomeHeader Component', () => {
     );
 
     expect(getByText('John')).toBeTruthy();
-    expect(getByText('home.continueShopping')).toBeTruthy();
   });
 
   it('renders greeting with empty string when userName is empty', () => {

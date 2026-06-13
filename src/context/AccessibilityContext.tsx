@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '@/i18n';
 
@@ -69,16 +69,16 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps):
     void loadSettings();
   }, []);
 
-  const setFontScaleName = async (scale: FontScaleOption) => {
+  const setFontScaleName = useCallback(async (scale: FontScaleOption) => {
     try {
       setFontScaleNameState(scale);
       await AsyncStorage.setItem(STORAGE_KEYS.fontSize, scale);
     } catch (error) {
       console.error('Error saving font size setting:', error);
     }
-  };
+  }, []);
 
-  const setLanguage = async (lang: LanguageOption) => {
+  const setLanguage = useCallback(async (lang: LanguageOption) => {
     try {
       setLanguageState(lang);
       await i18n.changeLanguage(lang);
@@ -86,21 +86,24 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps):
     } catch (error) {
       console.error('Error saving language setting:', error);
     }
-  };
+  }, []);
 
   const fontScale = FONT_SCALES[fontScaleName];
 
+  const value = useMemo<AccessibilityContextValue>(
+    () => ({
+      fontScale,
+      fontScaleName,
+      language,
+      setFontScaleName,
+      setLanguage,
+      isLoading,
+    }),
+    [fontScale, fontScaleName, language, setFontScaleName, setLanguage, isLoading]
+  );
+
   return (
-    <AccessibilityContext.Provider
-      value={{
-        fontScale,
-        fontScaleName,
-        language,
-        setFontScaleName,
-        setLanguage,
-        isLoading,
-      }}
-    >
+    <AccessibilityContext.Provider value={value}>
       {children}
     </AccessibilityContext.Provider>
   );

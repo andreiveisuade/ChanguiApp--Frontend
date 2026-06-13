@@ -64,12 +64,13 @@ describe('LogoutView Component', () => {
     expect(getByText('andrei@uade.edu.ar')).toBeTruthy();
   });
 
-  it('renders empty name/email when user is null', () => {
+  it('renders the default name when user is null', () => {
     const { getByText } = render(
       <LogoutView user={null} onLogout={mockOnLogout} onCancel={mockOnCancel} />
     );
 
-    expect(getByText('avatar:')).toBeTruthy();
+    // Sin usuario, el nombre cae al default (home.defaultUser → "Usuario")
+    expect(getByText('avatar:home.defaultUser')).toBeTruthy();
   });
 
   it('calls onLogout when confirm button is pressed', () => {

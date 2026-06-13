@@ -1,9 +1,16 @@
 import AuthRepository from '../AuthRepository';
 import supabase from '@/config/supabase';
+import { authClient } from '@/config/clients';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import { STORAGE_KEYS } from '@/constants/storage';
+
+jest.mock('@/config/clients', () => ({
+  __esModule: true,
+  default: { get: jest.fn(), post: jest.fn(), put: jest.fn(), delete: jest.fn() },
+  authClient: { post: jest.fn() },
+}));
 
 jest.mock('@/config/supabase', () => ({
   __esModule: true,
@@ -23,13 +30,16 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 }));
 
 jest.mock('expo-auth-session', () => ({ makeRedirectUri: jest.fn(() => 'changuiapp://redirect') }));
-jest.mock('expo-linking', () => ({ parse: jest.fn() }));
+jest.mock('expo-linking', () => ({
+  parse: jest.fn(),
+  addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+}));
 jest.mock('expo-web-browser', () => ({
   maybeCompleteAuthSession: jest.fn(),
   openAuthSessionAsync: jest.fn(),
 }));
 
-const fetchMock = jest.fn();
+const mockedPost = authClient.post as jest.Mock;
 const mockedGetItem = jest.mocked(AsyncStorage.getItem);
 const mockedSetItem = jest.mocked(AsyncStorage.setItem);
 const mockedRemoveItem = jest.mocked(AsyncStorage.removeItem);
@@ -43,55 +53,79 @@ const mockedOpenAuth = jest.mocked(WebBrowser.openAuthSessionAsync);
 describe('AuthRepository', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    global.fetch = fetchMock as unknown as typeof fetch;
   });
 
   describe('login / register', () => {
     it('login: POST /api/auth/login y normaliza token + user', async () => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ token: 'tk', user: { id: 'u1', email: 'a@b.com', full_name: 'Andrei' } }),
+      mockedPost.mockResolvedValueOnce({
+        data: { token: 'tk', user: { id: 'u1', email: 'a@b.com', full_name: 'Andrei' } },
       });
 
       const result = await AuthRepository.login('a@b.com', 'secret123');
 
-      const [url, opts] = fetchMock.mock.calls[0];
-      expect(url).toContain('/api/auth/login');
-      expect(JSON.parse(opts.body)).toEqual({ email: 'a@b.com', password: 'secret123' });
+      expect(mockedPost).toHaveBeenCalledWith('/api/auth/login', {
+        email: 'a@b.com',
+        password: 'secret123',
+      });
       expect(result.token).toBe('tk');
       expect(result.user).toEqual({ id: 'u1', email: 'a@b.com', full_name: 'Andrei', avatar_url: null, created_at: expect.any(String) });
     });
 
     it('register: manda name (no full_name) al backend', async () => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ token: 'tk', user: { id: 'u1', email: 'a@b.com', full_name: 'Andrei' } }),
+      mockedPost.mockResolvedValueOnce({
+        data: { token: 'tk', user: { id: 'u1', email: 'a@b.com', full_name: 'Andrei' } },
       });
 
       await AuthRepository.register('Andrei Veis', 'a@b.com', 'secret123');
 
-      const [, opts] = fetchMock.mock.calls[0];
-      expect(JSON.parse(opts.body)).toEqual({ name: 'Andrei Veis', email: 'a@b.com', password: 'secret123' });
+      expect(mockedPost).toHaveBeenCalledWith('/api/auth/register', {
+        name: 'Andrei Veis',
+        email: 'a@b.com',
+        password: 'secret123',
+      });
     });
 
     it('lanza el mensaje del backend en respuesta no-OK', async () => {
-      fetchMock.mockResolvedValueOnce({ ok: false, json: async () => ({ message: 'credenciales inválidas' }) });
+      mockedPost.mockRejectedValueOnce({
+        isAxiosError: true,
+        response: { status: 401, data: { message: 'credenciales inválidas' } },
+      });
 
       await expect(AuthRepository.login('a@b.com', 'x')).rejects.toThrow('credenciales inválidas');
     });
 
-    it('traduce AbortError a network timeout', async () => {
-      const abort = new Error('aborted');
-      abort.name = 'AbortError';
-      fetchMock.mockRejectedValueOnce(abort);
+    it('extrae el msg de validación de express-validator ({errors:[...]})', async () => {
+      mockedPost.mockRejectedValueOnce({
+        isAxiosError: true,
+        response: {
+          status: 400,
+          data: { errors: [{ msg: 'La password debe tener al menos 6 caracteres', path: 'password' }] },
+        },
+      });
+
+      await expect(AuthRepository.login('a@b.com', 'x')).rejects.toThrow(
+        'La password debe tener al menos 6 caracteres',
+      );
+    });
+
+    it('traduce error de red (sin respuesta) a network timeout', async () => {
+      mockedPost.mockRejectedValueOnce({ isAxiosError: true, request: {}, response: undefined });
 
       await expect(AuthRepository.login('a@b.com', 'x')).rejects.toThrow('network timeout');
     });
 
+    it('preserva el status HTTP en el error lanzado', async () => {
+      mockedPost.mockRejectedValueOnce({
+        isAxiosError: true,
+        response: { status: 503, data: undefined },
+      });
+
+      await expect(AuthRepository.login('a@b.com', 'x')).rejects.toMatchObject({ status: 503 });
+    });
+
     it('toma email/full_name desde user_metadata si faltan en la raíz', async () => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ token: 'tk', user: { id: 'u1', user_metadata: { email: 'meta@b.com', name: 'Meta User' } } }),
+      mockedPost.mockResolvedValueOnce({
+        data: { token: 'tk', user: { id: 'u1', user_metadata: { email: 'meta@b.com', name: 'Meta User' } } },
       });
 
       const result = await AuthRepository.login('a@b.com', 'x');
@@ -101,13 +135,13 @@ describe('AuthRepository', () => {
     });
 
     it('lanza si la respuesta no trae token', async () => {
-      fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { id: 'u1', email: 'a@b.com' } }) });
+      mockedPost.mockResolvedValueOnce({ data: { user: { id: 'u1', email: 'a@b.com' } } });
 
       await expect(AuthRepository.login('a@b.com', 'x')).rejects.toThrow('Invalid auth token');
     });
 
     it('lanza si el user no tiene email', async () => {
-      fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ token: 'tk', user: { id: 'u1' } }) });
+      mockedPost.mockResolvedValueOnce({ data: { token: 'tk', user: { id: 'u1' } } });
 
       await expect(AuthRepository.login('a@b.com', 'x')).rejects.toThrow('Invalid user response');
     });
@@ -130,10 +164,14 @@ describe('AuthRepository', () => {
     });
 
     it('lanza si el usuario cancela el browser', async () => {
+      jest.useFakeTimers();
       mockedSignInOAuth.mockResolvedValueOnce({ data: { url: 'https://google/oauth' }, error: null } as never);
       mockedOpenAuth.mockResolvedValueOnce({ type: 'cancel' } as never);
 
-      await expect(AuthRepository.loginWithGoogle()).rejects.toThrow('Google OAuth cancelled');
+      const assertion = expect(AuthRepository.loginWithGoogle()).rejects.toThrow('Google OAuth cancelled');
+      await jest.advanceTimersByTimeAsync(2000);
+      await assertion;
+      jest.useRealTimers();
     });
 
     it('lanza el error de supabase en signInWithOAuth', async () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { colors, fonts, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, spacing } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 
 type FormLabelProps = {
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   label: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     fontWeight: '600',
     marginBottom: spacing.sm,
   },

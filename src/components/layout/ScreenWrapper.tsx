@@ -9,7 +9,7 @@ import {
   ScrollView
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors } from '@/constants/theme';
+import { colors, spacing } from '@/constants/theme';
 
 interface ScreenWrapperProps {
   children: React.ReactNode;
@@ -71,11 +71,11 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 16, // Margen lateral estándar para Changuiapp
+    paddingHorizontal: spacing.lg, // Margen lateral estándar para Changuiapp
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: 16,
-    paddingBottom: 24, // Espacio extra al final del scroll para que no pegue abajo
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.xl, // Espacio extra al final del scroll para que no pegue abajo
   },
 });

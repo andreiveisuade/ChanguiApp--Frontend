@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ShoppingListItem } from '@/types/domain';
-import { colors, spacing, touchTarget } from '@/constants/theme';
+import { colors, iconSize, spacing, touchTarget } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -31,9 +31,9 @@ export function ListItemRow({
         style={({ pressed }) => [styles.checkbox, pressed && styles.checkboxPressed]}
       >
         {item.purchased ? (
-          <AppIcon name="exito" size={22} color={colors.success} />
+          <AppIcon name="exito" size={iconSize.md} color={colors.success} />
         ) : (
-          <AppIcon name="circulo" size={22} color={colors.border} />
+          <AppIcon name="circulo" size={iconSize.md} color={colors.border} />
         )}
       </Pressable>
 

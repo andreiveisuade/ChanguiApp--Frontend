@@ -5,7 +5,7 @@ import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import ProfileButton from '@/components/profile/ProfileButton';
 import { useAccessibility, FontScaleOption, LanguageOption, FONT_SCALES } from '@/context/AccessibilityContext';
-import { colors, spacing, radii } from '@/constants/theme';
+import { colors, spacing, radii, iconSize, fontSize } from '@/constants/theme';
 
 interface ConfigViewProps {
   onBack: () => void;
@@ -48,7 +48,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
       {/* Sección 1: Idioma */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <AppIcon name="idioma" size={20} color="#374151" style={styles.sectionIcon} />
+          <AppIcon name="idioma" size={iconSize.smd} color={colors.textSlate} style={styles.sectionIcon} />
           <AppText variant="H2" style={styles.sectionTitle}>
             {t('profile.languageSection', { defaultValue: 'Idioma' })}
           </AppText>
@@ -71,7 +71,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
             </AppText>
           </View>
           {tempLanguage === 'es' && (
-            <AppIcon name="check-circulo" size={22} color="#10B981" />
+            <AppIcon name="check-circulo" size={iconSize.md} color={colors.successStrong} />
           )}
         </Pressable>
 
@@ -92,7 +92,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
             </AppText>
           </View>
           {tempLanguage === 'en' && (
-            <AppIcon name="check-circulo" size={22} color="#10B981" />
+            <AppIcon name="check-circulo" size={iconSize.md} color={colors.successStrong} />
           )}
         </Pressable>
 
@@ -113,7 +113,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
             </AppText>
           </View>
           {tempLanguage === 'pt' && (
-            <AppIcon name="check-circulo" size={22} color="#10B981" />
+            <AppIcon name="check-circulo" size={iconSize.md} color={colors.successStrong} />
           )}
         </Pressable>
       </View>
@@ -121,7 +121,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
       {/* Sección 2: Tamaño de Fuente */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <AppIcon name="fuente" size={20} color="#374151" style={styles.sectionIcon} />
+          <AppIcon name="fuente" size={iconSize.smd} color={colors.textSlate} style={styles.sectionIcon} />
           <AppText variant="H2" style={styles.sectionTitle}>
             {t('profile.fontSizeSection', { defaultValue: 'Tamaño de fuente' })}
           </AppText>
@@ -145,7 +145,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
                   variant="Body"
                   style={[
                     styles.fontSizePrefix,
-                    { fontSize: 16 * scaleFactor }
+                    { fontSize: fontSize.h3 * scaleFactor }
                   ]}
                 >
                   Aa
@@ -155,7 +155,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
                 </AppText>
               </View>
               {isSelected && (
-                <AppIcon name="check-circulo" size={22} color="#10B981" />
+                <AppIcon name="check-circulo" size={iconSize.md} color={colors.successStrong} />
               )}
             </Pressable>
           );
@@ -172,7 +172,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
             variant="Body"
             style={[
               styles.previewText,
-              { fontSize: 14 * FONT_SCALES[tempFontScaleName] }
+              { fontSize: fontSize.body * FONT_SCALES[tempFontScaleName] }
             ]}
           >
             {t('profile.previewText', {
@@ -203,18 +203,18 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: spacing.lg,
-    paddingBottom: 40,
+    paddingBottom: spacing.xxxl,
   },
   screenTitle: {
     fontWeight: '800',
-    color: '#111827',
-    fontSize: 24,
+    color: colors.textDark,
+    fontSize: fontSize.h1,
     marginBottom: spacing.xs,
     marginTop: spacing.md,
   },
   screenSubtitle: {
-    color: '#6B7280',
-    fontSize: 14,
+    color: colors.textMuted,
+    fontSize: fontSize.body,
     marginBottom: spacing.xl,
   },
   section: {
@@ -230,13 +230,13 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontWeight: '700',
-    color: '#111827',
-    fontSize: 17,
+    color: colors.textDark,
+    fontSize: fontSize.h3,
   },
   optionCard: {
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     borderRadius: radii.md,
     padding: spacing.md,
     flexDirection: 'row',
@@ -245,8 +245,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   optionCardSelected: {
-    backgroundColor: '#EEF2FF',
-    borderColor: '#818CF8',
+    backgroundColor: colors.indigoSurfaceAlt,
+    borderColor: colors.indigoBorder,
   },
   optionLeft: {
     flexDirection: 'row',
@@ -254,35 +254,35 @@ const styles = StyleSheet.create({
   },
   flagEmoji: {
     marginRight: spacing.sm,
-    fontSize: 22,
+    fontSize: fontSize.h1,
   },
   fontSizePrefix: {
     marginRight: spacing.sm,
     fontWeight: '600',
-    color: '#4B5563',
+    color: colors.textSlateMuted,
     width: 28,
     textAlign: 'center',
   },
   optionLabel: {
     fontWeight: '500',
-    color: '#1F2937',
+    color: colors.textSlateDark,
   },
   previewLabel: {
-    color: '#6B7280',
+    color: colors.textMuted,
     fontWeight: '700',
-    fontSize: 11,
+    fontSize: fontSize.label,
     marginBottom: spacing.xs,
     textTransform: 'uppercase',
   },
   previewContainer: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surfaceMuted,
     borderRadius: radii.md,
     padding: spacing.md,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
   },
   previewText: {
-    color: '#374151',
+    color: colors.textSlate,
     lineHeight: 20,
   },
   actions: {

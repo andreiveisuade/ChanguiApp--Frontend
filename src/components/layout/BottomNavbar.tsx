@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
-import { colors } from '@/constants/theme';
+import { colors, fontSize, iconSize, spacing } from '@/constants/theme';
 import { AppIcon } from '../atoms/AppIcon';
 import { AppText } from '../atoms/AppText';
 
@@ -74,7 +74,7 @@ export const BottomNavbar = ({ state, navigation }: BottomTabBarProps) => {
               accessibilityState={{ selected: isFocused }}
             >
               <View style={styles.scannerButton}>
-                <AppIcon name={iconName} size={26} color="#FFFFFF" />
+                <AppIcon name={iconName} size={iconSize.lg} color={colors.white} />
               </View>
               <AppText variant="Label" style={styles.scannerLabel}>
                 {label}
@@ -97,7 +97,7 @@ export const BottomNavbar = ({ state, navigation }: BottomTabBarProps) => {
           >
             <AppIcon
               name={iconName}
-              size={22}
+              size={iconSize.md}
               color={isFocused ? colors.primary : colors.textSecondary}
             />
             <AppText
@@ -119,21 +119,21 @@ export const BottomNavbar = ({ state, navigation }: BottomTabBarProps) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    borderTopColor: colors.border,
     justifyContent: 'space-around',
     alignItems: 'flex-end',
-    paddingTop: 8,
+    paddingTop: spacing.sm,
   },
   tabButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 4,
+    paddingVertical: spacing.xs,
   },
   tabLabel: {
-    fontSize: 10,
+    fontSize: fontSize.label,
     marginTop: 2,
     textTransform: 'none',
     fontFamily: 'Inter-Medium',
@@ -158,8 +158,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   scannerLabel: {
-    fontSize: 10,
-    marginTop: 4,
+    fontSize: fontSize.label,
+    marginTop: spacing.xs,
     color: colors.textSecondary,
     fontFamily: 'Inter-Medium',
     textTransform: 'none',

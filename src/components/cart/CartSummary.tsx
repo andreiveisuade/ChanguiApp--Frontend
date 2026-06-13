@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { AppText } from '@/components/atoms/AppText';
 import { PriceBreakdown } from '@/components/pricing/PriceBreakdown';
-import { colors, spacing, touchTarget } from '@/constants/theme';
+import { colors, spacing, touchTarget, radii } from '@/constants/theme';
 import { formatRate } from '@/utils/currency';
 import { TaxSummary } from '@/types/domain';
 
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.xl,
     minHeight: touchTarget.minHeight,
     backgroundColor: colors.primary,
-    borderRadius: 8,
+    borderRadius: radii.sm,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
     alignItems: 'center',

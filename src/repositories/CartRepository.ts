@@ -4,6 +4,8 @@ import httpClient from '@/config/clients';
 const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
 const DEFAULT_TAX_RATE = 21;
 
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
 interface RawProduct {
   id: string;
   name: string;
@@ -107,9 +109,13 @@ function buildSummaryFromItems(items: CartItemWithProduct[], total: number): Tax
   });
 
   return {
-    subtotal_net: subtotalNet,
-    taxes: Array.from(groupedTaxes.values()),
-    total,
+    subtotal_net: round2(subtotalNet),
+    taxes: Array.from(groupedTaxes.values()).map((tax) => ({
+      ...tax,
+      base: round2(tax.base),
+      amount: round2(tax.amount),
+    })),
+    total: round2(total),
   };
 }
 

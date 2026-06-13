@@ -52,6 +52,9 @@ async function getDb(): Promise<SQLite.SQLiteDatabase> {
         );
       `);
       return db;
+    }).catch((e) => {
+      dbPromise = null;
+      throw e;
     });
   }
   return dbPromise;

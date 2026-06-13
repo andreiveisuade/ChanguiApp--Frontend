@@ -131,6 +131,7 @@
       "serverWaking": "The server is starting up. Wait a few seconds and try again.",
       "tooManyAttempts": "Too many attempts. Wait a few minutes and try again.",
       "serverError": "Server error. Please try again in a moment.",
+      "invalidData": "Please check the information you entered.",
       "unknown": "Something went wrong. Try again."
     }
   },
@@ -300,7 +301,13 @@
     "progress": "{{done}} of {{total}} items",
     "addItem": "Add item",
     "markPurchased": "Mark as purchased",
-    "markUnpurchased": "Mark as not purchased"
+    "markUnpurchased": "Mark as not purchased",
+    "title": "My lists",
+    "back": "Back",
+    "empty": "You don't have any lists yet. Create one from the field above.",
+    "detailEmpty": "This list is empty. Add items from the field above.",
+    "newListPlaceholder": "New list name...",
+    "deleteList": "Delete list"
   },
   "purchases": {
     "total": "Total",

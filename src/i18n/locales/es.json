@@ -131,6 +131,7 @@
       "serverWaking": "El servidor está iniciándose. Esperá unos segundos y reintentá.",
       "tooManyAttempts": "Demasiados intentos. Esperá unos minutos y probá de nuevo.",
       "serverError": "Error en el servidor. Reintentá en un momento.",
+      "invalidData": "Revisá los datos ingresados.",
       "unknown": "Ocurrió un error. Intentá de nuevo."
     }
   },
@@ -300,7 +301,13 @@
     "progress": "{{done}} de {{total}} ítems",
     "addItem": "Agregar ítem",
     "markPurchased": "Marcar como comprado",
-    "markUnpurchased": "Marcar como no comprado"
+    "markUnpurchased": "Marcar como no comprado",
+    "title": "Mis listas",
+    "back": "Volver",
+    "empty": "Todavía no tenés listas. Creá una desde el campo de arriba.",
+    "detailEmpty": "Esta lista está vacía. Agregá ítems desde el campo de arriba.",
+    "newListPlaceholder": "Nombre de la nueva lista...",
+    "deleteList": "Eliminar lista"
   },
   "purchases": {
     "total": "Total",

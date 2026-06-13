@@ -1,49 +1,26 @@
 import ChanguiAppLogo from '@/../assets/logos/changuiapp-logo.svg';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import AuthRepository from '@/repositories/AuthRepository';
+import useBootstrapRoute from '@/hooks/useBootstrapRoute';
+import { clearAllStorage } from '@/utils/storage';
 import { colors } from '@/constants/theme';
-import { STORAGE_KEYS } from '@/constants/storage';
-import { ROUTES } from '@/constants/routes';
 
 export default function IndexRoute(): React.JSX.Element {
   const router = useRouter();
   const hasNavigated = useRef(false);
   const [resetKey, setResetKey] = useState(0);
+  const target = useBootstrapRoute(resetKey);
 
   useEffect(() => {
-    if (hasNavigated.current) return;
+    if (hasNavigated.current || target === null) return;
 
-    let stillMounted = true;
-
-    const redirect = async (): Promise<void> => {
-      const [hasCompletedOnboarding, session] = await Promise.all([
-        AsyncStorage.getItem(STORAGE_KEYS.onboardingCompleted),
-        AuthRepository.getStoredSession(),
-      ]);
-
-      if (!stillMounted) return;
-
-      hasNavigated.current = true;
-
-      if (!hasCompletedOnboarding) {
-        router.replace(ROUTES.onboarding);
-      } else {
-        router.replace(session ? ROUTES.tabs.home : ROUTES.auth.login);
-      }
-    };
-
-    void redirect();
-
-    return () => {
-      stillMounted = false;
-    };
-  }, [router, resetKey]);
+    hasNavigated.current = true;
+    router.replace(target);
+  }, [router, target]);
 
   const handleDevReset = useCallback(async (): Promise<void> => {
-    await AsyncStorage.clear();
+    await clearAllStorage();
     hasNavigated.current = false;
     setResetKey((key) => key + 1);
   }, []);

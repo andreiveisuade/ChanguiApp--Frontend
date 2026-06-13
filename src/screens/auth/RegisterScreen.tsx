@@ -11,7 +11,7 @@ import PasswordInput from '@/components/forms/PasswordInput';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
 import AuthContainer from '@/components/layout/AuthContainer';
 import useAuth from '@/viewmodels/useAuth';
-import { colors, fonts, spacing } from '@/constants/theme';
+import { colors, fonts, spacing, fontSize } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
 import {
   doPasswordsMatch,
@@ -150,14 +150,14 @@ const styles = StyleSheet.create({
   title: {
     color: colors.textPrimary,
     fontFamily: fonts.display,
-    fontSize: 32,
+    fontSize: fontSize.display,
     fontWeight: '800',
     marginBottom: spacing.md,
   },
   subtitle: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.h3,
     lineHeight: 24,
   },
   footer: {
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   footerText: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 15,
+    fontSize: fontSize.h3,
   },
 });
 
