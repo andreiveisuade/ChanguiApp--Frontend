@@ -165,3 +165,19 @@ Derivado de `ChanguiApp--Backend/docs/Plan_de_Pruebas.md §8`. Probar cada uno p
 ### Aclaraciones de alcance (importante para no quedar mal en la defensa)
 - **Listas de compras (3er CRUD):** implementado como **CRUD local en SQLite** (`ListRepository` sobre `expo-sqlite`), a propósito sin backend — cubre el requisito de persistencia local + modo offline. Es uno de los 3 CRUD obligatorios (Carrito + Perfil server, Listas local). Ver §3.8.
 - **Supermercados (`/api/stores`):** implementado en backend pero declarado fuera de alcance en el `Plan_de_Pruebas`. Testeo opcional.
+
+---
+
+## 6. Analytics / observabilidad — decisión de alcance (requisito no funcional)
+
+La consigna lista analytics/observabilidad como requisito no funcional. Decisión del equipo: **no integrar un SDK de analytics de terceros** (Firebase Analytics, Amplitude, etc.) en esta entrega. Fundamentos:
+
+1. **Privacidad y consentimiento.** Instrumentar telemetría con un proveedor externo implica enviar datos de comportamiento de usuarios reales a un tercero, lo que exigiría una política de privacidad y un flujo de consentimiento que exceden el alcance de un MVP académico. Preferimos no recolectar lo que no podemos gobernar.
+2. **Riesgo técnico sobre un build que ya funciona.** Los SDK nativos (p. ej. `@react-native-firebase/analytics`) requieren configuración nativa (`google-services.json`), `expo prebuild` y salir del flujo *managed* de Expo. A días de la entrega, eso pone en riesgo el APK firmado —el entregable concreto de la consigna— sin aportar a los objetivos evaluados.
+3. **Costo/beneficio.** El foco de la entrega es demostrar CRUDs completos, arquitectura MVVM + capas, persistencia (server y local) y el flujo de compra. Analytics de producto no mueve esa aguja.
+
+**Qué observabilidad SÍ tiene la app hoy** (mostrable en la defensa):
+- **Backend:** logging HTTP de cada request con `morgan` (`index.ts:30`) y manejo de errores centralizado en el `errorHandler` global (`index.ts:111`), que clasifica y filtra errores antes de responder; más el log del cron de sincronización de Precios Claros.
+- **Frontend:** `ErrorTranslationService` loguea el error original (`console.error('[ErrorTranslationService]', err)`) antes de traducirlo a un mensaje amigable, y el **DebugOverlay** (consola de diagnóstico en runtime; easter-egg de 5 taps en el saludo) permite inspeccionar estado de sesión/red en el dispositivo.
+
+**Plan a futuro (deuda documentada).** Si se incorporara analytics de producto, se haría con un `AnalyticsService` detrás de una interfaz —mismo patrón que `ErrorTranslationService` / Repository— emitiendo eventos del funnel (login, escaneo, alta al carrito, checkout iniciado/confirmado). La UI dispararía eventos sin conocer el proveedor, de modo que cambiar el destino (consola, backend propio, SDK externo) no tocaría las vistas.
