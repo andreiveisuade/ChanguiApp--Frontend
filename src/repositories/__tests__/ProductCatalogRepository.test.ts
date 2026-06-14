@@ -1,13 +1,13 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as repo from '../ProductCatalogRepository';
+import type { CatalogApiItem } from '../ProductCatalogRepository';
 jest.mock('@react-native-async-storage/async-storage', () => ({
   __esModule: true,
   default: { getItem: jest.fn(), setItem: jest.fn() },
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+ 
 const { __mockDb: mockDb } = require('expo-sqlite');
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as repo from '../ProductCatalogRepository';
-import type { CatalogApiItem } from '../ProductCatalogRepository';
 
 const mockedAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>;
 

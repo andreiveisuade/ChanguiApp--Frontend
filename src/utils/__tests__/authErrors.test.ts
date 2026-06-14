@@ -1,6 +1,6 @@
-jest.mock('@/i18n', () => ({ __esModule: true, default: { t: (key: string) => key } }));
-
 import { mapAuthError } from '../authErrors';
+
+jest.mock('@/i18n', () => ({ __esModule: true, default: { t: (key: string) => key } }));
 
 describe('mapAuthError', () => {
   it('detecta email ya registrado y apunta al campo email', () => {

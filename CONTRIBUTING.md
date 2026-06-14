@@ -45,6 +45,18 @@ El resto del documento tiene los detalles. Si tenés dudas, leé la sección que
 
 ---
 
+## Arquitectura (MVVM)
+
+El frontend separa responsabilidades en capas. Respetá esta dirección de dependencias:
+
+- **View** (`src/screens/`, `src/components/`): solo presentación (JSX y estilos). No hace fetch, no accede a repositorios y no tiene lógica de negocio. Consume un hook.
+- **ViewModel** (`src/viewmodels/`, `src/context/`): un hook por pantalla con estado + acciones + orquestación. Es el único que llama a los repositorios.
+- **Model** (`src/repositories/`, `src/services/`, `src/types/`, `src/config/clients.ts`): acceso a datos y reglas. Toda la I/O (axios, storage) pasa por acá.
+
+**Regla:** `screen → viewmodel → repository`. Nunca saltear capas: una screen no importa un repository ni hace `fetch`/`axios` directo.
+
+---
+
 ## Estrategia de Ramas
 
 ```

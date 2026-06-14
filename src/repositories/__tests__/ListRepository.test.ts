@@ -1,10 +1,10 @@
+import ListRepository from '../ListRepository';
 jest.mock('expo-crypto', () => ({
   randomUUID: jest.fn(() => 'uuid-fixed'),
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+ 
 const { __mockDb: mockDb } = require('expo-sqlite');
-import ListRepository from '../ListRepository';
 
 describe('ListRepository (SQLite local)', () => {
   afterEach(() => jest.clearAllMocks());
