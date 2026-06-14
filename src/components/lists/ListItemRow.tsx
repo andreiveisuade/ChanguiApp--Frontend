@@ -9,12 +9,14 @@ import { AppIcon } from '@/components/atoms/AppIcon';
 interface ListItemRowProps {
   item: ShoppingListItem;
   onToggle: () => void;
+  onDelete?: () => void;
   isLast?: boolean;
 }
 
 export function ListItemRow({
   item,
   onToggle,
+  onDelete,
   isLast = false,
 }: ListItemRowProps): React.JSX.Element {
   const { t } = useTranslation();
@@ -47,6 +49,17 @@ export function ListItemRow({
 
       {item.quantity > 1 ? (
         <AppText variant="Label" style={styles.qty}>×{item.quantity}</AppText>
+      ) : null}
+
+      {onDelete ? (
+        <Pressable
+          onPress={onDelete}
+          accessibilityLabel={t('lists.deleteItem')}
+          accessibilityRole="button"
+          style={({ pressed }) => [styles.delete, pressed && styles.checkboxPressed]}
+        >
+          <AppIcon name="eliminar" size={20} color={colors.textSecondary} />
+        </Pressable>
       ) : null}
     </View>
   );
@@ -83,6 +96,12 @@ const styles = StyleSheet.create({
   },
   qty: {
     textTransform: 'none',
+  },
+  delete: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: touchTarget.minHeight,
+    minWidth: touchTarget.minWidth,
   },
 });
 

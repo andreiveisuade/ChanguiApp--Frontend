@@ -292,11 +292,28 @@
     "notFound": "We couldn't find this purchase"
   },
   "lists": {
+    "title": "My lists",
     "addItemPlaceholder": "Product name...",
+    "searchPlaceholder": "Search product...",
+    "noResults": "No products found",
     "progress": "{{done}} of {{total}} items",
     "addItem": "Add item",
     "markPurchased": "Mark as purchased",
-    "markUnpurchased": "Mark as not purchased"
+    "markUnpurchased": "Mark as not purchased",
+    "deleteItem": "Delete item",
+    "newList": "New list",
+    "createList": "Create list",
+    "listNamePlaceholder": "List name",
+    "deleteList": "Delete list",
+    "deleteListConfirm": "Delete \"{{name}}\"? This can't be undone.",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "emptyTitle": "You don't have any lists yet",
+    "emptySubtitle": "Create your first shopping list",
+    "emptyListTitle": "Empty list",
+    "emptyListSubtitle": "Search the catalog to add a product",
+    "back": "Back",
+    "openLists": "My lists"
   },
   "purchases": {
     "total": "Total",

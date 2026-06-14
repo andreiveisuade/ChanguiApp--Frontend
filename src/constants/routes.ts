@@ -1,6 +1,8 @@
 export const ROUTES = {
   root: '/',
   onboarding: '/onboarding',
+  lists: '/lists',
+  listDetail: '/list-detail',
   tabs: {
     home: '/(tabs)/home',
     cart: '/(tabs)/cart',

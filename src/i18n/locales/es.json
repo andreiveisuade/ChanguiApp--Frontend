@@ -292,11 +292,28 @@
     "notFound": "No encontramos esta compra"
   },
   "lists": {
+    "title": "Mis listas",
     "addItemPlaceholder": "Nombre del producto...",
+    "searchPlaceholder": "Buscar producto...",
+    "noResults": "No se encontraron productos",
     "progress": "{{done}} de {{total}} ítems",
     "addItem": "Agregar ítem",
     "markPurchased": "Marcar como comprado",
-    "markUnpurchased": "Marcar como no comprado"
+    "markUnpurchased": "Marcar como no comprado",
+    "deleteItem": "Eliminar ítem",
+    "newList": "Nueva lista",
+    "createList": "Crear lista",
+    "listNamePlaceholder": "Nombre de la lista",
+    "deleteList": "Eliminar lista",
+    "deleteListConfirm": "¿Querés eliminar \"{{name}}\"? Esta acción no se puede deshacer.",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "emptyTitle": "Todavía no tenés listas",
+    "emptySubtitle": "Creá tu primera lista de compras",
+    "emptyListTitle": "Lista vacía",
+    "emptyListSubtitle": "Buscá un producto del catálogo para agregarlo",
+    "back": "Volver",
+    "openLists": "Mis listas"
   },
   "purchases": {
     "total": "Total",

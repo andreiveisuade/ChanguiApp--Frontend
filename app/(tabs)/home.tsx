@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, ScrollView, View, RefreshControl } from 'react-native';
+import { StyleSheet, ScrollView, View, RefreshControl, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import useAuth from '@/viewmodels/useAuth';
 import useCart from '@/viewmodels/useCart';
@@ -9,6 +9,8 @@ import CartSummaryCard from '@/components/home/CartSummaryCard';
 import CartItemRow from '@/components/home/CartItemRow';
 import EmptyCartMessage from '@/components/home/EmptyCartMessage';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
+import { AppText } from '@/components/atoms/AppText';
+import { AppIcon } from '@/components/atoms/AppIcon';
 import { colors, spacing } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
 
@@ -81,6 +83,19 @@ export default function HomeRoute(): React.JSX.Element {
         {items.length === 0 && !isLoading && !error && (
           <EmptyCartMessage />
         )}
+
+        {/* Acceso a las listas de compra */}
+        <Pressable
+          onPress={() => router.push(ROUTES.lists)}
+          accessibilityRole="button"
+          accessibilityLabel={t('lists.openLists')}
+          style={({ pressed }) => [styles.listsCard, pressed && styles.listsCardPressed]}
+        >
+          <AppIcon name="lista" size={24} color={colors.primary} />
+          <AppText variant="H3" style={styles.listsCardText}>
+            {t('lists.openLists')}
+          </AppText>
+        </Pressable>
       </ScrollView>
     </View>
   );
@@ -121,5 +136,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: spacing.xl,
     marginTop: spacing.xl,
+  },
+  listsCard: {
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    borderRadius: 24,
+    flexDirection: 'row',
+    gap: spacing.md,
+    marginHorizontal: spacing.xl,
+    marginTop: spacing.lg,
+    padding: spacing.lg,
+    shadowColor: colors.textPrimary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  listsCardPressed: {
+    opacity: 0.85,
+  },
+  listsCardText: {
+    textTransform: 'none',
   },
 });

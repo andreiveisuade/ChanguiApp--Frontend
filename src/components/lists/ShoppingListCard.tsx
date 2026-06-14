@@ -9,11 +9,13 @@ import { AppIcon } from '@/components/atoms/AppIcon';
 interface ShoppingListCardProps {
   list: ShoppingList;
   onPress: () => void;
+  onLongPress?: () => void;
 }
 
 export function ShoppingListCard({
   list,
   onPress,
+  onLongPress,
 }: ShoppingListCardProps): React.JSX.Element {
   const { t } = useTranslation();
   const progress =
@@ -22,6 +24,7 @@ export function ShoppingListCard({
   return (
     <Pressable
       onPress={onPress}
+      onLongPress={onLongPress}
       accessibilityLabel={list.name}
       accessibilityRole="button"
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
