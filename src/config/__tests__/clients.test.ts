@@ -12,13 +12,21 @@ const mockedGetSession = jest.mocked(AuthRepository.getStoredSession);
 const mockedClearSession = jest.mocked(AuthRepository.clearSession);
 
 // Handlers internos de los interceptores: los probamos directo, sin pegarle a la red.
-const requestFulfilled = (httpClient.interceptors.request as unknown as {
-  handlers: { fulfilled: (config: { headers: Record<string, string> }) => Promise<{ headers: Record<string, string> }> }[];
-}).handlers[0].fulfilled;
+const requestFulfilled = (
+  httpClient.interceptors.request as unknown as {
+    handlers: {
+      fulfilled: (config: {
+        headers: Record<string, string>;
+      }) => Promise<{ headers: Record<string, string> }>;
+    }[];
+  }
+).handlers[0].fulfilled;
 
-const responseRejected = (httpClient.interceptors.response as unknown as {
-  handlers: { rejected: (error: unknown) => Promise<never> }[];
-}).handlers[0].rejected;
+const responseRejected = (
+  httpClient.interceptors.response as unknown as {
+    handlers: { rejected: (error: unknown) => Promise<never> }[];
+  }
+).handlers[0].rejected;
 
 const validSession = {
   token: 'tk',
@@ -42,7 +50,9 @@ describe('httpClient interceptors', () => {
       mockedGetSession.mockResolvedValueOnce(null);
       const emitSpy = jest.spyOn(authEvents, 'emitSessionExpired');
 
-      await expect(requestFulfilled({ headers: {} })).rejects.toBeInstanceOf(AuthSessionExpiredError);
+      await expect(requestFulfilled({ headers: {} })).rejects.toBeInstanceOf(
+        AuthSessionExpiredError,
+      );
       expect(emitSpy).toHaveBeenCalledTimes(1);
       emitSpy.mockRestore();
     });
@@ -52,9 +62,9 @@ describe('httpClient interceptors', () => {
     it('401: limpia la sesión, emite sessionExpired y lanza AuthSessionExpiredError', async () => {
       const emitSpy = jest.spyOn(authEvents, 'emitSessionExpired');
 
-      await expect(responseRejected({ response: { status: 401, data: {} } })).rejects.toBeInstanceOf(
-        AuthSessionExpiredError,
-      );
+      await expect(
+        responseRejected({ response: { status: 401, data: {} } }),
+      ).rejects.toBeInstanceOf(AuthSessionExpiredError);
       expect(mockedClearSession).toHaveBeenCalledTimes(1);
       expect(emitSpy).toHaveBeenCalledTimes(1);
       emitSpy.mockRestore();
@@ -77,21 +87,21 @@ describe('httpClient interceptors', () => {
     });
 
     it('503 sin body: mensaje amigable de servicio no disponible', async () => {
-      await expect(
-        responseRejected({ response: { status: 503, data: {} } }),
-      ).rejects.toThrow('El servicio no está disponible. Reintentá en unos momentos.');
+      await expect(responseRejected({ response: { status: 503, data: {} } })).rejects.toThrow(
+        'El servicio no está disponible. Reintentá en unos momentos.',
+      );
     });
 
     it('5xx sin body: mensaje amigable de error de servidor', async () => {
-      await expect(
-        responseRejected({ response: { status: 500, data: {} } }),
-      ).rejects.toThrow('Hubo un error en el servidor. Reintentá más tarde.');
+      await expect(responseRejected({ response: { status: 500, data: {} } })).rejects.toThrow(
+        'Hubo un error en el servidor. Reintentá más tarde.',
+      );
     });
 
     it('4xx sin body: fallback al status', async () => {
-      await expect(
-        responseRejected({ response: { status: 404, data: {} } }),
-      ).rejects.toThrow('Request failed with status 404');
+      await expect(responseRejected({ response: { status: 404, data: {} } })).rejects.toThrow(
+        'Request failed with status 404',
+      );
     });
   });
 });

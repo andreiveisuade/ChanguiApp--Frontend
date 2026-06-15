@@ -15,21 +15,17 @@ describe('TextLinkButton Component', () => {
         title="Register"
         accessibilityHint="Navigates to registration screen"
         onPress={mockOnPress}
-      />
+      />,
     );
     expect(getByText('Register')).toBeTruthy();
-    
+
     const button = getByRole('link');
     expect(button.props.accessibilityHint).toBe('Navigates to registration screen');
   });
 
   it('calls onPress when clicked', () => {
     const { getByRole } = render(
-      <TextLinkButton
-        title="Register"
-        accessibilityHint="Register"
-        onPress={mockOnPress}
-      />
+      <TextLinkButton title="Register" accessibilityHint="Register" onPress={mockOnPress} />,
     );
     const button = getByRole('link');
     fireEvent.press(button);

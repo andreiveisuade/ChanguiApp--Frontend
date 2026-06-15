@@ -34,9 +34,7 @@ describe('PurchaseCard Component', () => {
   });
 
   it('renders store name, date and formatted total', () => {
-    const { getByText } = render(
-      <PurchaseCard purchase={makePurchase()} onPress={mockOnPress} />
-    );
+    const { getByText } = render(<PurchaseCard purchase={makePurchase()} onPress={mockOnPress} />);
 
     expect(getByText('Coto')).toBeTruthy();
     expect(getByText('01/06/2026')).toBeTruthy();
@@ -45,7 +43,7 @@ describe('PurchaseCard Component', () => {
 
   it('exposes an accessibility label with store name and formatted total', () => {
     const { getByLabelText } = render(
-      <PurchaseCard purchase={makePurchase()} onPress={mockOnPress} />
+      <PurchaseCard purchase={makePurchase()} onPress={mockOnPress} />,
     );
 
     expect(getByLabelText('Coto — $12.500')).toBeTruthy();
@@ -53,7 +51,7 @@ describe('PurchaseCard Component', () => {
 
   it('calls onPress when the card is pressed', () => {
     const { getByLabelText } = render(
-      <PurchaseCard purchase={makePurchase()} onPress={mockOnPress} />
+      <PurchaseCard purchase={makePurchase()} onPress={mockOnPress} />,
     );
 
     fireEvent.press(getByLabelText('Coto — $12.500'));

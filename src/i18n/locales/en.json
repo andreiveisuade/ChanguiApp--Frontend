@@ -11,7 +11,24 @@
   "total": "Total",
   "add_to_cart": "Add to cart",
   "empty_cart": "Empty cart",
-  "checkout": "Checkout",
+  "checkout": {
+    "confirmingTitle": "Confirming your payment",
+    "confirmingSubtitle": "This may take a few seconds.",
+    "successTitle": "Payment confirmed!",
+    "successSubtitle": "Your purchase was saved to your history.",
+    "pendingTitle": "Payment in progress",
+    "pendingSubtitle": "We're waiting for Mercado Pago to confirm. You'll see it in your history.",
+    "timeoutTitle": "We couldn't confirm the payment",
+    "timeoutSubtitle": "If you completed the payment, it may take a few minutes to show up in your history.",
+    "viewHistory": "View my history",
+    "viewHistoryHint": "Opens the purchase history",
+    "goHome": "Back to home",
+    "goHomeHint": "Returns to the home screen",
+    "backToCart": "Back to cart",
+    "backToCartHint": "Returns to the cart",
+    "retry": "Retry",
+    "retryHint": "Checks the payment status again"
+  },
   "lang_es": "Español",
   "lang_en": "English",
   "lang_pt": "Português",
@@ -51,24 +68,6 @@
     "checkout": "Checkout",
     "checkoutHint": "Pay for your cart with Mercado Pago",
     "greeting": "Hello, {{name}}"
-  },
-  "checkout": {
-    "confirmingTitle": "Confirming your payment",
-    "confirmingSubtitle": "This may take a few seconds.",
-    "successTitle": "Payment confirmed!",
-    "successSubtitle": "Your purchase was saved to your history.",
-    "pendingTitle": "Payment in progress",
-    "pendingSubtitle": "We're waiting for Mercado Pago to confirm. You'll see it in your history.",
-    "timeoutTitle": "We couldn't confirm the payment",
-    "timeoutSubtitle": "If you completed the payment, it may take a few minutes to show up in your history.",
-    "viewHistory": "View my history",
-    "viewHistoryHint": "Opens the purchase history",
-    "goHome": "Back to home",
-    "goHomeHint": "Returns to the home screen",
-    "backToCart": "Back to cart",
-    "backToCartHint": "Returns to the cart",
-    "retry": "Retry",
-    "retryHint": "Checks the payment status again"
   },
   "auth": {
     "login": {
@@ -297,17 +296,28 @@
     "notFound": "We couldn't find this purchase"
   },
   "lists": {
+    "title": "My lists",
     "addItemPlaceholder": "Product name...",
+    "searchPlaceholder": "Search product...",
+    "noResults": "No products found",
     "progress": "{{done}} of {{total}} items",
     "addItem": "Add item",
     "markPurchased": "Mark as purchased",
     "markUnpurchased": "Mark as not purchased",
-    "title": "My lists",
+    "deleteItem": "Delete item",
+    "newList": "New list",
+    "createList": "Create list",
+    "listNamePlaceholder": "List name",
+    "deleteList": "Delete list",
+    "deleteListConfirm": "Delete \"{{name}}\"? This can't be undone.",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "emptyTitle": "You don't have any lists yet",
+    "emptySubtitle": "Create your first shopping list",
+    "emptyListTitle": "Empty list",
+    "emptyListSubtitle": "Search the catalog to add a product",
     "back": "Back",
-    "empty": "You don't have any lists yet. Create one from the field above.",
-    "detailEmpty": "This list is empty. Add items from the field above.",
-    "newListPlaceholder": "New list name...",
-    "deleteList": "Delete list"
+    "openLists": "My lists"
   },
   "purchases": {
     "total": "Total",
@@ -332,4 +342,3 @@
     "sentMessage": "If {{email}} has an account, you'll receive a reset link within a few minutes."
   }
 }
-

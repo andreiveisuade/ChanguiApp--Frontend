@@ -25,7 +25,9 @@ describe('mapAuthError', () => {
   });
 
   it('detecta errores de Google/OAuth', () => {
-    expect(mapAuthError(new Error('Google OAuth cancelled')).message).toBe('auth.errors.googleError');
+    expect(mapAuthError(new Error('Google OAuth cancelled')).message).toBe(
+      'auth.errors.googleError',
+    );
   });
 
   it('cae en unknown para errores no reconocidos o tipos no-Error', () => {
@@ -45,7 +47,9 @@ describe('mapAuthError', () => {
   });
 
   it('para 400 muestra el detalle de validación del backend, o un genérico si falta', () => {
-    expect(mapAuthError({ status: 400, message: 'La password debe tener al menos 6 caracteres' })).toEqual({
+    expect(
+      mapAuthError({ status: 400, message: 'La password debe tener al menos 6 caracteres' }),
+    ).toEqual({
       message: 'La password debe tener al menos 6 caracteres',
       field: 'general',
     });

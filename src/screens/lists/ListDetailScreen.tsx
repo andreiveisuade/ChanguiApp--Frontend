@@ -3,35 +3,31 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { colors, spacing, iconSize, touchTarget } from '@/constants/theme';
+import {
+  borderWidth,
+  colors,
+  iconSize,
+  opacity,
+  radii,
+  sizes,
+  spacing,
+  touchTarget,
+} from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import ErrorMessage from '@/components/feedback/ErrorMessage';
+import { ProductSearchInput } from '@/components/lists/ProductSearchInput';
 import { ListItemRow } from '@/components/lists/ListItemRow';
-import { AddListItemInput } from '@/components/lists/AddListItemInput';
 import { useListDetail } from '@/viewmodels/useListDetail';
 
 export function ListDetailScreen(): React.JSX.Element {
   const { t } = useTranslation();
   const router = useRouter();
-  const params = useLocalSearchParams<{ id: string; name?: string }>();
-  const { items, isLoading, error, refresh, addItem, toggleItem, removeList } = useListDetail(
-    params.id
-  );
+  const params = useLocalSearchParams<{ listId: string; name?: string }>();
+  const { items, isLoading, addProduct, toggleItem, removeItem } = useListDetail(params.listId);
 
-  const handleDelete = async (): Promise<void> => {
-    const ok = await removeList();
-    if (ok) router.back();
-  };
+  const title = params.name ?? t('lists.title');
 
   const renderBody = (): React.JSX.Element => {
-    if (error) {
-      return (
-        <View style={styles.stateContainer}>
-          <ErrorMessage message={error} closeAccessibilityHint={t('common.retry')} onClose={refresh} />
-        </View>
-      );
-    }
     if (isLoading) {
       return (
         <View style={styles.stateContainer}>
@@ -42,25 +38,28 @@ export function ListDetailScreen(): React.JSX.Element {
     if (items.length === 0) {
       return (
         <View style={styles.stateContainer}>
-          <AppText variant="Body" style={styles.empty}>
-            {t('lists.detailEmpty')}
+          <AppIcon name="lista" size={iconSize.hero} color={colors.border} />
+          <AppText variant="H3" style={styles.emptyTitle}>
+            {t('lists.emptyListTitle')}
+          </AppText>
+          <AppText variant="Body" style={styles.emptySubtitle}>
+            {t('lists.emptyListSubtitle')}
           </AppText>
         </View>
       );
     }
     return (
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.itemsCard}>
-          {items.map((item, index) => (
-            <ListItemRow
-              key={item.id}
-              item={item}
-              onToggle={() => toggleItem(item)}
-              isLast={index === items.length - 1}
-            />
-          ))}
-        </View>
-      </ScrollView>
+      <View style={styles.itemsCard}>
+        {items.map((item, index) => (
+          <ListItemRow
+            key={item.id}
+            item={item}
+            onToggle={() => toggleItem(item.id)}
+            onDelete={() => removeItem(item.id)}
+            isLast={index === items.length - 1}
+          />
+        ))}
+      </View>
     );
   };
 
@@ -70,38 +69,33 @@ export function ListDetailScreen(): React.JSX.Element {
         <View style={styles.headerBar}>
           <Pressable
             onPress={() => router.back()}
-            style={styles.iconButton}
+            style={styles.backButton}
             accessibilityRole="button"
             accessibilityLabel={t('lists.back')}
           >
             <AppIcon name="atras" size={iconSize.md} color={colors.textPrimary} />
           </Pressable>
           <AppText variant="H2" style={styles.headerTitle} numberOfLines={1}>
-            {params.name || t('lists.title')}
+            {title}
           </AppText>
-          <Pressable
-            onPress={handleDelete}
-            style={styles.iconButton}
-            accessibilityRole="button"
-            accessibilityLabel={t('lists.deleteList')}
-          >
-            <AppIcon name="eliminar" size={iconSize.md} color={colors.error} />
-          </Pressable>
         </View>
       </SafeAreaView>
 
-      <View style={styles.addRow}>
-        <AddListItemInput onAdd={addItem} />
-      </View>
-
-      {renderBody()}
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <ProductSearchInput onSelect={addProduct} />
+        {renderBody()}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   page: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.white,
     flex: 1,
   },
   headerSafe: {
@@ -110,13 +104,14 @@ const styles = StyleSheet.create({
   headerBar: {
     alignItems: 'center',
     borderBottomColor: colors.border,
-    borderBottomWidth: 1,
+    borderBottomWidth: borderWidth.hairline,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    gap: spacing.sm,
+    paddingBottom: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
   },
-  iconButton: {
+  backButton: {
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: touchTarget.minHeight,
@@ -124,28 +119,34 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     flex: 1,
-    marginHorizontal: spacing.sm,
-    textTransform: 'none',
-  },
-  addRow: {
-    padding: spacing.lg,
   },
   content: {
-    paddingHorizontal: spacing.lg,
+    flexGrow: 1,
+    padding: spacing.lg,
     paddingBottom: spacing.xxl,
   },
   itemsCard: {
     backgroundColor: colors.white,
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: radii.md,
+    borderWidth: borderWidth.hairline,
+    marginTop: spacing.md,
     paddingHorizontal: spacing.lg,
   },
   stateContainer: {
     alignItems: 'center',
-    flex: 1,
+    gap: spacing.sm,
     justifyContent: 'center',
+    marginTop: sizes.emptyStateOffset,
     padding: spacing.xl,
   },
-  empty: {
+  emptyTitle: {
+    marginTop: spacing.sm,
+    textAlign: 'center',
+    textTransform: 'none',
+  },
+  emptySubtitle: {
+    opacity: opacity.muted,
     textAlign: 'center',
   },
 });

@@ -29,9 +29,7 @@ describe('AppIcon Component', () => {
   });
 
   it('renders correctly with a valid icon name mapped to MaterialCommunityIcons', () => {
-    const { getByTestId, getByText } = render(
-      <AppIcon name="inicio" size={30} color="red" />
-    );
+    const { getByTestId, getByText } = render(<AppIcon name="inicio" size={30} color="red" />);
     const iconElement = getByTestId('mock-icon');
 
     expect(iconElement).toBeTruthy();
@@ -50,9 +48,7 @@ describe('AppIcon Component', () => {
 
   it('applies custom style wrapper', () => {
     const customStyle = { margin: 10 };
-    const { UNSAFE_getByType } = render(
-      <AppIcon name="configuracion" style={customStyle} />
-    );
+    const { UNSAFE_getByType } = render(<AppIcon name="configuracion" style={customStyle} />);
     const viewElement = UNSAFE_getByType(View);
     expect(viewElement.props.style).toEqual(customStyle);
   });

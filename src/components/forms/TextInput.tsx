@@ -14,12 +14,7 @@ interface TextInputProps extends RNTextInputProps {
   error?: string | null;
 }
 
-export function TextInput({
-  label,
-  error,
-  style,
-  ...props
-}: TextInputProps): React.JSX.Element {
+export function TextInput({ label, error, style, ...props }: TextInputProps): React.JSX.Element {
   return (
     <View style={styles.wrapper}>
       {label ? <FormLabel>{label}</FormLabel> : null}

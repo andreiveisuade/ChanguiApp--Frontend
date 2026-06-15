@@ -10,10 +10,7 @@ interface ProductCardProps {
   showBarcode?: boolean;
 }
 
-export function ProductCard({
-  product,
-  showBarcode = false,
-}: ProductCardProps): React.JSX.Element {
+export function ProductCard({ product, showBarcode = false }: ProductCardProps): React.JSX.Element {
   const [imageError, setImageError] = useState(false);
 
   return (
@@ -32,14 +29,18 @@ export function ProductCard({
       )}
 
       <View style={styles.info}>
-        <AppText variant="H2" numberOfLines={2}>{product.name}</AppText>
-        {product.brand ? (
-          <AppText variant="Body">{product.brand}</AppText>
-        ) : null}
+        <AppText variant="H2" numberOfLines={2}>
+          {product.name}
+        </AppText>
+        {product.brand ? <AppText variant="Body">{product.brand}</AppText> : null}
         {showBarcode ? (
-          <AppText variant="Body" style={styles.barcode}>{product.barcode}</AppText>
+          <AppText variant="Body" style={styles.barcode}>
+            {product.barcode}
+          </AppText>
         ) : null}
-        <AppText variant="Price" style={styles.price}>{formatARS(product.price)}</AppText>
+        <AppText variant="Price" style={styles.price}>
+          {formatARS(product.price)}
+        </AppText>
       </View>
     </View>
   );

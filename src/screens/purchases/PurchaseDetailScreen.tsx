@@ -29,14 +29,20 @@ export function PurchaseDetailScreen(): React.JSX.Element {
     if (error) {
       return (
         <View style={styles.stateContainer}>
-          <ErrorMessage message={error} closeAccessibilityHint={t('common.retry')} onClose={refresh} />
+          <ErrorMessage
+            message={error}
+            closeAccessibilityHint={t('common.retry')}
+            onClose={refresh}
+          />
         </View>
       );
     }
     if (!purchase) {
       return (
         <View style={styles.stateContainer}>
-          <AppText variant="Body" style={styles.emptySubtitle}>{t('purchaseDetail.notFound')}</AppText>
+          <AppText variant="Body" style={styles.emptySubtitle}>
+            {t('purchaseDetail.notFound')}
+          </AppText>
         </View>
       );
     }
@@ -48,7 +54,9 @@ export function PurchaseDetailScreen(): React.JSX.Element {
     return (
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.metaCard}>
-          <AppText variant="H2" style={styles.store}>{storeName}</AppText>
+          <AppText variant="H2" style={styles.store}>
+            {storeName}
+          </AppText>
           <View style={styles.metaRow}>
             <AppIcon name="calendario" size={iconSize.xs} color={colors.textSecondary} />
             <AppText variant="Body">{formatPurchaseDate(purchase.date)}</AppText>
@@ -82,7 +90,9 @@ export function PurchaseDetailScreen(): React.JSX.Element {
               {purchase.summary.taxes.map((tax) => (
                 <View key={tax.label} style={styles.summaryRow}>
                   <AppText variant="Body">{tax.label}</AppText>
-                  <AppText variant="Body" style={styles.summaryValue}>{formatARS(tax.amount)}</AppText>
+                  <AppText variant="Body" style={styles.summaryValue}>
+                    {formatARS(tax.amount)}
+                  </AppText>
                 </View>
               ))}
               <View style={styles.divider} />
@@ -109,7 +119,9 @@ export function PurchaseDetailScreen(): React.JSX.Element {
           >
             <AppIcon name="atras" size={iconSize.md} color={colors.textPrimary} />
           </Pressable>
-          <AppText variant="H2" style={styles.headerTitle}>{t('purchaseDetail.title')}</AppText>
+          <AppText variant="H2" style={styles.headerTitle}>
+            {t('purchaseDetail.title')}
+          </AppText>
         </View>
       </SafeAreaView>
       {renderBody()}

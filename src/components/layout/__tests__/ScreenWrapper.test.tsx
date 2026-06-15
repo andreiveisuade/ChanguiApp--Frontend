@@ -15,7 +15,7 @@ describe('ScreenWrapper Component', () => {
     const { getByText, UNSAFE_queryByType } = render(
       <ScreenWrapper>
         <Text>Contenido</Text>
-      </ScreenWrapper>
+      </ScreenWrapper>,
     );
 
     expect(getByText('Contenido')).toBeTruthy();
@@ -26,7 +26,7 @@ describe('ScreenWrapper Component', () => {
     const { getByText, UNSAFE_getByType } = render(
       <ScreenWrapper withScroll>
         <Text>Scrollable</Text>
-      </ScreenWrapper>
+      </ScreenWrapper>,
     );
 
     expect(getByText('Scrollable')).toBeTruthy();
@@ -38,7 +38,7 @@ describe('ScreenWrapper Component', () => {
     const { UNSAFE_queryAllByType } = render(
       <ScreenWrapper style={customStyle}>
         <Text>Styled</Text>
-      </ScreenWrapper>
+      </ScreenWrapper>,
     );
 
     const views = UNSAFE_queryAllByType(View);

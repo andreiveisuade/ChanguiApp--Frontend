@@ -1,6 +1,7 @@
 // https://docs.expo.dev/guides/using-eslint/
 const { defineConfig } = require('eslint/config');
 const expoConfig = require('eslint-config-expo/flat');
+const eslintConfigPrettier = require('eslint-config-prettier');
 const globals = require('globals');
 
 module.exports = defineConfig([
@@ -32,4 +33,6 @@ module.exports = defineConfig([
       'react/display-name': 'off',
     },
   },
+  // Debe ir último: apaga las reglas de formato de ESLint que choquen con Prettier.
+  eslintConfigPrettier,
 ]);

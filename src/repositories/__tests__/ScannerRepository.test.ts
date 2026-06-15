@@ -28,7 +28,14 @@ describe('ScannerRepository.getProductByBarcode', () => {
   });
 
   it('cache-first: si el producto está en el catálogo local lo devuelve sin pegarle a la red', async () => {
-    const local = { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 };
+    const local = {
+      id: 'p1',
+      name: 'Yerba',
+      barcode: '779',
+      brand: 'Playadito',
+      image_url: null,
+      price: 1000,
+    };
     mockedLocalLookup.mockResolvedValueOnce(local);
 
     const result = await getProductByBarcode('779');
@@ -40,7 +47,14 @@ describe('ScannerRepository.getProductByBarcode', () => {
 
   it('si el cache local falla, cae a la red sin romper el escaneo', async () => {
     mockedLocalLookup.mockRejectedValueOnce(new Error('sqlite down'));
-    const product = { id: 'p1', name: 'Yerba', barcode: '779', brand: null, image_url: null, price: 1000 };
+    const product = {
+      id: 'p1',
+      name: 'Yerba',
+      barcode: '779',
+      brand: null,
+      image_url: null,
+      price: 1000,
+    };
     mockedGet.mockResolvedValueOnce(axiosResponse(product, 200));
 
     const result = await getProductByBarcode('779');
@@ -50,7 +64,14 @@ describe('ScannerRepository.getProductByBarcode', () => {
   });
 
   it('devuelve el producto cuando el backend responde 200', async () => {
-    const product = { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 };
+    const product = {
+      id: 'p1',
+      name: 'Yerba',
+      barcode: '779',
+      brand: 'Playadito',
+      image_url: null,
+      price: 1000,
+    };
     mockedGet.mockResolvedValueOnce(axiosResponse(product, 200));
 
     const result = await getProductByBarcode('779');

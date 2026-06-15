@@ -12,7 +12,7 @@ jest.mock('react-i18next', () => ({
 describe('AvatarImage Component', () => {
   it('renders an Image with the given uri', () => {
     const { UNSAFE_getByType } = render(
-      <AvatarImage uri="https://example.com/avatar.png" fullName="John Doe" />
+      <AvatarImage uri="https://example.com/avatar.png" fullName="John Doe" />,
     );
 
     const image = UNSAFE_getByType(Image);
@@ -22,9 +22,7 @@ describe('AvatarImage Component', () => {
   });
 
   it('renders initials fallback when no uri is provided', () => {
-    const { getByText, getByLabelText } = render(
-      <AvatarImage fullName="John Doe" />
-    );
+    const { getByText, getByLabelText } = render(<AvatarImage fullName="John Doe" />);
 
     expect(getByText('JD')).toBeTruthy();
     expect(getByLabelText('John Doe')).toBeTruthy();

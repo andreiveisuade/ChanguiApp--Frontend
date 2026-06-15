@@ -51,12 +51,7 @@ interface AppIconProps {
   style?: ViewStyle;
 }
 
-export const AppIcon = ({ 
-  name, 
-  size = 24, 
-  color = colors.primary, 
-  style 
-}: AppIconProps) => {
+export const AppIcon = ({ name, size = 24, color = colors.primary, style }: AppIconProps) => {
   const iconName = iconMap[name];
   if (!iconName) {
     if (__DEV__) {

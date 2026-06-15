@@ -15,7 +15,7 @@ describe('OnboardingSlide Component', () => {
         title="Escanea productos"
         text="Apunta con la cámara al código de barra."
         width={375}
-      />
+      />,
     );
 
     expect(getByText('Escanea productos')).toBeTruthy();

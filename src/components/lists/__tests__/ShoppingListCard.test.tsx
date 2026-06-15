@@ -5,8 +5,7 @@ import { ShoppingList } from '@/types/domain';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (k: string, o?: any) =>
-      o?.done !== undefined ? `${k} ${o.done}/${o.total}` : k,
+    t: (k: string, o?: any) => (o?.done !== undefined ? `${k} ${o.done}/${o.total}` : k),
   }),
 }));
 
@@ -36,9 +35,7 @@ describe('ShoppingListCard Component', () => {
   });
 
   it('renders the list name and progress text', () => {
-    const { getByText } = render(
-      <ShoppingListCard list={makeList()} onPress={mockOnPress} />
-    );
+    const { getByText } = render(<ShoppingListCard list={makeList()} onPress={mockOnPress} />);
 
     expect(getByText('Compra semanal')).toBeTruthy();
     expect(getByText('lists.progress 2/4')).toBeTruthy();
@@ -46,7 +43,7 @@ describe('ShoppingListCard Component', () => {
 
   it('computes the progress fill width based on done/total items', () => {
     const { UNSAFE_getAllByType } = render(
-      <ShoppingListCard list={makeList({ done_items: 1, total_items: 4 })} onPress={mockOnPress} />
+      <ShoppingListCard list={makeList({ done_items: 1, total_items: 4 })} onPress={mockOnPress} />,
     );
 
     const { View } = require('react-native');
@@ -60,7 +57,7 @@ describe('ShoppingListCard Component', () => {
 
   it('renders 0% width when there are no items (no division by zero)', () => {
     const { UNSAFE_getAllByType } = render(
-      <ShoppingListCard list={makeList({ done_items: 0, total_items: 0 })} onPress={mockOnPress} />
+      <ShoppingListCard list={makeList({ done_items: 0, total_items: 0 })} onPress={mockOnPress} />,
     );
 
     const { View } = require('react-native');
@@ -73,9 +70,7 @@ describe('ShoppingListCard Component', () => {
   });
 
   it('calls onPress when the card is pressed', () => {
-    const { getByLabelText } = render(
-      <ShoppingListCard list={makeList()} onPress={mockOnPress} />
-    );
+    const { getByLabelText } = render(<ShoppingListCard list={makeList()} onPress={mockOnPress} />);
 
     fireEvent.press(getByLabelText('Compra semanal'));
     expect(mockOnPress).toHaveBeenCalledTimes(1);

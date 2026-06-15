@@ -76,8 +76,7 @@ const STATUS_TO_CODE: Record<number, ErrorCode> = {
   409: 'CONFLICT',
 };
 
-const named = (err: unknown, name: string): boolean =>
-  err instanceof Error && err.name === name;
+const named = (err: unknown, name: string): boolean => err instanceof Error && err.name === name;
 
 const isNetworkError = (err: unknown): boolean =>
   err instanceof NetworkError || err instanceof TypeError || named(err, 'TypeError');
