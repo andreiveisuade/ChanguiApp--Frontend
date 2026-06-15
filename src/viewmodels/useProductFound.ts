@@ -3,7 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Product } from '@/types/domain';
 import CartRepository from '@/repositories/CartRepository';
-import { ErrorTranslationService } from '@/services/ErrorTranslationService';
+import { translateQueryError } from '@/utils/queryError';
 import { summarizeSingleProduct } from '@/services/TaxSummaryService';
 import { UserFriendlyError } from '@/types/errors';
 
@@ -73,7 +73,7 @@ export const useProductFound = (): UseProductFoundReturn => {
       });
       router.replace('/(tabs)/cart');
     } catch (err) {
-      setErrorMessage(ErrorTranslationService.translate(err));
+      setErrorMessage(translateQueryError(err));
     }
   };
 
