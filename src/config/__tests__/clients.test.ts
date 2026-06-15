@@ -103,5 +103,11 @@ describe('httpClient interceptors', () => {
         'Request failed with status 404',
       );
     });
+
+    it('adjunta el status como propiedad estructurada del error', async () => {
+      await expect(
+        responseRejected({ response: { status: 409, data: { message: 'conflict' } } }),
+      ).rejects.toMatchObject({ status: 409, message: 'conflict' });
+    });
   });
 });

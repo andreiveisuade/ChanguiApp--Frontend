@@ -86,6 +86,12 @@ const isParseError = (err: unknown): boolean =>
   err instanceof SyntaxError || named(err, 'SyntaxError');
 
 const extractStatusCode = (err: unknown): number | null => {
+  // Preferimos el status estructurado (el httpClient lo adjunta como propiedad).
+  if (err && typeof err === 'object' && 'status' in err) {
+    const status = (err as { status?: unknown }).status;
+    if (typeof status === 'number') return status;
+  }
+  // Fallback: extraerlo del mensaje técnico de axios ("Request failed with status N").
   const message = err instanceof Error ? err.message : typeof err === 'string' ? err : '';
   const match = message.match(/Request failed with status (\d+)/i);
   return match ? parseInt(match[1], 10) : null;

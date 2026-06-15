@@ -91,6 +91,16 @@ describe('ErrorTranslationService', () => {
     expect(result.code).toBe('NOT_FOUND');
   });
 
+  it('prefiere el status estructurado (.status) sobre el mensaje', () => {
+    const error = Object.assign(new Error('El servicio no está disponible.'), { status: 503 });
+    expect(ErrorTranslationService.translate(error).code).toBe('SERVER_ERROR');
+  });
+
+  it('mapea un 404 estructurado sin el string técnico en el mensaje', () => {
+    const error = Object.assign(new Error('no encontrado'), { status: 404 });
+    expect(ErrorTranslationService.translate(error).code).toBe('NOT_FOUND');
+  });
+
   it('falls back to UNKNOWN for unexpected errors', () => {
     const error = new Error('Some random backend error');
     const result = ErrorTranslationService.translate(error);

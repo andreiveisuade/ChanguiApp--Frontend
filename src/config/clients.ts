@@ -60,7 +60,11 @@ httpClient.interceptors.response.use(
           ? 'Hubo un error en el servidor. Reintentá más tarde.'
           : `Request failed with status ${status}`;
     const message = data?.message ?? data?.error ?? fallback;
-    throw new Error(message);
+    // Adjuntamos el status como propiedad estructurada para que los consumidores
+    // (ErrorTranslationService) no tengan que parsear el mensaje por regex.
+    const httpError = new Error(message) as Error & { status?: number };
+    httpError.status = status;
+    throw httpError;
   },
 );
 
