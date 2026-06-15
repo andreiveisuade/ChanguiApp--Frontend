@@ -26,7 +26,7 @@ describe('OnboardingDots Component', () => {
 
   it('applies the light variant active color to the current dot', () => {
     const { UNSAFE_getAllByType } = render(
-      <OnboardingDots total={2} current={0} variant="light" />
+      <OnboardingDots total={2} current={0} variant="light" />,
     );
 
     const { View } = require('react-native');

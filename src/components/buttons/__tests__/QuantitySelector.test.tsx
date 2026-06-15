@@ -3,7 +3,9 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { QuantitySelector } from '../QuantitySelector';
 
 jest.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string, opts?: any) => opts?.value !== undefined ? `${key} ${opts.value}` : key }),
+  useTranslation: () => ({
+    t: (key: string, opts?: any) => (opts?.value !== undefined ? `${key} ${opts.value}` : key),
+  }),
 }));
 
 jest.mock('@/components/atoms/AppIcon', () => {
@@ -22,22 +24,14 @@ describe('QuantitySelector Component', () => {
 
   it('renders correctly with given value', () => {
     const { getByText } = render(
-      <QuantitySelector
-        value={5}
-        onIncrement={mockOnIncrement}
-        onDecrement={mockOnDecrement}
-      />
+      <QuantitySelector value={5} onIncrement={mockOnIncrement} onDecrement={mockOnDecrement} />,
     );
     expect(getByText('5')).toBeTruthy();
   });
 
   it('calls onIncrement when increment button is pressed', () => {
     const { getByLabelText } = render(
-      <QuantitySelector
-        value={5}
-        onIncrement={mockOnIncrement}
-        onDecrement={mockOnDecrement}
-      />
+      <QuantitySelector value={5} onIncrement={mockOnIncrement} onDecrement={mockOnDecrement} />,
     );
     const incButton = getByLabelText('common.incrementQuantity');
     fireEvent.press(incButton);
@@ -46,11 +40,7 @@ describe('QuantitySelector Component', () => {
 
   it('calls onDecrement when decrement button is pressed', () => {
     const { getByLabelText } = render(
-      <QuantitySelector
-        value={5}
-        onIncrement={mockOnIncrement}
-        onDecrement={mockOnDecrement}
-      />
+      <QuantitySelector value={5} onIncrement={mockOnIncrement} onDecrement={mockOnDecrement} />,
     );
     const decButton = getByLabelText('common.decrementQuantity');
     fireEvent.press(decButton);
@@ -64,7 +54,7 @@ describe('QuantitySelector Component', () => {
         min={1}
         onIncrement={mockOnIncrement}
         onDecrement={mockOnDecrement}
-      />
+      />,
     );
     const decButton = getByLabelText('common.decrementQuantity');
     fireEvent.press(decButton);
@@ -79,7 +69,7 @@ describe('QuantitySelector Component', () => {
         max={10}
         onIncrement={mockOnIncrement}
         onDecrement={mockOnDecrement}
-      />
+      />,
     );
     const incButton = getByLabelText('common.incrementQuantity');
     fireEvent.press(incButton);

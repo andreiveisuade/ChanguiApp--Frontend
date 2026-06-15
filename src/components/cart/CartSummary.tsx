@@ -25,7 +25,11 @@ export function CartSummary({ summary, onPay }: CartSummaryProps): React.JSX.Ele
     <View style={styles.container}>
       <View style={styles.line} />
 
-      <PriceBreakdown subtotalNet={summary.subtotal_net} taxLines={taxLines} total={summary.total} />
+      <PriceBreakdown
+        subtotalNet={summary.subtotal_net}
+        taxLines={taxLines}
+        total={summary.total}
+      />
 
       <Pressable
         style={[styles.payButton, disabled && styles.payButtonDisabled]}

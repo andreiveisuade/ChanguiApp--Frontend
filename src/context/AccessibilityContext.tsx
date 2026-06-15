@@ -1,4 +1,12 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  ReactNode,
+} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '@/i18n';
 
@@ -99,14 +107,10 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps):
       setLanguage,
       isLoading,
     }),
-    [fontScale, fontScaleName, language, setFontScaleName, setLanguage, isLoading]
+    [fontScale, fontScaleName, language, setFontScaleName, setLanguage, isLoading],
   );
 
-  return (
-    <AccessibilityContext.Provider value={value}>
-      {children}
-    </AccessibilityContext.Provider>
-  );
+  return <AccessibilityContext.Provider value={value}>{children}</AccessibilityContext.Provider>;
 }
 
 export function useAccessibility(): AccessibilityContextValue {

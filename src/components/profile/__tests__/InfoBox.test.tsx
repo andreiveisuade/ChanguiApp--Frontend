@@ -34,9 +34,7 @@ describe('InfoBox Component', () => {
   });
 
   it('renders the bold text when provided', () => {
-    const { getByText } = render(
-      <InfoBox text=" regular" boldText="Important:" />
-    );
+    const { getByText } = render(<InfoBox text=" regular" boldText="Important:" />);
     expect(getByText('Important:')).toBeTruthy();
   });
 

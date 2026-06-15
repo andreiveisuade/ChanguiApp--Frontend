@@ -42,6 +42,8 @@ describe('useAuth', () => {
       throw new Error('useAuth must be used within an AuthProvider');
     });
 
-    expect(() => renderHook(() => useAuth())).toThrow('useAuth must be used within an AuthProvider');
+    expect(() => renderHook(() => useAuth())).toThrow(
+      'useAuth must be used within an AuthProvider',
+    );
   });
 });

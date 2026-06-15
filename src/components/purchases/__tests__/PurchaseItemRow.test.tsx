@@ -28,7 +28,7 @@ describe('PurchaseItemRow Component', () => {
 
   it('renders the line total formatted as unit_price * quantity', () => {
     const { getByText } = render(
-      <PurchaseItemRow item={makeItem({ unit_price: 800, quantity: 2 })} />
+      <PurchaseItemRow item={makeItem({ unit_price: 800, quantity: 2 })} />,
     );
 
     expect(getByText('$1.600')).toBeTruthy();
@@ -36,7 +36,7 @@ describe('PurchaseItemRow Component', () => {
 
   it('renders the correct line total for a single unit', () => {
     const { getByText } = render(
-      <PurchaseItemRow item={makeItem({ unit_price: 1500, quantity: 1 })} />
+      <PurchaseItemRow item={makeItem({ unit_price: 1500, quantity: 1 })} />,
     );
 
     expect(getByText('×1')).toBeTruthy();

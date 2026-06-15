@@ -27,7 +27,14 @@ const detail: PurchaseDetail = {
   status: 'completed',
   item_count: 1,
   items: [
-    { id: 'it1', purchase_id: 'pur1', product_name: 'Yerba', barcode: '779', quantity: 2, unit_price: 500 },
+    {
+      id: 'it1',
+      purchase_id: 'pur1',
+      product_name: 'Yerba',
+      barcode: '779',
+      quantity: 2,
+      unit_price: 500,
+    },
   ],
 };
 

@@ -30,23 +30,21 @@ describe('CartHeader Component', () => {
 
   it('renders greeting with the first name only when userName is provided', () => {
     const { getByText } = render(
-      <CartHeader userName="John Doe" onProfilePress={mockOnProfilePress} />
+      <CartHeader userName="John Doe" onProfilePress={mockOnProfilePress} />,
     );
 
     expect(getByText('John')).toBeTruthy();
   });
 
   it('renders an empty greeting when userName is empty', () => {
-    const { queryByText } = render(
-      <CartHeader userName="" onProfilePress={mockOnProfilePress} />
-    );
+    const { queryByText } = render(<CartHeader userName="" onProfilePress={mockOnProfilePress} />);
 
     expect(queryByText('John')).toBeNull();
   });
 
   it('calls onProfilePress when the profile button is pressed', () => {
     const { getByRole } = render(
-      <CartHeader userName="John Doe" onProfilePress={mockOnProfilePress} />
+      <CartHeader userName="John Doe" onProfilePress={mockOnProfilePress} />,
     );
 
     fireEvent.press(getByRole('button'));

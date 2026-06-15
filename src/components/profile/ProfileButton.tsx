@@ -25,7 +25,7 @@ export function ProfileButton({
 }: ProfileButtonProps): React.JSX.Element {
   const getStyles = () => {
     const isActuallyDisabled = disabled || variant === 'disabled';
-    
+
     if (isActuallyDisabled) {
       return {
         button: styles.disabledButton,
@@ -77,9 +77,9 @@ export function ProfileButton({
       ]}
     >
       {isLoading ? (
-        <ActivityIndicator 
-          color={variant === 'secondary' ? colors.primary : colors.white} 
-          size="small" 
+        <ActivityIndicator
+          color={variant === 'secondary' ? colors.primary : colors.white}
+          size="small"
         />
       ) : (
         <View style={styles.content}>

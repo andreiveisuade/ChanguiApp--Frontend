@@ -22,7 +22,7 @@ describe('PriceBreakdown', () => {
         subtotalNet={1239.67}
         taxLines={[{ label: 'IVA (21%)', amount: 260.33 }]}
         total={1500}
-      />
+      />,
     );
 
     expect(getByText('pricing.priceWithoutTax')).toBeTruthy();
@@ -42,7 +42,7 @@ describe('PriceBreakdown', () => {
           { label: 'IVA (10,5%)', amount: 105 },
         ]}
         total={2365}
-      />
+      />,
     );
 
     expect(getByText('IVA (21%)')).toBeTruthy();
@@ -50,9 +50,7 @@ describe('PriceBreakdown', () => {
   });
 
   it('sin líneas de IVA igual muestra sin IVA y total', () => {
-    const { getByText } = render(
-      <PriceBreakdown subtotalNet={850} taxLines={[]} total={850} />
-    );
+    const { getByText } = render(<PriceBreakdown subtotalNet={850} taxLines={[]} total={850} />);
 
     expect(getByText('pricing.priceWithoutTax')).toBeTruthy();
     expect(getByText('pricing.total')).toBeTruthy();

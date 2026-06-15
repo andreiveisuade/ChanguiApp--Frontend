@@ -1,75 +1,170 @@
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { useListDetail } from '../useListDetail';
-import ListRepository from '@/repositories/ListRepository';
+import * as ListRepository from '@/repositories/ListRepository';
+import { Product, ShoppingListItem } from '@/types/domain';
 
 jest.mock('@/repositories/ListRepository', () => ({
-  __esModule: true,
-  default: {
-    getList: jest.fn(),
-    addItem: jest.fn(),
-    setPurchased: jest.fn(),
-    deleteList: jest.fn(),
-  },
+  getListItems: jest.fn(),
+  addItem: jest.fn(),
+  toggleItem: jest.fn(),
+  setItemQuantity: jest.fn(),
+  deleteItem: jest.fn(),
 }));
 jest.mock('@/services/ErrorTranslationService', () => ({
-  ErrorTranslationService: { translate: jest.fn(() => ({ title: 'E', message: 'm', code: 'X' })) },
+  ErrorTranslationService: {
+    translate: jest.fn(() => ({
+      title: 'Error',
+      message: 'msg',
+      actionLabel: 'Reintentar',
+      code: 'UNKNOWN',
+    })),
+  },
 }));
 
-const mockedGetList = jest.mocked(ListRepository.getList);
-const mockedAdd = jest.mocked(ListRepository.addItem);
-const mockedSet = jest.mocked(ListRepository.setPurchased);
-const mockedDelete = jest.mocked(ListRepository.deleteList);
+const repo = ListRepository as jest.Mocked<typeof ListRepository>;
 
-const item = { id: 'i1', list_id: 'l1', name: 'Leche', quantity: 1, purchased: false };
-const listMeta = { id: 'l1', name: 'Súper', total_items: 1, done_items: 0 };
+const product: Product = {
+  id: 'p1',
+  name: 'Leche',
+  barcode: '779',
+  brand: null,
+  image_url: null,
+  price: 1500,
+};
+
+const item: ShoppingListItem = {
+  id: 'i1',
+  list_id: 'l1',
+  barcode: '779',
+  name: 'Leche',
+  brand: null,
+  price: 1500,
+  image_url: null,
+  quantity: 1,
+  purchased: false,
+  created_at: '2026-06-10T00:00:00.000Z',
+};
 
 describe('useListDetail', () => {
-  beforeEach(() => jest.clearAllMocks());
+  beforeEach(() => {
+    jest.clearAllMocks();
+    repo.getListItems.mockResolvedValue([item]);
+    repo.addItem.mockResolvedValue(undefined);
+    repo.toggleItem.mockResolvedValue(undefined);
+    repo.setItemQuantity.mockResolvedValue(undefined);
+    repo.deleteItem.mockResolvedValue(undefined);
+  });
 
-  it('carga los items al montar', async () => {
-    mockedGetList.mockResolvedValue({ list: listMeta, items: [item] });
+  it('no carga ítems cuando no hay listId', async () => {
+    const { result } = renderHook(() => useListDetail(undefined));
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    expect(repo.getListItems).not.toHaveBeenCalled();
+    expect(result.current.items).toEqual([]);
+  });
+
+  it('carga los ítems de la lista al montar', async () => {
     const { result } = renderHook(() => useListDetail('l1'));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    expect(repo.getListItems).toHaveBeenCalledWith('l1');
     expect(result.current.items).toEqual([item]);
   });
 
-  it('addItem agrega el item devuelto', async () => {
-    mockedGetList.mockResolvedValue({ list: listMeta, items: [] });
+  it('addProduct agrega el producto y recarga en silencio', async () => {
     const { result } = renderHook(() => useListDetail('l1'));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
+    repo.getListItems.mockClear();
 
-    mockedAdd.mockResolvedValue(item);
     await act(async () => {
-      await result.current.addItem('Leche');
+      await result.current.addProduct(product);
     });
-    expect(mockedAdd).toHaveBeenCalledWith('l1', 'Leche');
-    expect(result.current.items).toContainEqual(item);
+    expect(repo.addItem).toHaveBeenCalledWith('l1', product);
+    expect(repo.getListItems).toHaveBeenCalledTimes(1);
   });
 
-  it('toggleItem invierte purchased', async () => {
-    mockedGetList.mockResolvedValue({ list: listMeta, items: [item] });
-    const { result } = renderHook(() => useListDetail('l1'));
+  it('addProduct no hace nada sin listId', async () => {
+    const { result } = renderHook(() => useListDetail(undefined));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    mockedSet.mockResolvedValue({ ...item, purchased: true });
     await act(async () => {
-      await result.current.toggleItem(item);
+      await result.current.addProduct(product);
     });
-    expect(mockedSet).toHaveBeenCalledWith('l1', 'i1', true);
-    expect(result.current.items[0].purchased).toBe(true);
+    expect(repo.addItem).not.toHaveBeenCalled();
   });
 
-  it('removeList borra y devuelve true', async () => {
-    mockedGetList.mockResolvedValue({ list: listMeta, items: [] });
+  it('toggleItem, setQuantity y removeItem mutan y recargan', async () => {
     const { result } = renderHook(() => useListDetail('l1'));
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    mockedDelete.mockResolvedValue(undefined);
-    let ok = false;
     await act(async () => {
-      ok = await result.current.removeList();
+      await result.current.toggleItem('i1');
     });
-    expect(mockedDelete).toHaveBeenCalledWith('l1');
-    expect(ok).toBe(true);
+    await act(async () => {
+      await result.current.setQuantity('i1', 3);
+    });
+    await act(async () => {
+      await result.current.removeItem('i1');
+    });
+
+    expect(repo.toggleItem).toHaveBeenCalledWith('i1');
+    expect(repo.setItemQuantity).toHaveBeenCalledWith('i1', 3);
+    expect(repo.deleteItem).toHaveBeenCalledWith('i1');
+  });
+
+  it('refresh vuelve a leer los ítems', async () => {
+    const { result } = renderHook(() => useListDetail('l1'));
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    repo.getListItems.mockClear();
+
+    await act(async () => {
+      await result.current.refresh();
+    });
+    expect(repo.getListItems).toHaveBeenCalledWith('l1');
+  });
+
+  describe('errores traducidos por ErrorTranslationService', () => {
+    it('setea error si falla la carga de ítems', async () => {
+      repo.getListItems.mockRejectedValueOnce(new Error('boom'));
+      const { result } = renderHook(() => useListDetail('l1'));
+
+      await waitFor(() => expect(result.current.error).not.toBeNull());
+      expect(result.current.error?.code).toBe('UNKNOWN');
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    it('setea error si falla toggleItem', async () => {
+      repo.toggleItem.mockRejectedValueOnce(new Error('boom'));
+      const { result } = renderHook(() => useListDetail('l1'));
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      await act(async () => {
+        await result.current.toggleItem('i1');
+      });
+      expect(result.current.error?.code).toBe('UNKNOWN');
+    });
+
+    it('setea error si falla addProduct, setQuantity o removeItem', async () => {
+      const { result } = renderHook(() => useListDetail('l1'));
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      repo.addItem.mockRejectedValueOnce(new Error('boom'));
+      await act(async () => {
+        await result.current.addProduct(product);
+      });
+      expect(result.current.error?.code).toBe('UNKNOWN');
+
+      repo.setItemQuantity.mockRejectedValueOnce(new Error('boom'));
+      await act(async () => {
+        await result.current.setQuantity('i1', 2);
+      });
+      expect(result.current.error?.code).toBe('UNKNOWN');
+
+      repo.deleteItem.mockRejectedValueOnce(new Error('boom'));
+      await act(async () => {
+        await result.current.removeItem('i1');
+      });
+      expect(result.current.error?.code).toBe('UNKNOWN');
+    });
   });
 });

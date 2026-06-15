@@ -2,7 +2,16 @@ import React, { useRef } from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { colors, fonts, fontSize, spacing, radii, touchTarget, iconSize, shadow } from '@/constants/theme';
+import {
+  colors,
+  fonts,
+  fontSize,
+  spacing,
+  radii,
+  touchTarget,
+  iconSize,
+  shadow,
+} from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { debugStore } from '@/utils/debugStore';

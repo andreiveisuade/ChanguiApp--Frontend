@@ -12,12 +12,12 @@ describe('ErrorMessage Component', () => {
 
   it('no renderiza nada si message es null o undefined', () => {
     const { toJSON: toJSONNull } = render(
-      <ErrorMessage message={null} closeAccessibilityHint="Close" onClose={mockOnClose} />
+      <ErrorMessage message={null} closeAccessibilityHint="Close" onClose={mockOnClose} />,
     );
     expect(toJSONNull()).toBeNull();
 
     const { toJSON: toJSONUndefined } = render(
-      <ErrorMessage message={undefined} closeAccessibilityHint="Close" onClose={mockOnClose} />
+      <ErrorMessage message={undefined} closeAccessibilityHint="Close" onClose={mockOnClose} />,
     );
     expect(toJSONUndefined()).toBeNull();
   });
@@ -28,13 +28,13 @@ describe('ErrorMessage Component', () => {
         message="Algo salió mal"
         closeAccessibilityHint="Cerrar mensaje de error"
         onClose={mockOnClose}
-      />
+      />,
     );
 
     expect(getByText('Algo salió mal')).toBeTruthy();
-    
+
     const views = UNSAFE_queryAllByType(View);
-    const alertView = views.find(v => v.props.accessibilityRole === 'alert');
+    const alertView = views.find((v) => v.props.accessibilityRole === 'alert');
     expect(alertView).toBeTruthy();
   });
 
@@ -50,24 +50,20 @@ describe('ErrorMessage Component', () => {
         message={errorObj}
         closeAccessibilityHint="Cerrar mensaje de error"
         onClose={mockOnClose}
-      />
+      />,
     );
 
     expect(getByText('Error de Red')).toBeTruthy();
     expect(getByText('No se pudo establecer conexión con el servidor.')).toBeTruthy();
 
     const views = UNSAFE_queryAllByType(View);
-    const alertView = views.find(v => v.props.accessibilityRole === 'alert');
+    const alertView = views.find((v) => v.props.accessibilityRole === 'alert');
     expect(alertView).toBeTruthy();
   });
 
   it('llama a onClose cuando se presiona el botón de cierre', () => {
     const { getByRole } = render(
-      <ErrorMessage
-        message="Error"
-        closeAccessibilityHint="Cerrar"
-        onClose={mockOnClose}
-      />
+      <ErrorMessage message="Error" closeAccessibilityHint="Cerrar" onClose={mockOnClose} />,
     );
 
     const closeButton = getByRole('button');

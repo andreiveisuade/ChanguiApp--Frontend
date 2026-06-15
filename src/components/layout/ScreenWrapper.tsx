@@ -1,12 +1,12 @@
 import React from 'react';
-import { 
-  StyleSheet, 
-  View, 
-  ViewStyle, 
+import {
+  StyleSheet,
+  View,
+  ViewStyle,
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, spacing } from '@/constants/theme';
@@ -17,17 +17,12 @@ interface ScreenWrapperProps {
   withScroll?: boolean; // Permite activar scroll completo si la pantalla es larga
 }
 
-export const ScreenWrapper = ({ 
-  children, 
-  style, 
-  withScroll = false 
-}: ScreenWrapperProps) => {
-  
+export const ScreenWrapper = ({ children, style, withScroll = false }: ScreenWrapperProps) => {
   // Renderiza el contenido interno con o sin scroll dinámicamente
   const renderContent = () => {
     if (withScroll) {
       return (
-        <ScrollView 
+        <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={[styles.scrollContent, style]}
         >
@@ -35,21 +30,14 @@ export const ScreenWrapper = ({
         </ScrollView>
       );
     }
-    return (
-      <View style={[styles.content, style]}>
-        {children}
-      </View>
-    );
+    return <View style={[styles.content, style]}>{children}</View>;
   };
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Configura la barra de estado superior del celular */}
-      <StatusBar 
-        barStyle="dark-content" 
-        backgroundColor={colors.background} 
-      />
-      
+      <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+
       {/* Evita que el teclado pise los elementos inferiores en formularios */}
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

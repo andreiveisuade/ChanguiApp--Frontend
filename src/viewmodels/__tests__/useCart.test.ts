@@ -29,7 +29,14 @@ const item: CartItemWithProduct = {
   product_id: 'p1',
   quantity: 2,
   unit_price: 1000,
-  product: { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 },
+  product: {
+    id: 'p1',
+    name: 'Yerba',
+    barcode: '779',
+    brand: 'Playadito',
+    image_url: null,
+    price: 1000,
+  },
 };
 
 const cartData: {

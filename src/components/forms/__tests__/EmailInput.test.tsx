@@ -16,7 +16,7 @@ jest.mock('@/components/forms/InlineError', () => {
   const { Text } = require('react-native');
   return {
     __esModule: true,
-    default: ({ message }: any) => message ? <Text testID="inline-error">{message}</Text> : null,
+    default: ({ message }: any) => (message ? <Text testID="inline-error">{message}</Text> : null),
   };
 });
 
@@ -36,7 +36,7 @@ describe('EmailInput Component', () => {
         placeholder="Enter email"
         accessibilityLabel="Email Input"
         invalidEmailMessage="Email inválido"
-      />
+      />,
     );
 
     expect(getByTestId('form-label').props.children).toBe('Email');
@@ -52,7 +52,7 @@ describe('EmailInput Component', () => {
         placeholder="Enter email"
         accessibilityLabel="Email Input"
         invalidEmailMessage="Email inválido"
-      />
+      />,
     );
 
     const input = getByPlaceholderText('Enter email');
@@ -69,7 +69,7 @@ describe('EmailInput Component', () => {
         placeholder="Enter email"
         accessibilityLabel="Email Input"
         invalidEmailMessage="Email inválido"
-      />
+      />,
     );
 
     expect(queryByTestId('inline-error')).toBeNull();
@@ -84,7 +84,7 @@ describe('EmailInput Component', () => {
         placeholder="Enter email"
         accessibilityLabel="Email Input"
         invalidEmailMessage="Email inválido"
-      />
+      />,
     );
 
     const input = getByPlaceholderText('Enter email');
@@ -102,7 +102,7 @@ describe('EmailInput Component', () => {
         accessibilityLabel="Email Input"
         invalidEmailMessage="Email inválido"
         error="Email already exists"
-      />
+      />,
     );
 
     expect(getByTestId('inline-error').props.children).toBe('Email already exists');

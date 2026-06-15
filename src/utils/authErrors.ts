@@ -31,12 +31,25 @@ type AuthErrorRule = {
 // Primera regla cuyo keyword aparezca en el mensaje gana (orden = prioridad).
 const ERROR_RULES: AuthErrorRule[] = [
   {
-    keywords: ['already registered', 'already exists', 'user already', 'email already', 'duplicate'],
+    keywords: [
+      'already registered',
+      'already exists',
+      'user already',
+      'email already',
+      'duplicate',
+    ],
     messageKey: 'auth.errors.emailAlreadyUsed',
     field: 'email',
   },
   {
-    keywords: ['invalid login', 'invalid credentials', 'credenciales inválidas', 'credenciales invalidas', 'incorrect', 'unauthorized'],
+    keywords: [
+      'invalid login',
+      'invalid credentials',
+      'credenciales inválidas',
+      'credenciales invalidas',
+      'incorrect',
+      'unauthorized',
+    ],
     messageKey: 'auth.errors.invalidCredentials',
     field: 'general',
   },

@@ -29,7 +29,12 @@ export function ProfileMainView({ user, onNavigate }: ProfileMainViewProps): Rea
             {fullName}
           </AppText>
           <View style={styles.emailContainer}>
-            <AppIcon name="mail" size={iconSize.xs} color={colors.textMuted} style={styles.emailIcon} />
+            <AppIcon
+              name="mail"
+              size={iconSize.xs}
+              color={colors.textMuted}
+              style={styles.emailIcon}
+            />
             <AppText variant="Body" style={styles.userEmail}>
               {email}
             </AppText>
@@ -82,7 +87,9 @@ export function ProfileMainView({ user, onNavigate }: ProfileMainViewProps): Rea
         />
         <SettingsCard
           title={t('profile.menu.deleteAccount', { defaultValue: 'Eliminar cuenta' })}
-          description={t('profile.menu.deleteAccountDesc', { defaultValue: 'Borrar permanentemente' })}
+          description={t('profile.menu.deleteAccountDesc', {
+            defaultValue: 'Borrar permanentemente',
+          })}
           iconName="eliminar"
           iconColor={colors.danger}
           iconBgColor={colors.dangerSurface}

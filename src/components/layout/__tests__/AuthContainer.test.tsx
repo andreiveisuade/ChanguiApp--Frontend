@@ -8,7 +8,7 @@ describe('AuthContainer Component', () => {
     const { getByText } = render(
       <AuthContainer>
         <Text>Auth Children Text</Text>
-      </AuthContainer>
+      </AuthContainer>,
     );
 
     expect(getByText('Auth Children Text')).toBeTruthy();
@@ -19,14 +19,14 @@ describe('AuthContainer Component', () => {
     const { getByText, UNSAFE_queryAllByType } = render(
       <AuthContainer contentStyle={customContentStyle}>
         <Text>Styled Child</Text>
-      </AuthContainer>
+      </AuthContainer>,
     );
 
     expect(getByText('Styled Child')).toBeTruthy();
-    
+
     // Find the View that has customContentStyle in its style array
     const views = UNSAFE_queryAllByType(View);
-    const matchingView = views.find(v => {
+    const matchingView = views.find((v) => {
       const style = v.props.style;
       if (Array.isArray(style)) {
         return style.includes(customContentStyle);

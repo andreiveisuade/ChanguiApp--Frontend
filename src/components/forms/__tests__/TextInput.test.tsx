@@ -31,7 +31,7 @@ describe('TextInput Component', () => {
         placeholder="Ingresá tu nombre"
         value=""
         onChangeText={mockOnChangeText}
-      />
+      />,
     );
 
     expect(getByTestId('form-label').props.children).toBe('Nombre');
@@ -40,7 +40,7 @@ describe('TextInput Component', () => {
 
   it('does not render a label when none is provided', () => {
     const { queryByTestId } = render(
-      <TextInput placeholder="Ingresá tu nombre" value="" onChangeText={mockOnChangeText} />
+      <TextInput placeholder="Ingresá tu nombre" value="" onChangeText={mockOnChangeText} />,
     );
 
     expect(queryByTestId('form-label')).toBeNull();
@@ -48,7 +48,7 @@ describe('TextInput Component', () => {
 
   it('calls onChangeText when text changes', () => {
     const { getByPlaceholderText } = render(
-      <TextInput placeholder="Ingresá tu nombre" value="" onChangeText={mockOnChangeText} />
+      <TextInput placeholder="Ingresá tu nombre" value="" onChangeText={mockOnChangeText} />,
     );
 
     fireEvent.changeText(getByPlaceholderText('Ingresá tu nombre'), 'Andrei');
@@ -57,7 +57,7 @@ describe('TextInput Component', () => {
 
   it('reflects the value prop', () => {
     const { getByPlaceholderText } = render(
-      <TextInput placeholder="Ingresá tu nombre" value="Andrei" onChangeText={mockOnChangeText} />
+      <TextInput placeholder="Ingresá tu nombre" value="Andrei" onChangeText={mockOnChangeText} />,
     );
 
     expect(getByPlaceholderText('Ingresá tu nombre').props.value).toBe('Andrei');
@@ -65,7 +65,7 @@ describe('TextInput Component', () => {
 
   it('does not render an error when none is provided', () => {
     const { queryByTestId } = render(
-      <TextInput placeholder="Ingresá tu nombre" value="" onChangeText={mockOnChangeText} />
+      <TextInput placeholder="Ingresá tu nombre" value="" onChangeText={mockOnChangeText} />,
     );
 
     expect(queryByTestId('inline-error')).toBeNull();
@@ -78,7 +78,7 @@ describe('TextInput Component', () => {
         value=""
         onChangeText={mockOnChangeText}
         error="Campo requerido"
-      />
+      />,
     );
 
     expect(getByTestId('inline-error').props.children).toBe('Campo requerido');
@@ -91,7 +91,7 @@ describe('TextInput Component', () => {
         value=""
         onChangeText={mockOnChangeText}
         secureTextEntry
-      />
+      />,
     );
 
     expect(getByPlaceholderText('Contraseña').props.secureTextEntry).toBe(true);

@@ -33,7 +33,18 @@ const DB_NAME = 'changuiapp.db';
 
 let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
-async function getDb(): Promise<SQLite.SQLiteDatabase> {
+/**
+ * Conexión singleton a la DB local. Exportada para que otros repos (ej. listas)
+ * reusen la misma conexión en vez de abrir changuiapp.db por separado.
+ *
+ * Crea la tabla `products` y el índice full-text `products_fts` (FTS5). Usamos
+ * una tabla FTS standalone (no external-content) porque upsertProducts hace
+ * INSERT OR REPLACE, que cambia el rowid implícito de `products` en cada
+ * re-upsert y desincronizaría un content_rowid. La unión se hace por `barcode`,
+ * que sí es estable. El tokenizer ignora acentos: "serenisima" matchea
+ * "Serenísima".
+ */
+export async function getDb(): Promise<SQLite.SQLiteDatabase> {
   if (!dbPromise) {
     dbPromise = SQLite.openDatabaseAsync(DB_NAME).then(async (db) => {
       await db.execAsync(`
@@ -50,14 +61,34 @@ async function getDb(): Promise<SQLite.SQLiteDatabase> {
           tax_amount REAL,
           updated_at TEXT NOT NULL
         );
+        CREATE VIRTUAL TABLE IF NOT EXISTS products_fts USING fts5(
+          barcode UNINDEXED,
+          name,
+          brand,
+          tokenize = 'unicode61 remove_diacritics 2'
+        );
       `);
+      await backfillFtsIfEmpty(db);
       return db;
-    }).catch((e) => {
-      dbPromise = null;
-      throw e;
     });
   }
   return dbPromise;
+}
+
+/**
+ * Puebla el índice FTS desde `products` cuando está vacío pero ya hay catálogo
+ * sincronizado (devices que bajaron el catálogo antes de existir la FTS).
+ * Idempotente: en arranques posteriores la FTS ya tiene filas y no hace nada.
+ */
+async function backfillFtsIfEmpty(db: SQLite.SQLiteDatabase): Promise<void> {
+  const fts = await db.getFirstAsync<{ n: number }>(`SELECT COUNT(*) AS n FROM products_fts`);
+  if ((fts?.n ?? 0) > 0) return;
+  const prod = await db.getFirstAsync<{ n: number }>(`SELECT COUNT(*) AS n FROM products`);
+  if ((prod?.n ?? 0) === 0) return;
+  await db.execAsync(`
+    INSERT INTO products_fts (barcode, name, brand)
+    SELECT barcode, name, COALESCE(brand, '') FROM products;
+  `);
 }
 
 function rowToProduct(row: ProductRow): Product {
@@ -104,6 +135,14 @@ export async function upsertProducts(items: CatalogApiItem[]): Promise<void> {
           p.updated_at,
         ],
       );
+      // Mantener el índice FTS en sync por barcode (DELETE+INSERT evita depender
+      // del rowid, que el INSERT OR REPLACE de arriba reescribe).
+      await db.runAsync(`DELETE FROM products_fts WHERE barcode = ?`, [p.barcode]);
+      await db.runAsync(`INSERT INTO products_fts (barcode, name, brand) VALUES (?, ?, ?)`, [
+        p.barcode,
+        p.name,
+        p.brand ?? '',
+      ]);
     }
   });
 }
@@ -111,11 +150,52 @@ export async function upsertProducts(items: CatalogApiItem[]): Promise<void> {
 /** Busca un producto por barcode en el cache local. null si no está. */
 export async function getProductByBarcode(barcode: string): Promise<Product | null> {
   const db = await getDb();
-  const row = await db.getFirstAsync<ProductRow>(
-    `SELECT * FROM products WHERE barcode = ?`,
-    [barcode],
-  );
+  const row = await db.getFirstAsync<ProductRow>(`SELECT * FROM products WHERE barcode = ?`, [
+    barcode,
+  ]);
   return row ? rowToProduct(row) : null;
+}
+
+/**
+ * Convierte el texto del usuario en una MATCH query de FTS5 segura para
+ * autocompletado: descarta toda la sintaxis especial de FTS5 (queda solo
+ * letras/números/espacios, así no hay forma de inyectar operadores), tokeniza y
+ * agrega prefijo a cada token. "Sere lec" -> "sere* lec*" (AND implícito).
+ * Devuelve null si no queda ningún token.
+ */
+function toFtsMatchQuery(raw: string): string | null {
+  const tokens = raw
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .split(/\s+/)
+    .filter(Boolean);
+  if (tokens.length === 0) return null;
+  return tokens.map((token) => `${token}*`).join(' ');
+}
+
+/**
+ * Busca productos por nombre/marca en el cache local (FTS5). Resuelve 100%
+ * contra SQLite, nunca pega a la red. Ordena por relevancia (bm25, con más peso
+ * al nombre que a la marca). Devuelve [] si la query queda vacía o ante error
+ * (el buscador no debe romper la UI).
+ */
+export async function searchProducts(query: string, limit: number): Promise<Product[]> {
+  const match = toFtsMatchQuery(query);
+  if (!match) return [];
+  const db = await getDb();
+  try {
+    const rows = await db.getAllAsync<ProductRow>(
+      `SELECT p.* FROM products_fts f
+         JOIN products p ON p.barcode = f.barcode
+        WHERE products_fts MATCH ?
+        ORDER BY bm25(products_fts, 1.0, 10.0, 5.0)
+        LIMIT ?`,
+      [match, limit],
+    );
+    return rows.map(rowToProduct);
+  } catch {
+    return [];
+  }
 }
 
 /** Cantidad de productos cacheados (0 = primer arranque, falta descarga inicial). */

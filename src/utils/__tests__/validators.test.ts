@@ -1,9 +1,4 @@
-import {
-  isValidEmail,
-  isValidPassword,
-  isValidFullName,
-  doPasswordsMatch,
-} from '../validators';
+import { isValidEmail, isValidPassword, isValidFullName, doPasswordsMatch } from '../validators';
 
 describe('validators utility tests', () => {
   describe('isValidEmail', () => {

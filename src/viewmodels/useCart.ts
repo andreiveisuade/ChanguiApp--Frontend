@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import CartRepository from '@/repositories/CartRepository';
 import { CartWithItems, CartItemWithProduct, TaxSummary } from '@/types/domain';
-
-const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
 import { ErrorTranslationService } from '@/services/ErrorTranslationService';
 import { UserFriendlyError } from '@/types/errors';
 import { useAsyncAction } from '@/hooks/useAsyncAction';
+
+const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
 
 export type UseCartReturn = {
   cart: CartWithItems | null;
@@ -44,29 +44,35 @@ export const useCart = (): UseCartReturn => {
     await fetchCart();
   }, [fetchCart]);
 
-  const updateQuantity = useCallback(async (itemId: string, quantity: number) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await CartRepository.updateItemQuantity(itemId, quantity);
-      await fetchCart();
-    } catch (err) {
-      setError(ErrorTranslationService.translate(err));
-      setIsLoading(false);
-    }
-  }, [fetchCart, setError, setIsLoading]);
+  const updateQuantity = useCallback(
+    async (itemId: string, quantity: number) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        await CartRepository.updateItemQuantity(itemId, quantity);
+        await fetchCart();
+      } catch (err) {
+        setError(ErrorTranslationService.translate(err));
+        setIsLoading(false);
+      }
+    },
+    [fetchCart, setError, setIsLoading],
+  );
 
-  const removeItem = useCallback(async (itemId: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await CartRepository.deleteItem(itemId);
-      await fetchCart();
-    } catch (err) {
-      setError(ErrorTranslationService.translate(err));
-      setIsLoading(false);
-    }
-  }, [fetchCart, setError, setIsLoading]);
+  const removeItem = useCallback(
+    async (itemId: string) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        await CartRepository.deleteItem(itemId);
+        await fetchCart();
+      } catch (err) {
+        setError(ErrorTranslationService.translate(err));
+        setIsLoading(false);
+      }
+    },
+    [fetchCart, setError, setIsLoading],
+  );
 
   return {
     cart,
