@@ -2,19 +2,21 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ShoppingListItem } from '@/types/domain';
-import { colors, spacing, touchTarget } from '@/constants/theme';
+import { borderWidth, colors, iconSize, opacity, spacing, touchTarget } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
 interface ListItemRowProps {
   item: ShoppingListItem;
   onToggle: () => void;
+  onDelete?: () => void;
   isLast?: boolean;
 }
 
 export function ListItemRow({
   item,
   onToggle,
+  onDelete,
   isLast = false,
 }: ListItemRowProps): React.JSX.Element {
   const { t } = useTranslation();
@@ -23,17 +25,15 @@ export function ListItemRow({
     <View style={[styles.row, isLast && styles.noBorder]}>
       <Pressable
         onPress={onToggle}
-        accessibilityLabel={
-          item.purchased ? t('lists.markUnpurchased') : t('lists.markPurchased')
-        }
+        accessibilityLabel={item.purchased ? t('lists.markUnpurchased') : t('lists.markPurchased')}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: item.purchased }}
         style={({ pressed }) => [styles.checkbox, pressed && styles.checkboxPressed]}
       >
         {item.purchased ? (
-          <AppIcon name="exito" size={22} color={colors.success} />
+          <AppIcon name="exito" size={iconSize.md} color={colors.success} />
         ) : (
-          <AppIcon name="circulo" size={22} color={colors.border} />
+          <AppIcon name="circulo" size={iconSize.md} color={colors.border} />
         )}
       </Pressable>
 
@@ -46,7 +46,20 @@ export function ListItemRow({
       </AppText>
 
       {item.quantity > 1 ? (
-        <AppText variant="Label" style={styles.qty}>×{item.quantity}</AppText>
+        <AppText variant="Label" style={styles.qty}>
+          ×{item.quantity}
+        </AppText>
+      ) : null}
+
+      {onDelete ? (
+        <Pressable
+          onPress={onDelete}
+          accessibilityLabel={t('lists.deleteItem')}
+          accessibilityRole="button"
+          style={({ pressed }) => [styles.delete, pressed && styles.checkboxPressed]}
+        >
+          <AppIcon name="eliminar" size={iconSize.smd} color={colors.textSecondary} />
+        </Pressable>
       ) : null}
     </View>
   );
@@ -56,7 +69,7 @@ const styles = StyleSheet.create({
   row: {
     alignItems: 'center',
     borderBottomColor: colors.border,
-    borderBottomWidth: 1,
+    borderBottomWidth: borderWidth.hairline,
     flexDirection: 'row',
     gap: spacing.md,
     paddingVertical: spacing.sm,
@@ -71,7 +84,7 @@ const styles = StyleSheet.create({
     minWidth: touchTarget.minWidth,
   },
   checkboxPressed: {
-    opacity: 0.6,
+    opacity: opacity.pressed,
   },
   name: {
     flex: 1,
@@ -83,6 +96,12 @@ const styles = StyleSheet.create({
   },
   qty: {
     textTransform: 'none',
+  },
+  delete: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: touchTarget.minHeight,
+    minWidth: touchTarget.minWidth,
   },
 });
 

@@ -47,16 +47,16 @@ npx react-native doctor
 
 ## Stack
 
-| Capa | Tecnologia | Descripcion |
-|------|-----------|-------------|
-| Framework | React Native + Expo | App movil multiplataforma (Android + iOS) |
-| Patron | MVVM + Repository | Separacion de responsabilidades |
-| Auth | Supabase Auth + AuthContext | Google Sign-In + email/contrasena, estado compartido |
-| Navegacion | Expo Router | File-based routing en `app/` |
-| HTTP | `apiFetch` helper (fetch wrapper) | Auth automatico + manejo de 401 |
-| i18n | react-i18next | Internacionalizacion (espanol + ingles) |
-| Scanner | expo-camera | Escaneo de codigos de barras (DEV-30, pendiente) |
-| Pagos | Mercado Pago (WebView) | Checkout in-app en sandbox |
+| Capa       | Tecnologia                        | Descripcion                                          |
+| ---------- | --------------------------------- | ---------------------------------------------------- |
+| Framework  | React Native + Expo               | App movil multiplataforma (Android + iOS)            |
+| Patron     | MVVM + Repository                 | Separacion de responsabilidades                      |
+| Auth       | Supabase Auth + AuthContext       | Google Sign-In + email/contrasena, estado compartido |
+| Navegacion | Expo Router                       | File-based routing en `app/`                         |
+| HTTP       | `apiFetch` helper (fetch wrapper) | Auth automatico + manejo de 401                      |
+| i18n       | react-i18next                     | Internacionalizacion (espanol + ingles)              |
+| Scanner    | expo-camera                       | Escaneo de codigos de barras (DEV-30, pendiente)     |
+| Pagos      | Mercado Pago (WebView)            | Checkout in-app en sandbox                           |
 
 ---
 
@@ -175,17 +175,17 @@ Las credenciales reales se comparten por el grupo de WhatsApp del equipo. Nunca 
 
 ## Pantallas de la app
 
-| Pantalla | Descripcion | Sprint |
-|----------|-------------|--------|
-| Onboarding | 3 pantallas de bienvenida (solo primera vez) | Sprint 2 |
-| Login / Register | Inicio de sesion y registro | Sprint 4 |
-| Seleccion supermercado | Elegir donde estas comprando | Sprint 4 |
-| Scanner | Escanear codigo de barras con la camara | Sprint 4 |
-| Carrito | Ver items, cantidades, total acumulado | Sprint 4 |
-| Listas de compras | Crear/gestionar listas, tachado automatico | Sprint 4-5 |
-| Checkout | Pago con Mercado Pago in-app | Sprint 5 |
-| Historial | Compras anteriores con cards view | Sprint 5 |
-| Perfil | Ver/editar datos, eliminar cuenta, config | Sprint 4-5 |
+| Pantalla               | Descripcion                                  | Sprint     |
+| ---------------------- | -------------------------------------------- | ---------- |
+| Onboarding             | 3 pantallas de bienvenida (solo primera vez) | Sprint 2   |
+| Login / Register       | Inicio de sesion y registro                  | Sprint 4   |
+| Seleccion supermercado | Elegir donde estas comprando                 | Sprint 4   |
+| Scanner                | Escanear codigo de barras con la camara      | Sprint 4   |
+| Carrito                | Ver items, cantidades, total acumulado       | Sprint 4   |
+| Listas de compras      | Crear/gestionar listas, tachado automatico   | Sprint 4-5 |
+| Checkout               | Pago con Mercado Pago in-app                 | Sprint 5   |
+| Historial              | Compras anteriores con cards view            | Sprint 5   |
+| Perfil                 | Ver/editar datos, eliminar cuenta, config    | Sprint 4-5 |
 
 ---
 
@@ -204,10 +204,10 @@ npx tsc --noEmit                # Typecheck (correr antes de pushear)
 
 ## Documentacion del proyecto
 
-| Documento | Ubicacion | Descripcion |
-|-----------|-----------|-------------|
-| Scope completo | [Backend/docs/Scope_ChanguiApp.md](https://github.com/andreiveisuade/ChanguiApp--Backend/blob/dev/docs/Scope_ChanguiApp.md) | Alcance, endpoints, CRUDs, entregables |
-| Guia de contribucion | [CONTRIBUTING.md](./CONTRIBUTING.md) | GitFlow, commits, PRs, reviews |
+| Documento            | Ubicacion                                                                                                                   | Descripcion                            |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| Scope completo       | [Backend/docs/Scope_ChanguiApp.md](https://github.com/andreiveisuade/ChanguiApp--Backend/blob/dev/docs/Scope_ChanguiApp.md) | Alcance, endpoints, CRUDs, entregables |
+| Guia de contribucion | [CONTRIBUTING.md](./CONTRIBUTING.md)                                                                                        | GitFlow, commits, PRs, reviews         |
 
 La documentacion del proyecto esta centralizada en el repo del Backend. El scope, DER, diagramas y Swagger viven ahi.
 
@@ -215,11 +215,11 @@ La documentacion del proyecto esta centralizada en el repo del Backend. El scope
 
 ## Equipo
 
-| Integrante | Rol |
-|------------|-----|
-| Andrei Veis | Scrum Master |
-| Ignacio Melinc | Product Owner |
-| Ezequiel Lupis | Desarrollador |
+| Integrante        | Rol           |
+| ----------------- | ------------- |
+| Andrei Veis       | Scrum Master  |
+| Ignacio Melinc    | Product Owner |
+| Ezequiel Lupis    | Desarrollador |
 | Ignacio Rodriguez | Desarrollador |
 | Maximo Vendramini | Desarrollador |
 

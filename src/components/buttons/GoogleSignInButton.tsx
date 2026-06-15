@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import GoogleColorIcon from '@/../assets/icons/google-color.svg';
-import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, spacing, touchTarget } from '@/constants/theme';
 
 type GoogleSignInButtonProps = {
   title: string;
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.textPrimary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.h3,
     fontWeight: '600',
   },
 });

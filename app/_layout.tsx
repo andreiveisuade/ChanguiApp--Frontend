@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider } from '@/context/AuthContext';
 import { AccessibilityProvider } from '@/context/AccessibilityContext';
+import { DebugOverlay } from '@/components/debug/DebugOverlay';
 import i18n from '@/i18n';
 import { colors } from '@/constants/theme';
 
@@ -21,6 +22,7 @@ export default function RootLayout(): React.JSX.Element {
         <AuthProvider>
           <StatusBar backgroundColor={colors.surface} style="dark" />
           <Stack screenOptions={{ headerShown: false }} />
+          <DebugOverlay />
         </AuthProvider>
       </AccessibilityProvider>
     </SafeAreaProvider>

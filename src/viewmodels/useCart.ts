@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import CartRepository from '@/repositories/CartRepository';
 import { CartWithItems, CartItemWithProduct, TaxSummary } from '@/types/domain';
-
-const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
-import { AuthSessionExpiredError } from '@/types/errors';
 import { ErrorTranslationService } from '@/services/ErrorTranslationService';
 import { UserFriendlyError } from '@/types/errors';
+import { useAsyncAction } from '@/hooks/useAsyncAction';
+
+const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
 
 export type UseCartReturn = {
   cart: CartWithItems | null;
@@ -24,30 +24,17 @@ export const useCart = (): UseCartReturn => {
   const [items, setItems] = useState<CartItemWithProduct[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [summary, setSummary] = useState<TaxSummary>(EMPTY_SUMMARY);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<UserFriendlyError | null>(null);
+  const { isLoading, error, setError, setIsLoading, run } = useAsyncAction(true);
 
   const fetchCart = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await CartRepository.getCart();
+    const data = await run(() => CartRepository.getCart());
+    if (data) {
       setCart(data.cart);
       setItems(data.items);
       setTotal(data.total);
       setSummary(data.summary);
-    } catch (err) {
-      // 401 / sesión inválida: el httpClient ya limpió el storage y emitió el evento.
-      // El AuthContext va a limpiar estado y el guard del tabs layout redirige a login.
-      // No exponemos el error al usuario para evitar flicker visual.
-      if (err instanceof AuthSessionExpiredError) {
-        return;
-      }
-      setError(ErrorTranslationService.translate(err));
-    } finally {
-      setIsLoading(false);
     }
-  }, []);
+  }, [run]);
 
   useEffect(() => {
     fetchCart();
@@ -57,29 +44,35 @@ export const useCart = (): UseCartReturn => {
     await fetchCart();
   }, [fetchCart]);
 
-  const updateQuantity = useCallback(async (itemId: string, quantity: number) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await CartRepository.updateItemQuantity(itemId, quantity);
-      await fetchCart();
-    } catch (err) {
-      setError(ErrorTranslationService.translate(err));
-      setIsLoading(false);
-    }
-  }, [fetchCart]);
+  const updateQuantity = useCallback(
+    async (itemId: string, quantity: number) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        await CartRepository.updateItemQuantity(itemId, quantity);
+        await fetchCart();
+      } catch (err) {
+        setError(ErrorTranslationService.translate(err));
+        setIsLoading(false);
+      }
+    },
+    [fetchCart, setError, setIsLoading],
+  );
 
-  const removeItem = useCallback(async (itemId: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await CartRepository.deleteItem(itemId);
-      await fetchCart();
-    } catch (err) {
-      setError(ErrorTranslationService.translate(err));
-      setIsLoading(false);
-    }
-  }, [fetchCart]);
+  const removeItem = useCallback(
+    async (itemId: string) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        await CartRepository.deleteItem(itemId);
+        await fetchCart();
+      } catch (err) {
+        setError(ErrorTranslationService.translate(err));
+        setIsLoading(false);
+      }
+    },
+    [fetchCart, setError, setIsLoading],
+  );
 
   return {
     cart,

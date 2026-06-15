@@ -5,7 +5,9 @@ import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { colors, spacing, radii, fonts } from '@/constants/theme';
+import { colors, spacing, radii, fonts, iconSize, fontSize } from '@/constants/theme';
+
+export const CONFIRM_PHRASE = 'ELIMINAR MI CUENTA';
 
 interface DeleteAccountViewProps {
   onDelete: () => Promise<void>;
@@ -23,7 +25,6 @@ export function DeleteAccountView({
   const { t } = useTranslation();
   const [confirmationText, setConfirmationText] = useState<string>('');
 
-  const CONFIRM_PHRASE = 'ELIMINAR MI CUENTA';
   const isConfirmed = confirmationText.trim() === CONFIRM_PHRASE;
 
   const handleDelete = () => {
@@ -32,9 +33,20 @@ export function DeleteAccountView({
   };
 
   const listItems = [
-    { icon: 'carrito', text: t('profile.deleteItems.history', { defaultValue: 'Todo tu historial de compras' }) },
-    { icon: 'perfil', text: t('profile.deleteItems.info', { defaultValue: 'Tu información personal y preferencias' }) },
-    { icon: 'tarjeta', text: t('profile.deleteItems.payment', { defaultValue: 'Métodos de pago guardados' }) },
+    {
+      icon: 'carrito',
+      text: t('profile.deleteItems.history', { defaultValue: 'Todo tu historial de compras' }),
+    },
+    {
+      icon: 'perfil',
+      text: t('profile.deleteItems.info', {
+        defaultValue: 'Tu información personal y preferencias',
+      }),
+    },
+    {
+      icon: 'tarjeta',
+      text: t('profile.deleteItems.payment', { defaultValue: 'Métodos de pago guardados' }),
+    },
   ];
 
   return (
@@ -42,7 +54,7 @@ export function DeleteAccountView({
       {/* Icono central de papelera */}
       <View style={styles.centerIconWrapper}>
         <View style={styles.iconCircle}>
-          <AppIcon name="eliminar" size={32} color="#EF4444" />
+          <AppIcon name="eliminar" size={iconSize.xxl} color={colors.danger} />
         </View>
       </View>
 
@@ -52,14 +64,18 @@ export function DeleteAccountView({
           {t('profile.deleteAccount', { defaultValue: 'Eliminar cuenta' })}
         </AppText>
         <AppText variant="Body" style={styles.subtitle}>
-          {t('profile.deleteConfirmSubtitle', { defaultValue: 'Esta acción es permanente y no se puede deshacer' })}
+          {t('profile.deleteConfirmSubtitle', {
+            defaultValue: 'Esta acción es permanente y no se puede deshacer',
+          })}
         </AppText>
       </View>
 
       {/* Caja de peligro */}
       <InfoBox
         variant="danger"
-        boldText={t('profile.deleteBoxBold', { defaultValue: '¡Atención! Esta acción es irreversible. ' })}
+        boldText={t('profile.deleteBoxBold', {
+          defaultValue: '¡Atención! Esta acción es irreversible. ',
+        })}
         text={t('profile.deleteBoxText', {
           defaultValue: 'Al eliminar tu cuenta perderás permanentemente:',
         })}
@@ -74,7 +90,12 @@ export function DeleteAccountView({
 
         {listItems.map((item, idx) => (
           <View key={idx} style={styles.listItemCard}>
-            <AppIcon name={item.icon} size={20} color="#6B7280" style={styles.listItemIcon} />
+            <AppIcon
+              name={item.icon}
+              size={iconSize.smd}
+              color={colors.textMuted}
+              style={styles.listItemIcon}
+            />
             <AppText variant="Body" style={styles.listItemText}>
               {item.text}
             </AppText>
@@ -89,7 +110,8 @@ export function DeleteAccountView({
         </AppText>
         <AppText variant="Body" style={styles.breakText}>
           {t('profile.needABreakText', {
-            defaultValue: 'En lugar de eliminar tu cuenta, puedes simplemente cerrar sesión y volver cuando quieras.',
+            defaultValue:
+              'En lugar de eliminar tu cuenta, puedes simplemente cerrar sesión y volver cuando quieras.',
           })}
         </AppText>
         <Pressable onPress={onNavigateToLogout}>
@@ -107,13 +129,15 @@ export function DeleteAccountView({
             {CONFIRM_PHRASE}
           </AppText>
         </AppText>
-        
+
         <View style={[styles.inputContainer, isConfirmed && styles.inputContainerConfirmed]}>
           <TextInput
             value={confirmationText}
             onChangeText={setConfirmationText}
-            placeholder={t('profile.confirmDeletePlaceholder', { defaultValue: 'Escribe la frase exacta' })}
-            placeholderTextColor="#9CA3AF"
+            placeholder={t('profile.confirmDeletePlaceholder', {
+              defaultValue: 'Escribe la frase exacta',
+            })}
+            placeholderTextColor={colors.textPlaceholder}
             autoCapitalize="characters"
             style={styles.input}
           />
@@ -142,7 +166,7 @@ export function DeleteAccountView({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: spacing.lg,
-    paddingBottom: 40,
+    paddingBottom: spacing.xxxl,
   },
   centerIconWrapper: {
     alignItems: 'center',
@@ -153,7 +177,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#FEE2E2', // Muy claro rojo
+    backgroundColor: colors.dangerSurfaceStrong, // Muy claro rojo
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -164,14 +188,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: '800',
-    color: '#111827',
-    fontSize: 26,
+    color: colors.textDark,
+    fontSize: fontSize.h1,
     textAlign: 'center',
     marginBottom: spacing.sm,
   },
   subtitle: {
-    color: '#6B7280',
-    fontSize: 15,
+    color: colors.textMuted,
+    fontSize: fontSize.h3,
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -185,16 +209,16 @@ const styles = StyleSheet.create({
   },
   listHeader: {
     fontWeight: '700',
-    color: '#111827',
-    fontSize: 16,
+    color: colors.textDark,
+    fontSize: fontSize.h3,
     marginBottom: spacing.md,
   },
   listItemCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surfaceSubtle,
     borderWidth: 1,
-    borderColor: '#F3F4F6',
+    borderColor: colors.surfaceMuted,
     borderRadius: radii.md,
     padding: spacing.md,
     marginBottom: spacing.sm,
@@ -203,14 +227,14 @@ const styles = StyleSheet.create({
     marginRight: spacing.md,
   },
   listItemText: {
-    color: '#4B5563',
-    fontSize: 14,
+    color: colors.textSlateMuted,
+    fontSize: fontSize.body,
     fontWeight: '500',
   },
   breakBox: {
-    backgroundColor: '#EFF6FF', // Celeste muy claro
+    backgroundColor: colors.infoBlueSurface, // Celeste muy claro
     borderWidth: 1,
-    borderColor: '#DBEAFE',
+    borderColor: colors.infoBlueBorder,
     borderRadius: radii.md,
     padding: spacing.lg,
     width: '100%',
@@ -218,38 +242,38 @@ const styles = StyleSheet.create({
   },
   breakTitle: {
     fontWeight: '700',
-    color: '#1E40AF',
-    fontSize: 15,
+    color: colors.infoBlueText,
+    fontSize: fontSize.h3,
     marginBottom: spacing.xs,
   },
   breakText: {
-    color: '#1E3A8A',
-    fontSize: 13,
+    color: colors.infoBlueTextDark,
+    fontSize: fontSize.body,
     lineHeight: 18,
     marginBottom: spacing.sm,
   },
   breakLink: {
-    color: '#2563EB',
+    color: colors.infoBlue,
     fontWeight: '700',
-    fontSize: 13,
+    fontSize: fontSize.body,
   },
   confirmSection: {
     width: '100%',
     marginBottom: spacing.xl,
   },
   confirmLabel: {
-    color: '#374151',
-    fontSize: 14,
+    color: colors.textSlate,
+    fontSize: fontSize.body,
     fontWeight: '600',
     marginBottom: spacing.sm,
   },
   confirmPhraseBold: {
     fontWeight: '800',
-    color: '#DC4040',
+    color: colors.primary,
   },
   inputContainer: {
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.borderMuted,
     borderRadius: radii.md,
     backgroundColor: colors.white,
     paddingHorizontal: spacing.md,
@@ -257,12 +281,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inputContainerConfirmed: {
-    borderColor: '#10B981',
+    borderColor: colors.successStrong,
   },
   input: {
-    fontSize: 15,
+    fontSize: fontSize.input,
     fontFamily: fonts.body,
-    color: '#111827',
+    color: colors.textDark,
     paddingVertical: spacing.sm,
   },
   actions: {

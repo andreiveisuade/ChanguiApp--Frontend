@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
-import { colors, fonts, radii, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, touchTarget } from '@/constants/theme';
 
 type SecondaryButtonProps = {
   title: string;
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.textPrimary,
     fontFamily: fonts.body,
-    fontSize: 18,
+    fontSize: fontSize.button,
     fontWeight: '600',
   },
 });

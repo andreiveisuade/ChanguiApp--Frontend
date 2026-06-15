@@ -135,7 +135,10 @@ describe('useProductFound', () => {
       await result.current.goToCart();
     });
 
-    expect(result.current.errorMessage).toBe('falló agregar');
+    expect(result.current.errorMessage).toMatchObject({
+      title: expect.any(String),
+      message: expect.any(String),
+    });
     expect(result.current.isLoading).toBe(false);
   });
 

@@ -33,8 +33,13 @@ describe('useCheckout', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockedMakeRedirectUri.mockReturnValue('changuiapp://checkout/return');
-    mockedCreatePreference.mockResolvedValue({ preference_id: 'pref-1', init_point: 'https://mp.com/init' });
-    mockedOpenAuth.mockResolvedValue({ type: 'dismiss' } as Awaited<ReturnType<typeof WebBrowser.openAuthSessionAsync>>);
+    mockedCreatePreference.mockResolvedValue({
+      preference_id: 'pref-1',
+      init_point: 'https://mp.com/init',
+    });
+    mockedOpenAuth.mockResolvedValue({ type: 'dismiss' } as Awaited<
+      ReturnType<typeof WebBrowser.openAuthSessionAsync>
+    >);
     mockedTranslate.mockReturnValue(translated);
   });
 
@@ -47,7 +52,10 @@ describe('useCheckout', () => {
     });
 
     expect(mockedCreatePreference).toHaveBeenCalledTimes(1);
-    expect(mockedOpenAuth).toHaveBeenCalledWith('https://mp.com/init', 'changuiapp://checkout/return');
+    expect(mockedOpenAuth).toHaveBeenCalledWith(
+      'https://mp.com/init',
+      'changuiapp://checkout/return',
+    );
     expect(resultValue).toEqual({ preferenceId: 'pref-1' });
     expect(result.current.isStarting).toBe(false);
     expect(result.current.error).toBeNull();

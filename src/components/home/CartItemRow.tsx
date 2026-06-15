@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { CartItemWithProduct } from '@/types/domain';
-import { colors, spacing } from '@/constants/theme';
+import { colors, fontSize, spacing, iconSize, radii } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { formatARS } from '@/utils/currency';
@@ -30,7 +30,7 @@ export const CartItemRow = ({ item, isLast = false }: CartItemRowProps) => {
             resizeMode="cover"
           />
         ) : (
-          <AppIcon name="package" size={24} color={colors.textSecondary} />
+          <AppIcon name="package" size={iconSize.mdl} color={colors.textSecondary} />
         )}
       </View>
 
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: 56,
     height: 56,
-    borderRadius: 12,
+    borderRadius: radii.md,
     backgroundColor: colors.muted,
     justifyContent: 'center',
     alignItems: 'center',
@@ -74,9 +74,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   productName: {
-    fontSize: 15,
+    fontSize: fontSize.h3,
     fontWeight: '500',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
 });
 

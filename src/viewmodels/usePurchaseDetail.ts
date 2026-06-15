@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import PurchaseRepository from '@/repositories/PurchaseRepository';
 import { PurchaseDetail } from '@/types/domain';
-import { AuthSessionExpiredError, UserFriendlyError } from '@/types/errors';
-import { ErrorTranslationService } from '@/services/ErrorTranslationService';
+import { UserFriendlyError } from '@/types/errors';
+import { useAsyncAction } from '@/hooks/useAsyncAction';
 
 export type UsePurchaseDetailReturn = {
   purchase: PurchaseDetail | null;
@@ -13,29 +13,17 @@ export type UsePurchaseDetailReturn = {
 
 export const usePurchaseDetail = (id: string | undefined): UsePurchaseDetailReturn => {
   const [purchase, setPurchase] = useState<PurchaseDetail | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<UserFriendlyError | null>(null);
+  const { isLoading, error, run } = useAsyncAction(Boolean(id));
 
   const fetchDetail = useCallback(async () => {
     if (!id) {
-      setIsLoading(false);
       return;
     }
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await PurchaseRepository.getPurchaseById(id);
+    const data = await run(() => PurchaseRepository.getPurchaseById(id));
+    if (data) {
       setPurchase(data);
-    } catch (err) {
-      // 401 / sesión inválida: el httpClient ya limpió el storage y emitió el evento.
-      if (err instanceof AuthSessionExpiredError) {
-        return;
-      }
-      setError(ErrorTranslationService.translate(err));
-    } finally {
-      setIsLoading(false);
     }
-  }, [id]);
+  }, [id, run]);
 
   useEffect(() => {
     fetchDetail();

@@ -1,11 +1,11 @@
 import React from 'react';
-import { 
-  View, 
-  TextInput, 
-  StyleSheet, 
-  TouchableOpacity, 
-  TextInputProps, 
-  ViewStyle 
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  TextInputProps,
+  ViewStyle,
 } from 'react-native';
 import { colors } from '@/constants/theme';
 import { AppIcon } from '../atoms/AppIcon';
@@ -23,12 +23,7 @@ export const SearchBar = ({
 }: SearchBarProps) => {
   return (
     <View style={[styles.container, containerStyle]}>
-      <AppIcon
-        name="buscar"
-        size={22}
-        color={colors.textSecondary}
-        style={styles.searchIcon}
-      />
+      <AppIcon name="buscar" size={22} color={colors.textSecondary} style={styles.searchIcon} />
 
       <TextInput
         style={styles.input}

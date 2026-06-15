@@ -7,11 +7,14 @@ import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { PrimaryButton } from '@/components/buttons/PrimaryButton';
 import { SecondaryButton } from '@/components/buttons/SecondaryButton';
-import { colors, spacing } from '@/constants/theme';
+import { colors, spacing, iconSize } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
 import useCheckoutStatus, { CheckoutStatus } from '@/viewmodels/useCheckoutStatus';
 
-const ICON_BY_STATUS: Record<Exclude<CheckoutStatus, 'checking'>, { name: string; color: string }> = {
+const ICON_BY_STATUS: Record<
+  Exclude<CheckoutStatus, 'checking'>,
+  { name: string; color: string }
+> = {
   success: { name: 'exito', color: colors.success },
   pending: { name: 'alerta', color: colors.warning },
   timeout: { name: 'error', color: colors.error },
@@ -57,7 +60,7 @@ export default function CheckoutConfirmationScreen(): React.JSX.Element | null {
 
   return (
     <ScreenWrapper style={styles.centered}>
-      <AppIcon name={icon.name} size={72} color={icon.color} />
+      <AppIcon name={icon.name} size={iconSize.heroMd} color={icon.color} />
       <AppText variant="H1" style={styles.title}>
         {t(`checkout.${status}Title`)}
       </AppText>

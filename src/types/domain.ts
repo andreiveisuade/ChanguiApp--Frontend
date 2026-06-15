@@ -66,7 +66,11 @@ export interface ShoppingList {
 export interface ShoppingListItem {
   id: string;
   list_id: string;
+  barcode: string;
   name: string;
+  brand: string | null;
+  price: number;
+  image_url: string | null;
   quantity: number;
   purchased: boolean;
   created_at?: string;

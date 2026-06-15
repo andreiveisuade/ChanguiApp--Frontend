@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { colors, fonts, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, spacing } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 
 type FormLabelProps = {
@@ -8,14 +8,18 @@ type FormLabelProps = {
 };
 
 export function FormLabel({ children }: FormLabelProps): React.JSX.Element {
-  return <AppText variant="Body" style={styles.label}>{children}</AppText>;
+  return (
+    <AppText variant="Body" style={styles.label}>
+      {children}
+    </AppText>
+  );
 }
 
 const styles = StyleSheet.create({
   label: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     fontWeight: '600',
     marginBottom: spacing.sm,
   },

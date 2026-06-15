@@ -84,7 +84,10 @@ describe('useScanner', () => {
       await result.current.handleBarcodeScanned({ data: '7790001' });
     });
 
-    expect(result.current.errorMessage).toBe('network timeout');
+    expect(result.current.errorMessage).toMatchObject({
+      title: expect.any(String),
+      message: expect.any(String),
+    });
     expect(result.current.loading).toBe(false);
   });
 

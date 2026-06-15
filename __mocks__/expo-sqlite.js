@@ -5,6 +5,7 @@ const mockDb = {
   execAsync: jest.fn().mockResolvedValue(undefined),
   runAsync: jest.fn().mockResolvedValue(undefined),
   getFirstAsync: jest.fn(),
+  getAllAsync: jest.fn().mockResolvedValue([]),
   withTransactionAsync: jest.fn(async (cb) => cb()),
 };
 

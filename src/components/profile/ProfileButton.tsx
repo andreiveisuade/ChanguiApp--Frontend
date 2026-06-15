@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { colors, spacing, radii } from '@/constants/theme';
+import { colors, spacing, radii, iconSize, fontSize } from '@/constants/theme';
 
 export type ProfileButtonVariant = 'primary' | 'secondary' | 'danger' | 'warning' | 'disabled';
 
@@ -25,12 +25,12 @@ export function ProfileButton({
 }: ProfileButtonProps): React.JSX.Element {
   const getStyles = () => {
     const isActuallyDisabled = disabled || variant === 'disabled';
-    
+
     if (isActuallyDisabled) {
       return {
         button: styles.disabledButton,
         text: styles.disabledText,
-        iconColor: '#9CA3AF',
+        iconColor: colors.textPlaceholder,
       };
     }
 
@@ -39,7 +39,7 @@ export function ProfileButton({
         return {
           button: styles.secondaryButton,
           text: styles.secondaryText,
-          iconColor: '#374151',
+          iconColor: colors.textSlate,
         };
       case 'danger':
         return {
@@ -77,18 +77,18 @@ export function ProfileButton({
       ]}
     >
       {isLoading ? (
-        <ActivityIndicator 
-          color={variant === 'secondary' ? colors.primary : colors.white} 
-          size="small" 
+        <ActivityIndicator
+          color={variant === 'secondary' ? colors.primary : colors.white}
+          size="small"
         />
       ) : (
         <View style={styles.content}>
           {iconName ? (
-            <AppIcon 
-              name={iconName} 
-              size={18} 
-              color={currentStyles.iconColor} 
-              style={styles.icon} 
+            <AppIcon
+              name={iconName}
+              size={iconSize.sm}
+              color={currentStyles.iconColor}
+              style={styles.icon}
             />
           ) : null}
           <AppText variant="Body" style={[styles.textBase, currentStyles.text]}>
@@ -123,12 +123,12 @@ const styles = StyleSheet.create({
     marginRight: spacing.sm,
   },
   textBase: {
-    fontSize: 16,
+    fontSize: fontSize.h3,
     fontWeight: '600',
   },
   // Primary variant
   primaryButton: {
-    backgroundColor: '#DC4040', // Red/Orange primary branding
+    backgroundColor: colors.primary, // Red/Orange primary branding
   },
   primaryText: {
     color: colors.white,
@@ -137,31 +137,31 @@ const styles = StyleSheet.create({
   secondaryButton: {
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.borderMuted,
   },
   secondaryText: {
-    color: '#374151',
+    color: colors.textSlate,
   },
   // Danger variant
   dangerButton: {
-    backgroundColor: '#DC4040', // Red
+    backgroundColor: colors.primary, // Red
   },
   dangerText: {
     color: colors.white,
   },
   // Warning variant (e.g. orange for Cerrar sesión button)
   warningButton: {
-    backgroundColor: '#EA580C', // Orange
+    backgroundColor: colors.accentOrange, // Orange
   },
   warningText: {
     color: colors.white,
   },
   // Disabled variant
   disabledButton: {
-    backgroundColor: '#E5E7EB',
+    backgroundColor: colors.border,
   },
   disabledText: {
-    color: '#9CA3AF',
+    color: colors.textPlaceholder,
   },
 });
 

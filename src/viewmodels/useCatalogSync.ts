@@ -11,7 +11,7 @@ export function useCatalogSync(enabled: boolean): void {
     if (!enabled) return;
     let cancelled = false;
     syncCatalog().catch((err) => {
-      if (!cancelled) {
+      if (!cancelled && __DEV__) {
         console.warn('[catalog] sync falló:', err);
       }
     });

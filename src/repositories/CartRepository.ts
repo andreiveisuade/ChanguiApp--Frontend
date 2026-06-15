@@ -1,8 +1,16 @@
-import { CartWithItems, CartItemWithProduct, TaxBreakdown, TaxLine, TaxSummary } from '@/types/domain';
+import {
+  CartWithItems,
+  CartItemWithProduct,
+  TaxBreakdown,
+  TaxLine,
+  TaxSummary,
+} from '@/types/domain';
 import httpClient from '@/config/clients';
 
 const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
 const DEFAULT_TAX_RATE = 21;
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
 
 interface RawProduct {
   id: string;
@@ -96,7 +104,9 @@ function buildSummaryFromItems(items: CartItemWithProduct[], total: number): Tax
     const lineTotal = item.unit_price * item.quantity;
     const productTax = item.product?.tax;
     const rate = productTax?.rate ?? DEFAULT_TAX_RATE;
-    const netAmount = productTax ? productTax.net_price * item.quantity : lineTotal / (1 + rate / 100);
+    const netAmount = productTax
+      ? productTax.net_price * item.quantity
+      : lineTotal / (1 + rate / 100);
     const taxAmount = productTax ? productTax.tax_amount * item.quantity : lineTotal - netAmount;
     const current = groupedTaxes.get(rate) ?? { rate, label: `IVA ${rate}%`, base: 0, amount: 0 };
 
@@ -107,9 +117,13 @@ function buildSummaryFromItems(items: CartItemWithProduct[], total: number): Tax
   });
 
   return {
-    subtotal_net: subtotalNet,
-    taxes: Array.from(groupedTaxes.values()),
-    total,
+    subtotal_net: round2(subtotalNet),
+    taxes: Array.from(groupedTaxes.values()).map((tax) => ({
+      ...tax,
+      base: round2(tax.base),
+      amount: round2(tax.amount),
+    })),
+    total: round2(total),
   };
 }
 
@@ -146,7 +160,7 @@ export const CartRepository = {
 
     const rawItems: RawCartItem[] = data.items ?? [];
     const mappedItems = rawItems.map(mapRawItem);
-    const itemsForTotals = mappedItems.length > 0 ? mappedItems : mappedCart?.cart_items ?? [];
+    const itemsForTotals = mappedItems.length > 0 ? mappedItems : (mappedCart?.cart_items ?? []);
     const calculatedTotal = calculateItemsTotal(itemsForTotals);
     const total = typeof data.total === 'number' && data.total > 0 ? data.total : calculatedTotal;
     const summary = hasSummaryValues(data.summary)

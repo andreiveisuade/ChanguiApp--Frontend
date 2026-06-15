@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
-import { colors, fonts, radii, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, touchTarget } from '@/constants/theme';
 
 type PrimaryButtonProps = {
   title: string;
@@ -31,7 +31,11 @@ export function PrimaryButton({
         pressed ? styles.buttonPressed : null,
       ]}
     >
-      {isLoading ? <ActivityIndicator color={colors.white} /> : <Text style={styles.text}>{title}</Text>}
+      {isLoading ? (
+        <ActivityIndicator color={colors.white} />
+      ) : (
+        <Text style={styles.text}>{title}</Text>
+      )}
     </Pressable>
   );
 }
@@ -55,7 +59,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.white,
     fontFamily: fonts.body,
-    fontSize: 18,
+    fontSize: fontSize.button,
     fontWeight: '600',
   },
 });

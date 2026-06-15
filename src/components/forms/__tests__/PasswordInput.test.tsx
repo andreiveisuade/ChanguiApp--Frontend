@@ -17,7 +17,7 @@ jest.mock('@/components/forms/InlineError', () => {
   const { Text } = require('react-native');
   return {
     __esModule: true,
-    default: ({ message }: any) => message ? <Text testID="inline-error">{message}</Text> : null,
+    default: ({ message }: any) => (message ? <Text testID="inline-error">{message}</Text> : null),
   };
 });
 
@@ -54,7 +54,7 @@ describe('PasswordInput Component', () => {
         accessibilityLabel="Password Input"
         showPasswordLabel="Show Password"
         hidePasswordLabel="Hide Password"
-      />
+      />,
     );
 
     const { TextInput } = require('react-native');
@@ -72,7 +72,7 @@ describe('PasswordInput Component', () => {
         accessibilityLabel="Password Input"
         showPasswordLabel="Show Password"
         hidePasswordLabel="Hide Password"
-      />
+      />,
     );
 
     const { TextInput } = require('react-native');
@@ -102,7 +102,7 @@ describe('PasswordInput Component', () => {
         hidePasswordLabel="Hide"
         showStrength={true}
         strengthLabels={strengthLabels}
-      />
+      />,
     );
 
     expect(getByTestId('strength-indicator')).toBeTruthy();
@@ -118,7 +118,7 @@ describe('PasswordInput Component', () => {
         showPasswordLabel="Show"
         hidePasswordLabel="Hide"
         error="Password is too short"
-      />
+      />,
     );
 
     expect(getByTestId('inline-error').props.children).toBe('Password is too short');

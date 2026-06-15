@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { colors, fonts, radii, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, spacing } from '@/constants/theme';
 import { FormLabel } from '@/components/forms/FormLabel';
 import { InlineError } from '@/components/forms/InlineError';
 
@@ -14,12 +14,7 @@ interface TextInputProps extends RNTextInputProps {
   error?: string | null;
 }
 
-export function TextInput({
-  label,
-  error,
-  style,
-  ...props
-}: TextInputProps): React.JSX.Element {
+export function TextInput({ label, error, style, ...props }: TextInputProps): React.JSX.Element {
   return (
     <View style={styles.wrapper}>
       {label ? <FormLabel>{label}</FormLabel> : null}
@@ -44,7 +39,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     color: colors.textPrimary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.input,
     minHeight: 56,
     paddingHorizontal: spacing.lg,
     paddingVertical: 0,

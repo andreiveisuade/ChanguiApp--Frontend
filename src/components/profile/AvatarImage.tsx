@@ -45,9 +45,7 @@ export function AvatarImage({
       accessibilityLabel={a11yLabel}
       accessibilityRole="image"
     >
-      <Text style={[styles.initials, { fontSize: initialsSize }]}>
-        {initials || '?'}
-      </Text>
+      <Text style={[styles.initials, { fontSize: initialsSize }]}>{initials || '?'}</Text>
     </View>
   );
 }

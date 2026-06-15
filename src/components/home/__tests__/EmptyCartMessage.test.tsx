@@ -17,19 +17,11 @@ jest.mock('@/components/atoms/AppIcon', () => {
 });
 
 describe('EmptyCartMessage Component', () => {
-  it('renders correct fallback title and subtitle translation keys when message is not provided', () => {
-    const { getByText } = render(<EmptyCartMessage />);
+  it('muestra solo el subtitle (sin titulo de carrito vacio)', () => {
+    const { getByText, queryByText } = render(<EmptyCartMessage />);
 
-    expect(getByText('home.emptyCart')).toBeTruthy();
     expect(getByText('home.emptyCartSubtitle')).toBeTruthy();
-  });
-
-  it('renders custom title when message is provided', () => {
-    const { getByText, queryByText } = render(<EmptyCartMessage message="Tu changuito está vacío" />);
-
-    expect(getByText('Tu changuito está vacío')).toBeTruthy();
     expect(queryByText('home.emptyCart')).toBeNull();
-    expect(getByText('home.emptyCartSubtitle')).toBeTruthy();
   });
 
   it('renders with the shopping cart icon', () => {

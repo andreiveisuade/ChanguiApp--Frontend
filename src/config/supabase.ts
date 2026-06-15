@@ -14,6 +14,10 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,
+    // El login con Google usa exchangeCodeForSession (espera ?code= en el
+    // retorno). Sin pkce, supabase-js usa implicit por default y devuelve
+    // #access_token en el fragmento → no hay code → el OAuth falla.
+    flowType: 'pkce',
   },
 });
 

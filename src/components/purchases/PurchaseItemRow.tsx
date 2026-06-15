@@ -10,10 +10,7 @@ interface PurchaseItemRowProps {
   isLast?: boolean;
 }
 
-export function PurchaseItemRow({
-  item,
-  isLast = false,
-}: PurchaseItemRowProps): React.JSX.Element {
+export function PurchaseItemRow({ item, isLast = false }: PurchaseItemRowProps): React.JSX.Element {
   const lineTotal = item.unit_price * item.quantity;
 
   return (
@@ -21,8 +18,12 @@ export function PurchaseItemRow({
       <AppText variant="H3" style={styles.name} numberOfLines={2}>
         {item.product_name}
       </AppText>
-      <AppText variant="Body" style={styles.qty}>×{item.quantity}</AppText>
-      <AppText variant="Body" style={styles.price}>{formatARS(lineTotal)}</AppText>
+      <AppText variant="Body" style={styles.qty}>
+        ×{item.quantity}
+      </AppText>
+      <AppText variant="Body" style={styles.price}>
+        {formatARS(lineTotal)}
+      </AppText>
     </View>
   );
 }

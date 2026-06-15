@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput, StyleProp, ViewStyle } from 'react-native'
 import { AppIcon } from '@/components/atoms/AppIcon';
 import FormLabel from '@/components/forms/FormLabel';
 import InlineError from '@/components/forms/InlineError';
-import { colors, spacing, radii, fonts } from '@/constants/theme';
+import { colors, spacing, radii, fonts, iconSize, fontSize } from '@/constants/theme';
 
 interface ProfileInputProps {
   label: string;
@@ -42,8 +42,8 @@ export function ProfileInput({
       >
         <AppIcon
           name={iconName}
-          size={20}
-          color={editable ? '#9CA3AF' : '#D1D5DB'}
+          size={iconSize.smd}
+          color={editable ? colors.textPlaceholder : colors.borderMuted}
           style={styles.icon}
         />
         <TextInput
@@ -53,7 +53,7 @@ export function ProfileInput({
           editable={editable}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor={colors.textPlaceholder}
           style={[styles.input, !editable && styles.disabledText]}
         />
       </View>
@@ -71,15 +71,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: colors.borderMuted,
     borderRadius: radii.md,
     backgroundColor: colors.white,
     paddingHorizontal: spacing.md,
     minHeight: 48,
   },
   disabledContainer: {
-    backgroundColor: '#F9FAFB',
-    borderColor: '#E5E7EB',
+    backgroundColor: colors.surfaceSubtle,
+    borderColor: colors.border,
   },
   errorContainer: {
     borderColor: colors.error,
@@ -89,13 +89,13 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 15,
+    fontSize: fontSize.input,
     fontFamily: fonts.body,
-    color: '#111827',
+    color: colors.textDark,
     paddingVertical: spacing.sm,
   },
   disabledText: {
-    color: '#9CA3AF',
+    color: colors.textPlaceholder,
   },
 });
 

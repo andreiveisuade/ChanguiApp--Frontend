@@ -46,7 +46,7 @@ describe('OnboardingFooter Component', () => {
         total={3}
         onNext={mockOnNext}
         onSkip={mockOnSkip}
-      />
+      />,
     );
 
     expect(getByText('onboarding.next')).toBeTruthy();
@@ -54,13 +54,7 @@ describe('OnboardingFooter Component', () => {
 
   it('renders the finish label when on the last slide', () => {
     const { getByText } = render(
-      <OnboardingFooter
-        isLast
-        current={2}
-        total={3}
-        onNext={mockOnNext}
-        onSkip={mockOnSkip}
-      />
+      <OnboardingFooter isLast current={2} total={3} onNext={mockOnNext} onSkip={mockOnSkip} />,
     );
 
     expect(getByText('onboarding.finish')).toBeTruthy();
@@ -74,7 +68,7 @@ describe('OnboardingFooter Component', () => {
         total={3}
         onNext={mockOnNext}
         onSkip={mockOnSkip}
-      />
+      />,
     );
 
     expect(getByTestId('onboarding-dots').props.accessibilityValue).toEqual({
@@ -91,7 +85,7 @@ describe('OnboardingFooter Component', () => {
         total={3}
         onNext={mockOnNext}
         onSkip={mockOnSkip}
-      />
+      />,
     );
 
     fireEvent.press(getByRole('button'));
@@ -100,13 +94,7 @@ describe('OnboardingFooter Component', () => {
 
   it('calls onNext when pressing finish on the last slide', () => {
     const { getByRole } = render(
-      <OnboardingFooter
-        isLast
-        current={2}
-        total={3}
-        onNext={mockOnNext}
-        onSkip={mockOnSkip}
-      />
+      <OnboardingFooter isLast current={2} total={3} onNext={mockOnNext} onSkip={mockOnSkip} />,
     );
 
     fireEvent.press(getByRole('button'));

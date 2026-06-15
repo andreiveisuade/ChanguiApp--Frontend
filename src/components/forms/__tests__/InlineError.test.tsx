@@ -18,8 +18,10 @@ describe('InlineError Component', () => {
   });
 
   it('debe renderizar el mensaje y el indicador de error si se proporciona un mensaje', () => {
-    const { getByText, UNSAFE_getByType } = render(<InlineError message="Formato de email inválido" />);
-    
+    const { getByText, UNSAFE_getByType } = render(
+      <InlineError message="Formato de email inválido" />,
+    );
+
     const view = UNSAFE_getByType(View);
     expect(view.props.accessibilityRole).toBe('alert');
     expect(getByText('!')).toBeTruthy();

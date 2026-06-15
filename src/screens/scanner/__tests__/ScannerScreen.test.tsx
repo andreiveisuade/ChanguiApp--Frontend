@@ -110,7 +110,9 @@ describe('ScannerScreen', () => {
 
   it('con errorMessage: muestra el banner de error y permite cerrarlo', () => {
     mockedUseScanner.mockReturnValue(
-      buildScannerState({ errorMessage: 'network timeout' }) as any,
+      buildScannerState({
+        errorMessage: { title: 'Error', message: 'network timeout', code: 'GENERIC' },
+      }) as any,
     );
 
     const { getByText, getByRole } = render(<ScannerScreen />);
@@ -126,9 +128,7 @@ describe('ScannerScreen', () => {
   });
 
   it('loading: monta el overlay de carga', () => {
-    mockedUseScanner.mockReturnValue(
-      buildScannerState({ scanned: true, loading: true }) as any,
-    );
+    mockedUseScanner.mockReturnValue(buildScannerState({ scanned: true, loading: true }) as any);
 
     const { UNSAFE_getAllByType } = render(<ScannerScreen />);
 
@@ -137,9 +137,7 @@ describe('ScannerScreen', () => {
   });
 
   it('loading deshabilita el boton de re-escaneo', () => {
-    mockedUseScanner.mockReturnValue(
-      buildScannerState({ scanned: true, loading: true }) as any,
-    );
+    mockedUseScanner.mockReturnValue(buildScannerState({ scanned: true, loading: true }) as any);
 
     const { getByText } = render(<ScannerScreen />);
     fireEvent.press(getByText('scanner.scanAgain'));

@@ -8,7 +8,7 @@ import FormLabel from '@/components/forms/FormLabel';
 import AppHeader from '@/components/layout/AppHeader';
 import AuthContainer from '@/components/layout/AuthContainer';
 import useAuth from '@/viewmodels/useAuth';
-import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, radii, spacing, touchTarget, iconSize, fontSize } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
 
 export function ForgotPasswordScreen(): React.JSX.Element {
@@ -30,7 +30,7 @@ export function ForgotPasswordScreen(): React.JSX.Element {
       <AuthContainer>
         <AppHeader />
         <View style={styles.mailCircle}>
-          <AppIcon color={colors.mailIcon} name="mail" size={42} />
+          <AppIcon color={colors.mailIcon} name="mail" size={iconSize.xxxxl} />
         </View>
         <View style={styles.hero}>
           <Text style={styles.title}>{t('forgotPassword.sentTitle')}</Text>
@@ -54,7 +54,7 @@ export function ForgotPasswordScreen(): React.JSX.Element {
         onPress={() => router.replace(ROUTES.auth.login)}
         style={styles.backLink}
       >
-        <AppIcon color={colors.primary} name="atras" size={18} />
+        <AppIcon color={colors.primary} name="atras" size={iconSize.sm} />
         <Text style={styles.backText}>{t('forgotPassword.back')}</Text>
       </Pressable>
       <View style={styles.hero}>
@@ -62,7 +62,7 @@ export function ForgotPasswordScreen(): React.JSX.Element {
         <Text style={styles.subtitle}>{t('forgotPassword.subtitle')}</Text>
       </View>
       <View style={styles.mailCircle}>
-        <AppIcon color={colors.mailIcon} name="mail" size={42} />
+        <AppIcon color={colors.mailIcon} name="mail" size={iconSize.xxxxl} />
       </View>
       <View style={styles.inputGroup}>
         <FormLabel>{t('forgotPassword.email')}</FormLabel>
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   backText: {
     color: colors.primary,
     fontFamily: fonts.body,
-    fontSize: 15,
+    fontSize: fontSize.h3,
     fontWeight: '700',
   },
   hero: {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   title: {
     color: colors.textPrimary,
     fontFamily: fonts.display,
-    fontSize: 28,
+    fontSize: fontSize.greeting,
     fontWeight: '800',
     lineHeight: 34,
     marginBottom: spacing.md,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.h3,
     lineHeight: 24,
   },
   mailCircle: {
@@ -141,14 +141,14 @@ const styles = StyleSheet.create({
     borderRadius: radii.md,
     color: colors.textPrimary,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.input,
     minHeight: 56,
     paddingHorizontal: spacing.lg,
   },
   info: {
     color: colors.textSecondary,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     lineHeight: 22,
     marginTop: spacing.xl,
     textAlign: 'center',

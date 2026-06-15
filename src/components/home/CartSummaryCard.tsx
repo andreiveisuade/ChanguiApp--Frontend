@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { colors, spacing } from '@/constants/theme';
+import { colors, spacing, radii, fontSize, iconSize, componentSize } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { formatARS } from '@/utils/currency';
@@ -28,10 +28,9 @@ export const CartSummaryCard = ({ itemCount, total, isLoading }: CartSummaryCard
     <View style={styles.container}>
       <View style={styles.leftSection}>
         <View style={styles.iconContainer}>
-          <AppIcon name="carrito" size={24} color={colors.white} />
+          <AppIcon name="carrito" size={iconSize.lgl} color={colors.white} />
         </View>
         <View style={styles.infoContainer}>
-          <AppText variant="Label">{t('home.activeCart')}</AppText>
           {isLoading ? (
             <ActivityIndicator size="small" color={colors.primary} style={styles.spinner} />
           ) : (
@@ -68,9 +67,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
+    width: componentSize.cartIconBox,
+    height: componentSize.cartIconBox,
+    borderRadius: radii.md,
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   productsCount: {
-    fontSize: 16,
+    fontSize: fontSize.h3,
     fontWeight: '700',
   },
   rightSection: {
@@ -89,11 +88,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   totalValue: {
-    fontSize: 20,
+    fontSize: fontSize.price,
   },
   spinner: {
     alignSelf: 'flex-start',
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
 });
 

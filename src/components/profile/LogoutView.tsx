@@ -6,7 +6,7 @@ import { AppIcon } from '@/components/atoms/AppIcon';
 import AvatarImage from '@/components/profile/AvatarImage';
 import InfoBox from '@/components/profile/InfoBox';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { spacing, radii } from '@/constants/theme';
+import { colors, spacing, radii, iconSize, fontSize } from '@/constants/theme';
 import { User } from '@/types/auth';
 
 interface LogoutViewProps {
@@ -18,7 +18,7 @@ interface LogoutViewProps {
 export function LogoutView({ user, onLogout, onCancel }: LogoutViewProps): React.JSX.Element {
   const { t } = useTranslation();
 
-  const fullName = user?.full_name ?? '';
+  const fullName = user?.full_name || t('home.defaultUser');
   const email = user?.email ?? '';
 
   return (
@@ -26,7 +26,7 @@ export function LogoutView({ user, onLogout, onCancel }: LogoutViewProps): React
       {/* Icono central de logout */}
       <View style={styles.centerIconWrapper}>
         <View style={styles.iconCircle}>
-          <AppIcon name="salir" size={32} color="#EA580C" />
+          <AppIcon name="salir" size={iconSize.xxl} color={colors.accentOrange} />
         </View>
       </View>
 
@@ -36,7 +36,9 @@ export function LogoutView({ user, onLogout, onCancel }: LogoutViewProps): React
           {t('profile.logoutConfirmTitle', { defaultValue: '¿Cerrar sesión?' })}
         </AppText>
         <AppText variant="Body" style={styles.subtitle}>
-          {t('profile.logoutConfirmSubtitle', { defaultValue: 'Podrás volver a iniciar sesión en cualquier momento' })}
+          {t('profile.logoutConfirmSubtitle', {
+            defaultValue: 'Podrás volver a iniciar sesión en cualquier momento',
+          })}
         </AppText>
       </View>
 
@@ -85,7 +87,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.xl,
-    paddingBottom: 40,
+    paddingBottom: spacing.xxxl,
     alignItems: 'center',
     flex: 1,
   },
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#FFE5D9', // Muy claro naranja
+    backgroundColor: colors.accentOrangeSurface, // Muy claro naranja
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -109,23 +111,23 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: '800',
-    color: '#111827',
-    fontSize: 26,
+    color: colors.textDark,
+    fontSize: fontSize.h1,
     textAlign: 'center',
     marginBottom: spacing.sm,
   },
   subtitle: {
-    color: '#6B7280',
-    fontSize: 15,
+    color: colors.textMuted,
+    fontSize: fontSize.h3,
     textAlign: 'center',
     lineHeight: 22,
   },
   userCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surfaceSubtle,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border,
     borderRadius: radii.md,
     padding: spacing.md,
     width: '100%',
@@ -137,11 +139,11 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontWeight: '700',
-    color: '#1F2937',
+    color: colors.textSlateDark,
   },
   userEmail: {
-    color: '#6B7280',
-    fontSize: 13,
+    color: colors.textMuted,
+    fontSize: fontSize.body,
     marginTop: 2,
   },
   infoBox: {

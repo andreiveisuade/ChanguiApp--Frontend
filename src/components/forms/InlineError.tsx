@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { colors, fonts, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, spacing } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 
 type InlineErrorProps = {
@@ -14,8 +14,12 @@ export function InlineError({ message }: InlineErrorProps): React.JSX.Element | 
 
   return (
     <View style={styles.container} accessibilityRole="alert">
-      <AppText variant="Body" style={styles.icon}>!</AppText>
-      <AppText variant="Body" style={styles.message}>{message}</AppText>
+      <AppText variant="Body" style={styles.icon}>
+        !
+      </AppText>
+      <AppText variant="Body" style={styles.message}>
+        {message}
+      </AppText>
     </View>
   );
 }
@@ -30,14 +34,14 @@ const styles = StyleSheet.create({
   icon: {
     color: colors.error,
     fontFamily: fonts.body,
-    fontSize: 13,
+    fontSize: fontSize.body,
     fontWeight: '800',
   },
   message: {
     color: colors.error,
     flex: 1,
     fontFamily: fonts.body,
-    fontSize: 13,
+    fontSize: fontSize.body,
     lineHeight: 18,
   },
 });

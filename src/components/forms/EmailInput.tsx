@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import FormLabel from '@/components/forms/FormLabel';
 import InlineError from '@/components/forms/InlineError';
-import { colors, fonts, radii, spacing } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, spacing } from '@/constants/theme';
 import { isValidEmail } from '@/utils/validators';
 
 type EmailInputProps = {
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     flex: 1,
     fontFamily: fonts.body,
-    fontSize: 16,
+    fontSize: fontSize.input,
     minHeight: 54,
   },
 });

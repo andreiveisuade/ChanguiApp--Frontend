@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, StyleProp, TextStyle, TextProps } from 'react-native';
-import { colors } from '@/constants/theme';
+import { colors, fontSize } from '@/constants/theme';
 import { useAccessibility } from '@/context/AccessibilityContext';
 
 // Definimos las variantes según tu escala tipográfica de branding
@@ -12,12 +12,7 @@ interface AppTextProps extends TextProps {
   style?: StyleProp<TextStyle>;
 }
 
-export const AppText = ({ 
-  variant = 'Body', 
-  children, 
-  style, 
-  ...props 
-}: AppTextProps) => {
+export const AppText = ({ variant = 'Body', children, style, ...props }: AppTextProps) => {
   const { fontScale } = useAccessibility();
 
   const baseStyle = styles[variant] as TextStyle;
@@ -32,10 +27,7 @@ export const AppText = ({
   };
 
   return (
-    <Text 
-      style={[baseStyle, style, scaledStyle]} 
-      {...props}
-    >
+    <Text style={[baseStyle, style, scaledStyle]} {...props}>
       {children}
     </Text>
   );
@@ -44,39 +36,39 @@ export const AppText = ({
 const styles = StyleSheet.create({
   Display: {
     fontFamily: 'Poppins-Bold',
-    fontSize: 32,
+    fontSize: fontSize.display,
     color: colors.textPrimary,
   },
   H1: {
     fontFamily: 'Poppins-Bold',
-    fontSize: 24,
+    fontSize: fontSize.h1,
     color: colors.textPrimary,
   },
   H2: {
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 18,
+    fontSize: fontSize.h2,
     color: colors.textPrimary,
   },
   H3: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 16,
+    fontSize: fontSize.h3,
     color: colors.textPrimary,
   },
   Body: {
     fontFamily: 'Inter-Regular',
-    fontSize: 14,
+    fontSize: fontSize.body,
     color: colors.textSecondary, // #6B6B6B según tu branding
     lineHeight: 20,
   },
   Label: {
     fontFamily: 'Inter-Medium',
-    fontSize: 12,
+    fontSize: fontSize.label,
     color: colors.textSecondary,
     textTransform: 'uppercase',
   },
   Price: {
     fontFamily: 'Inter-Bold',
-    fontSize: 18,
+    fontSize: fontSize.price,
     color: colors.primary, // #DC4040 para resaltar el costo
   },
 });

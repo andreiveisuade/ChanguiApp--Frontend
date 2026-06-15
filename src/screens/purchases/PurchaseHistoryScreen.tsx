@@ -1,12 +1,20 @@
-import React, { useMemo, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, RefreshControl, StyleSheet, TextInput, View } from 'react-native';
+import React from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
-import { colors, fonts, radii, spacing } from '@/constants/theme';
+import { colors, fonts, radii, spacing, iconSize, fontSize } from '@/constants/theme';
 import HistoryHeader from '@/components/layout/HistoryHeader';
 import { PurchaseCard } from '@/components/purchases/PurchaseCard';
 import useProfile from '@/viewmodels/useProfile';
-import { usePurchaseHistory } from '@/viewmodels/usePurchaseHistory';
+import { usePurchaseHistory, DATE_FILTERS } from '@/viewmodels/usePurchaseHistory';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import ErrorMessage from '@/components/feedback/ErrorMessage';
@@ -14,55 +22,24 @@ import { ROUTES } from '@/constants/routes';
 import { Purchase } from '@/types/domain';
 import { formatARS } from '@/utils/currency';
 
-const FILTERS = ['thisWeek', 'thisMonth', 'thisYear'] as const;
-type DateFilter = (typeof FILTERS)[number];
-
-/** Filtra por ventana temporal usando created_at (lo único confiable que da el listado). */
-function withinFilter(dateIso: string, filter: DateFilter): boolean {
-  const date = new Date(dateIso);
-  if (Number.isNaN(date.getTime())) return false;
-  const now = new Date();
-  if (filter === 'thisWeek') {
-    // Semana calendario (desde el lunes), coherente con thisMonth/thisYear.
-    const startOfWeek = new Date(now);
-    startOfWeek.setHours(0, 0, 0, 0);
-    const daysFromMonday = (now.getDay() + 6) % 7; // 0 = lunes ... 6 = domingo
-    startOfWeek.setDate(now.getDate() - daysFromMonday);
-    return date >= startOfWeek;
-  }
-  if (filter === 'thisMonth') {
-    return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-  }
-  return date.getFullYear() === now.getFullYear();
-}
-
 export function PurchaseHistoryScreen(): React.JSX.Element {
   const { t } = useTranslation();
   const router = useRouter();
   const { profile } = useProfile();
-  const { purchases, isLoading, error, refresh } = usePurchaseHistory();
+  const {
+    purchases,
+    filtered,
+    summary,
+    search,
+    setSearch,
+    filter,
+    setFilter,
+    isLoading,
+    error,
+    refresh,
+  } = usePurchaseHistory();
 
-  const [search, setSearch] = useState<string>('');
-  const [filter, setFilter] = useState<DateFilter>('thisYear');
-
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return purchases.filter((p) => {
-      if (!withinFilter(p.date, filter)) return false;
-      if (!q) return true;
-      const store = (p.store_name ?? '').toLowerCase();
-      return store.includes(q) || String(p.id).toLowerCase().includes(q);
-    });
-  }, [purchases, search, filter]);
-
-  const summary = useMemo(() => {
-    const completed = filtered.filter((p) => p.status === 'completed');
-    const totalSpent = completed.reduce((acc, p) => acc + p.total, 0);
-    const completedCount = completed.length;
-    return { totalSpent, completedCount };
-  }, [filtered]);
-
-  const userName = profile?.full_name ?? t('home.defaultUser');
+  const userName = profile?.full_name || t('home.defaultUser');
 
   const goToDetail = (purchase: Purchase): void => {
     router.push({ pathname: ROUTES.purchaseDetail, params: { id: String(purchase.id) } });
@@ -79,14 +56,22 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
     if (error) {
       return (
         <View style={styles.stateContainer}>
-          <ErrorMessage message={error} closeAccessibilityHint={t('common.retry')} onClose={refresh} />
+          <ErrorMessage
+            message={error}
+            closeAccessibilityHint={t('common.retry')}
+            onClose={refresh}
+          />
         </View>
       );
     }
     return (
       <View style={styles.stateContainer}>
-        <AppText variant="H3" style={styles.emptyTitle}>{t('historyScreen.emptyTitle')}</AppText>
-        <AppText variant="Body" style={styles.emptySubtitle}>{t('historyScreen.emptySubtitle')}</AppText>
+        <AppText variant="H3" style={styles.emptyTitle}>
+          {t('historyScreen.emptyTitle')}
+        </AppText>
+        <AppText variant="Body" style={styles.emptySubtitle}>
+          {t('historyScreen.emptySubtitle')}
+        </AppText>
       </View>
     );
   };
@@ -111,18 +96,26 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
           <View>
             <View style={styles.summary}>
               <View style={styles.summaryCol}>
-                <AppText variant="Label" style={styles.summaryLabel}>{t('historyScreen.totalSpent')}</AppText>
-                <AppText variant="Display" style={styles.summaryValue}>{formatARS(summary.totalSpent)}</AppText>
+                <AppText variant="Label" style={styles.summaryLabel}>
+                  {t('historyScreen.totalSpent')}
+                </AppText>
+                <AppText variant="Display" style={styles.summaryValue}>
+                  {formatARS(summary.totalSpent)}
+                </AppText>
               </View>
               <View style={styles.summaryDivider} />
               <View style={styles.summaryCol}>
-                <AppText variant="Label" style={styles.summaryLabel}>{t('historyScreen.completed')}</AppText>
-                <AppText variant="Display" style={styles.summaryValue}>{summary.completedCount}</AppText>
+                <AppText variant="Label" style={styles.summaryLabel}>
+                  {t('historyScreen.completed')}
+                </AppText>
+                <AppText variant="Display" style={styles.summaryValue}>
+                  {summary.completedCount}
+                </AppText>
               </View>
             </View>
 
             <View style={styles.searchContainer}>
-              <AppIcon name="buscar" size={18} color={colors.textSecondary} />
+              <AppIcon name="buscar" size={iconSize.sm} color={colors.textSecondary} />
               <TextInput
                 accessibilityLabel={t('historyScreen.searchA11y')}
                 placeholder={t('historyScreen.searchPlaceholder')}
@@ -134,7 +127,7 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
             </View>
 
             <View style={styles.filtersRow}>
-              {FILTERS.map((option) => {
+              {DATE_FILTERS.map((option) => {
                 const active = filter === option;
                 return (
                   <Pressable
@@ -143,7 +136,10 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
                     onPress={() => setFilter(option)}
                     style={[styles.filterButton, active && styles.filterButtonActive]}
                   >
-                    <AppText variant="Body" style={[styles.filterText, active && styles.filterTextActive]}>
+                    <AppText
+                      variant="Body"
+                      style={[styles.filterText, active && styles.filterTextActive]}
+                    >
                       {t(`historyScreen.filters.${option}`)}
                     </AppText>
                   </Pressable>
@@ -197,7 +193,7 @@ const styles = StyleSheet.create({
   summaryValue: {
     color: colors.textPrimary,
     fontFamily: fonts.display,
-    fontSize: 24,
+    fontSize: fontSize.h1,
     fontWeight: '800',
   },
   searchContainer: {
@@ -216,7 +212,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     flex: 1,
     fontFamily: fonts.body,
-    fontSize: 15,
+    fontSize: fontSize.input,
     padding: 0,
   },
   filtersRow: {
@@ -227,7 +223,7 @@ const styles = StyleSheet.create({
   filterButton: {
     alignItems: 'center',
     backgroundColor: colors.inputBackground,
-    borderRadius: 18,
+    borderRadius: radii.lg,
     height: 36,
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
@@ -238,7 +234,7 @@ const styles = StyleSheet.create({
   filterText: {
     color: colors.textPrimary,
     fontFamily: fonts.body,
-    fontSize: 13,
+    fontSize: fontSize.body,
   },
   filterTextActive: {
     color: colors.white,

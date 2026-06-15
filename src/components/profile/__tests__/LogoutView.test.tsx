@@ -57,24 +57,25 @@ describe('LogoutView Component', () => {
 
   it('renders the user name and email', () => {
     const { getByText } = render(
-      <LogoutView user={user} onLogout={mockOnLogout} onCancel={mockOnCancel} />
+      <LogoutView user={user} onLogout={mockOnLogout} onCancel={mockOnCancel} />,
     );
 
     expect(getByText('Andrei Veis')).toBeTruthy();
     expect(getByText('andrei@uade.edu.ar')).toBeTruthy();
   });
 
-  it('renders empty name/email when user is null', () => {
+  it('renders the default name when user is null', () => {
     const { getByText } = render(
-      <LogoutView user={null} onLogout={mockOnLogout} onCancel={mockOnCancel} />
+      <LogoutView user={null} onLogout={mockOnLogout} onCancel={mockOnCancel} />,
     );
 
-    expect(getByText('avatar:')).toBeTruthy();
+    // Sin usuario, el nombre cae al default (home.defaultUser → "Usuario")
+    expect(getByText('avatar:home.defaultUser')).toBeTruthy();
   });
 
   it('calls onLogout when confirm button is pressed', () => {
     const { getByLabelText } = render(
-      <LogoutView user={user} onLogout={mockOnLogout} onCancel={mockOnCancel} />
+      <LogoutView user={user} onLogout={mockOnLogout} onCancel={mockOnCancel} />,
     );
 
     fireEvent.press(getByLabelText('Sí, cerrar sesión'));
@@ -83,7 +84,7 @@ describe('LogoutView Component', () => {
 
   it('calls onCancel when cancel button is pressed', () => {
     const { getByLabelText } = render(
-      <LogoutView user={user} onLogout={mockOnLogout} onCancel={mockOnCancel} />
+      <LogoutView user={user} onLogout={mockOnLogout} onCancel={mockOnCancel} />,
     );
 
     fireEvent.press(getByLabelText('Cancelar'));

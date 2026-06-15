@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as AuthSession from 'expo-auth-session';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import supabase from '@/config/supabase';
+import { authClient } from '@/config/clients';
 import { AuthSession as StoredAuthSession, User } from '@/types/auth';
-import { API_URL, API_TIMEOUT_MS, DEEP_LINKS } from '@/constants/api';
+import { DEEP_LINKS } from '@/constants/api';
 import { STORAGE_KEYS } from '@/constants/storage';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -45,7 +47,11 @@ const normalizeUser = (rawUser: unknown): User => {
         [metadata, 'full_name'],
         [metadata, 'name'],
       ) ?? '',
-    avatar_url: pickString([rawUser, 'avatar_url'], [rawUser, 'avatarUrl'], [metadata, 'avatar_url']),
+    avatar_url: pickString(
+      [rawUser, 'avatar_url'],
+      [rawUser, 'avatarUrl'],
+      [metadata, 'avatar_url'],
+    ),
     created_at:
       pickString([rawUser, 'created_at'], [rawUser, 'createdAt']) ?? new Date().toISOString(),
   };
@@ -81,45 +87,48 @@ const normalizeAuthSession = (payload: unknown): StoredAuthSession => {
   };
 };
 
+/**
+ * Extrae el mensaje de error del backend contemplando los tres formatos:
+ * { message }, { error } y el { errors: [{ msg }] } de express-validator (400).
+ */
+const extractApiErrorMessage = (payload: unknown): string | null => {
+  if (!isObjectRecord(payload)) {
+    return null;
+  }
+  const direct = getString(payload, 'message') ?? getString(payload, 'error');
+  if (direct) {
+    return direct;
+  }
+  if (
+    Array.isArray(payload.errors) &&
+    payload.errors.length > 0 &&
+    isObjectRecord(payload.errors[0])
+  ) {
+    return getString(payload.errors[0], 'msg');
+  }
+  return null;
+};
+
 const requestAuth = async (
   endpoint: 'login' | 'register',
   body: ObjectRecord,
 ): Promise<StoredAuthSession> => {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
-
   try {
-    const response = await fetch(`${API_URL}/api/auth/${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-      signal: controller.signal,
-    });
-
-    const payload: unknown = await response.json().catch(() => null);
-
-    if (!response.ok) {
-      const errorMessage =
-        isObjectRecord(payload) && typeof payload.message === 'string'
-          ? payload.message
-          : isObjectRecord(payload) && typeof payload.error === 'string'
-            ? payload.error
-            : 'Authentication request failed';
-      const httpError = new Error(errorMessage) as Error & { status?: number };
-      httpError.status = response.status;
-      throw httpError;
-    }
-
-    return normalizeAuthSession(payload);
+    const { data } = await authClient.post(`/api/auth/${endpoint}`, body);
+    return normalizeAuthSession(data);
   } catch (err) {
-    if (err instanceof Error && err.name === 'AbortError') {
+    if (axios.isAxiosError(err)) {
+      if (err.response) {
+        const payload: unknown = err.response.data;
+        const errorMessage = extractApiErrorMessage(payload) ?? 'Authentication request failed';
+        const httpError = new Error(errorMessage) as Error & { status?: number };
+        httpError.status = err.response.status;
+        throw httpError;
+      }
+      // Sin respuesta del servidor: red caída o timeout.
       throw new Error('network timeout', { cause: err });
     }
     throw err;
-  } finally {
-    clearTimeout(timeoutId);
   }
 };
 
@@ -127,11 +136,8 @@ export const AuthRepository = {
   login: (email: string, password: string): Promise<StoredAuthSession> =>
     requestAuth('login', { email, password }),
 
-  register: (
-    full_name: string,
-    email: string,
-    password: string,
-  ): Promise<StoredAuthSession> => requestAuth('register', { name: full_name, email, password }),
+  register: (full_name: string, email: string, password: string): Promise<StoredAuthSession> =>
+    requestAuth('register', { name: full_name, email, password }),
 
   loginWithGoogle: async (): Promise<StoredAuthSession> => {
     const redirectTo = AuthSession.makeRedirectUri();
@@ -151,22 +157,46 @@ export const AuthRepository = {
       throw new Error('Google OAuth URL missing');
     }
 
-    const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
+    // El redirect de vuelta puede llegar por dos caminos: el resultado de
+    // openAuthSessionAsync (caso normal) o el listener de deep link. En Android,
+    // el intent del scheme intercepta el redirect y reabre la app, devolviendo
+    // 'dismiss' en openAuthSessionAsync; el ?code= llega por Linking.
+    const redirectUrl = await new Promise<string | null>((resolve) => {
+      let settled = false;
+      const finish = (url: string | null): void => {
+        if (settled) return;
+        settled = true;
+        subscription.remove();
+        resolve(url);
+      };
+      const subscription = Linking.addEventListener('url', ({ url }) => finish(url));
+      WebBrowser.openAuthSessionAsync(data.url, redirectTo)
+        .then((res) => {
+          if (res.type === 'success') {
+            finish(res.url);
+          } else {
+            // 'dismiss'/'cancel': damos una ventana corta por si el deep link
+            // todavía está en camino; si no llega, se cancela.
+            setTimeout(() => finish(null), 2000);
+          }
+        })
+        .catch(() => finish(null));
+    });
 
-    if (result.type !== 'success') {
+    if (!redirectUrl) {
       throw new Error('Google OAuth cancelled');
     }
 
-    const parsedUrl = Linking.parse(result.url);
-    const code = typeof parsedUrl.queryParams?.code === 'string' ? parsedUrl.queryParams.code : null;
+    const parsedUrl = Linking.parse(redirectUrl);
+    const code =
+      typeof parsedUrl.queryParams?.code === 'string' ? parsedUrl.queryParams.code : null;
 
     if (!code) {
       throw new Error('Google OAuth code missing');
     }
 
-    const { data: sessionData, error: sessionError } = await supabase.auth.exchangeCodeForSession(
-      code,
-    );
+    const { data: sessionData, error: sessionError } =
+      await supabase.auth.exchangeCodeForSession(code);
 
     if (sessionError) {
       throw sessionError;
@@ -230,7 +260,10 @@ export const AuthRepository = {
   },
 
   clearSession: async (): Promise<void> => {
-    await Promise.all([AsyncStorage.removeItem(STORAGE_KEYS.token), AsyncStorage.removeItem(STORAGE_KEYS.user)]);
+    await Promise.all([
+      AsyncStorage.removeItem(STORAGE_KEYS.token),
+      AsyncStorage.removeItem(STORAGE_KEYS.user),
+    ]);
   },
 };
 

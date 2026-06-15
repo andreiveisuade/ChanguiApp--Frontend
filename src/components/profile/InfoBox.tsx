@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
-import { spacing, radii } from '@/constants/theme';
+import { colors, spacing, radii, iconSize, fontSize } from '@/constants/theme';
 
 export type InfoBoxVariant = 'info' | 'warning' | 'danger';
 
@@ -13,29 +13,34 @@ interface InfoBoxProps {
   style?: ViewStyle;
 }
 
-export function InfoBox({ variant = 'info', text, boldText, style }: InfoBoxProps): React.JSX.Element {
+export function InfoBox({
+  variant = 'info',
+  text,
+  boldText,
+  style,
+}: InfoBoxProps): React.JSX.Element {
   const getStyles = () => {
     switch (variant) {
       case 'warning':
         return {
           container: styles.warningContainer,
-          iconColor: '#D97706',
-          textColor: '#92400E',
+          iconColor: colors.warningIcon,
+          textColor: colors.warningText,
           iconName: 'alerta',
         };
       case 'danger':
         return {
           container: styles.dangerContainer,
-          iconColor: '#C1121F',
-          textColor: '#7F1D1D',
+          iconColor: colors.error,
+          textColor: colors.dangerTextDark,
           iconName: 'alerta',
         };
       case 'info':
       default:
         return {
           container: styles.infoContainer,
-          iconColor: '#2563EB',
-          textColor: '#1E3A8A',
+          iconColor: colors.infoBlue,
+          textColor: colors.infoBlueTextDark,
           iconName: 'bombilla',
         };
     }
@@ -45,10 +50,10 @@ export function InfoBox({ variant = 'info', text, boldText, style }: InfoBoxProp
 
   return (
     <View style={[styles.container, config.container, style]}>
-      <AppIcon 
-        name={config.iconName} 
-        size={20} 
-        color={config.iconColor} 
+      <AppIcon
+        name={config.iconName}
+        size={iconSize.smd}
+        color={config.iconColor}
         style={styles.icon}
       />
       <AppText variant="Body" style={[styles.text, { color: config.textColor }]}>
@@ -77,25 +82,25 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
-    fontSize: 13,
+    fontSize: fontSize.body,
     lineHeight: 18,
     fontWeight: '400',
   },
   boldText: {
     fontWeight: 'bold',
-    fontSize: 13,
+    fontSize: fontSize.body,
   },
   infoContainer: {
-    backgroundColor: '#EBF3FE',
-    borderColor: '#BFDBFE',
+    backgroundColor: colors.infoBlueSurfaceAlt,
+    borderColor: colors.infoBlueBorderAlt,
   },
   warningContainer: {
-    backgroundColor: '#FFFBEB',
-    borderColor: '#FDE68A',
+    backgroundColor: colors.warningSurface,
+    borderColor: colors.warningBorder,
   },
   dangerContainer: {
-    backgroundColor: '#FEF2F2',
-    borderColor: '#FEE2E2',
+    backgroundColor: colors.dangerSurface,
+    borderColor: colors.dangerSurfaceStrong,
   },
 });
 

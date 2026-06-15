@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
+import { colors, fonts, fontSize, radii, spacing, touchTarget } from '@/constants/theme';
 import { UserFriendlyError } from '@/types/errors';
 
 type ErrorMessageProps = {
@@ -18,26 +18,19 @@ export function ErrorMessage({
     return null;
   }
 
-  const isUserFriendly =
-    typeof message === 'object' &&
-    message !== null &&
-    'title' in message &&
-    'message' in message;
+  const isUserFriendly = (m: UserFriendlyError | string): m is UserFriendlyError =>
+    typeof m === 'object' && m !== null && 'title' in m && 'message' in m;
 
   return (
     <View style={styles.card} accessibilityRole="alert">
       <View style={styles.textContainer}>
-        {isUserFriendly ? (
+        {isUserFriendly(message) ? (
           <>
-            <Text style={[styles.text, styles.titleText]}>
-              {(message as UserFriendlyError).title}
-            </Text>
-            <Text style={styles.descriptionText}>
-              {(message as UserFriendlyError).message}
-            </Text>
+            <Text style={[styles.text, styles.titleText]}>{message.title}</Text>
+            <Text style={styles.descriptionText}>{message.message}</Text>
           </>
         ) : (
-          <Text style={styles.text}>{message as string}</Text>
+          <Text style={styles.text}>{message}</Text>
         )}
       </View>
       <Pressable
@@ -72,7 +65,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.error,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     lineHeight: 20,
   },
   titleText: {
@@ -83,7 +76,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     color: colors.error,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     lineHeight: 20,
   },
   closeButton: {
@@ -95,10 +88,9 @@ const styles = StyleSheet.create({
   closeText: {
     color: colors.error,
     fontFamily: fonts.body,
-    fontSize: 14,
+    fontSize: fontSize.body,
     fontWeight: '800',
   },
 });
 
 export default ErrorMessage;
-

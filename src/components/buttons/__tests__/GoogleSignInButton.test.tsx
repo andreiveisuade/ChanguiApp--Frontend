@@ -18,10 +18,10 @@ describe('GoogleSignInButton Component', () => {
         title="Sign in with Google"
         accessibilityHint="Sign in using your Google account"
         onPress={mockOnPress}
-      />
+      />,
     );
     expect(getByText('Sign in with Google')).toBeTruthy();
-    
+
     const button = getByRole('button');
     expect(button.props.accessibilityHint).toBe('Sign in using your Google account');
   });
@@ -32,7 +32,7 @@ describe('GoogleSignInButton Component', () => {
         title="Sign in with Google"
         accessibilityHint="Sign in"
         onPress={mockOnPress}
-      />
+      />,
     );
     const button = getByRole('button');
     fireEvent.press(button);
@@ -46,7 +46,7 @@ describe('GoogleSignInButton Component', () => {
         accessibilityHint="Sign in"
         onPress={mockOnPress}
         disabled={true}
-      />
+      />,
     );
     const button = getByRole('button');
     fireEvent.press(button);
