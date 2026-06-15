@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as ListRepository from '@/repositories/ListRepository';
 import { ShoppingList } from '@/types/domain';
 import { UserFriendlyError } from '@/types/errors';
-import { ErrorTranslationService } from '@/services/ErrorTranslationService';
+import { translateQueryError } from '@/utils/queryError';
 
 export type UseListsReturn = {
   lists: ShoppingList[];
@@ -15,58 +15,57 @@ export type UseListsReturn = {
 
 /** Índice de listas de compra (persistencia local, sin red). */
 export const useLists = (): UseListsReturn => {
-  const [lists, setLists] = useState<ShoppingList[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<UserFriendlyError | null>(null);
+  const queryClient = useQueryClient();
 
-  const fetchLists = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
+  const query = useQuery({
+    queryKey: ['lists'],
+    queryFn: () => ListRepository.getLists(),
+  });
+
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ['lists'] });
+
+  const createMutation = useMutation({
+    mutationFn: (name: string) => ListRepository.createList(name),
+    onSuccess: invalidate,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (listId: string) => ListRepository.deleteList(listId),
+    onSuccess: invalidate,
+  });
+
+  const error = translateQueryError(query.error ?? createMutation.error ?? deleteMutation.error);
+
+  const refresh = async (): Promise<void> => {
+    await query.refetch();
+  };
+
+  const createList = async (name: string): Promise<void> => {
+    const trimmed = name.trim();
+    if (!trimmed) return;
     try {
-      const data = await ListRepository.getLists();
-      setLists(data);
-    } catch (err) {
-      setError(ErrorTranslationService.translate(err));
-    } finally {
-      setIsLoading(false);
+      await createMutation.mutateAsync(trimmed);
+    } catch {
+      // El error se expone vía `error`.
     }
-  }, []);
+  };
 
-  useEffect(() => {
-    fetchLists();
-  }, [fetchLists]);
+  const deleteList = async (listId: string): Promise<void> => {
+    try {
+      await deleteMutation.mutateAsync(listId);
+    } catch {
+      // El error se expone vía `error`.
+    }
+  };
 
-  const refresh = useCallback(async () => {
-    await fetchLists();
-  }, [fetchLists]);
-
-  const createList = useCallback(
-    async (name: string) => {
-      const trimmed = name.trim();
-      if (!trimmed) return;
-      try {
-        await ListRepository.createList(trimmed);
-        await fetchLists();
-      } catch (err) {
-        setError(ErrorTranslationService.translate(err));
-      }
-    },
-    [fetchLists],
-  );
-
-  const deleteList = useCallback(
-    async (listId: string) => {
-      try {
-        await ListRepository.deleteList(listId);
-        await fetchLists();
-      } catch (err) {
-        setError(ErrorTranslationService.translate(err));
-      }
-    },
-    [fetchLists],
-  );
-
-  return { lists, isLoading, error, refresh, createList, deleteList };
+  return {
+    lists: query.data ?? [],
+    isLoading: query.isPending,
+    error,
+    refresh,
+    createList,
+    deleteList,
+  };
 };
 
 export default useLists;

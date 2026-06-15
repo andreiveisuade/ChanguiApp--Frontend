@@ -1,5 +1,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { usePurchaseHistory } from '../usePurchaseHistory';
+import { createQueryWrapper } from '@/test-utils/queryWrapper';
 import PurchaseRepository from '@/repositories/PurchaseRepository';
 import { ErrorTranslationService } from '@/services/ErrorTranslationService';
 import { AuthSessionExpiredError, UserFriendlyError } from '@/types/errors';
@@ -41,7 +42,7 @@ describe('usePurchaseHistory', () => {
   });
 
   it('carga el historial al montar y apaga el loading', async () => {
-    const { result } = renderHook(() => usePurchaseHistory());
+    const { result } = renderHook(() => usePurchaseHistory(), { wrapper: createQueryWrapper() });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -51,7 +52,7 @@ describe('usePurchaseHistory', () => {
 
   it('error en la carga: traduce y expone el error', async () => {
     mockedGetPurchases.mockRejectedValueOnce(new Error('Request failed with status 500'));
-    const { result } = renderHook(() => usePurchaseHistory());
+    const { result } = renderHook(() => usePurchaseHistory(), { wrapper: createQueryWrapper() });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -62,7 +63,7 @@ describe('usePurchaseHistory', () => {
 
   it('sesión expirada en la carga: no expone error al usuario', async () => {
     mockedGetPurchases.mockRejectedValueOnce(new AuthSessionExpiredError());
-    const { result } = renderHook(() => usePurchaseHistory());
+    const { result } = renderHook(() => usePurchaseHistory(), { wrapper: createQueryWrapper() });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -71,7 +72,7 @@ describe('usePurchaseHistory', () => {
   });
 
   it('refresh vuelve a pedir el historial', async () => {
-    const { result } = renderHook(() => usePurchaseHistory());
+    const { result } = renderHook(() => usePurchaseHistory(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {

@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import PurchaseRepository from '@/repositories/PurchaseRepository';
 import { PurchaseDetail } from '@/types/domain';
 import { UserFriendlyError } from '@/types/errors';
-import { useAsyncAction } from '@/hooks/useAsyncAction';
+import { translateQueryError } from '@/utils/queryError';
 
 export type UsePurchaseDetailReturn = {
   purchase: PurchaseDetail | null;
@@ -12,28 +12,22 @@ export type UsePurchaseDetailReturn = {
 };
 
 export const usePurchaseDetail = (id: string | undefined): UsePurchaseDetailReturn => {
-  const [purchase, setPurchase] = useState<PurchaseDetail | null>(null);
-  const { isLoading, error, run } = useAsyncAction(Boolean(id));
+  const query = useQuery({
+    queryKey: ['purchase', id],
+    queryFn: () => PurchaseRepository.getPurchaseById(id as string),
+    enabled: Boolean(id),
+  });
 
-  const fetchDetail = useCallback(async () => {
-    if (!id) {
-      return;
-    }
-    const data = await run(() => PurchaseRepository.getPurchaseById(id));
-    if (data) {
-      setPurchase(data);
-    }
-  }, [id, run]);
+  const refresh = async (): Promise<void> => {
+    await query.refetch();
+  };
 
-  useEffect(() => {
-    fetchDetail();
-  }, [fetchDetail]);
-
-  const refresh = useCallback(async () => {
-    await fetchDetail();
-  }, [fetchDetail]);
-
-  return { purchase, isLoading, error, refresh };
+  return {
+    purchase: query.data ?? null,
+    isLoading: Boolean(id) && query.isPending,
+    error: translateQueryError(query.error),
+    refresh,
+  };
 };
 
 export default usePurchaseDetail;

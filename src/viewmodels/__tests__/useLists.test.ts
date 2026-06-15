@@ -1,5 +1,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { useLists } from '../useLists';
+import { createQueryWrapper } from '@/test-utils/queryWrapper';
 import * as ListRepository from '@/repositories/ListRepository';
 import { ErrorTranslationService } from '@/services/ErrorTranslationService';
 import { ShoppingList } from '@/types/domain';
@@ -39,7 +40,7 @@ describe('useLists', () => {
   });
 
   it('carga las listas al montar', async () => {
-    const { result } = renderHook(() => useLists());
+    const { result } = renderHook(() => useLists(), { wrapper: createQueryWrapper() });
     expect(result.current.isLoading).toBe(true);
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -48,7 +49,7 @@ describe('useLists', () => {
   });
 
   it('createList ignora un nombre vacío tras trimear', async () => {
-    const { result } = renderHook(() => useLists());
+    const { result } = renderHook(() => useLists(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -58,7 +59,7 @@ describe('useLists', () => {
   });
 
   it('createList crea con el nombre trimeado y refresca', async () => {
-    const { result } = renderHook(() => useLists());
+    const { result } = renderHook(() => useLists(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     repo.getLists.mockClear();
 
@@ -70,7 +71,7 @@ describe('useLists', () => {
   });
 
   it('deleteList borra y refresca', async () => {
-    const { result } = renderHook(() => useLists());
+    const { result } = renderHook(() => useLists(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     repo.getLists.mockClear();
 
@@ -82,20 +83,20 @@ describe('useLists', () => {
   });
 
   it('refresh vuelve a leer las listas', async () => {
-    const { result } = renderHook(() => useLists());
+    const { result } = renderHook(() => useLists(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     repo.getLists.mockResolvedValueOnce([list, { ...list, id: 'l2', name: 'Farmacia' }]);
     await act(async () => {
       await result.current.refresh();
     });
-    expect(result.current.lists).toHaveLength(2);
+    await waitFor(() => expect(result.current.lists).toHaveLength(2));
   });
 
   describe('errores traducidos por ErrorTranslationService', () => {
     it('setea error si falla la carga inicial', async () => {
       repo.getLists.mockRejectedValueOnce(new Error('boom'));
-      const { result } = renderHook(() => useLists());
+      const { result } = renderHook(() => useLists(), { wrapper: createQueryWrapper() });
 
       await waitFor(() => expect(result.current.error).not.toBeNull());
       expect(result.current.error?.code).toBe('UNKNOWN');
@@ -105,24 +106,24 @@ describe('useLists', () => {
 
     it('setea error si falla createList', async () => {
       repo.createList.mockRejectedValueOnce(new Error('boom'));
-      const { result } = renderHook(() => useLists());
+      const { result } = renderHook(() => useLists(), { wrapper: createQueryWrapper() });
       await waitFor(() => expect(result.current.isLoading).toBe(false));
 
       await act(async () => {
         await result.current.createList('X');
       });
-      expect(result.current.error?.code).toBe('UNKNOWN');
+      await waitFor(() => expect(result.current.error?.code).toBe('UNKNOWN'));
     });
 
     it('setea error si falla deleteList', async () => {
       repo.deleteList.mockRejectedValueOnce(new Error('boom'));
-      const { result } = renderHook(() => useLists());
+      const { result } = renderHook(() => useLists(), { wrapper: createQueryWrapper() });
       await waitFor(() => expect(result.current.isLoading).toBe(false));
 
       await act(async () => {
         await result.current.deleteList('l1');
       });
-      expect(result.current.error?.code).toBe('UNKNOWN');
+      await waitFor(() => expect(result.current.error?.code).toBe('UNKNOWN'));
     });
   });
 });
