@@ -1,5 +1,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { useListDetail } from '../useListDetail';
+import { createQueryWrapper } from '@/test-utils/queryWrapper';
 import * as ListRepository from '@/repositories/ListRepository';
 import { Product, ShoppingListItem } from '@/types/domain';
 
@@ -56,7 +57,7 @@ describe('useListDetail', () => {
   });
 
   it('no carga ítems cuando no hay listId', async () => {
-    const { result } = renderHook(() => useListDetail(undefined));
+    const { result } = renderHook(() => useListDetail(undefined), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     expect(repo.getListItems).not.toHaveBeenCalled();
@@ -64,7 +65,7 @@ describe('useListDetail', () => {
   });
 
   it('carga los ítems de la lista al montar', async () => {
-    const { result } = renderHook(() => useListDetail('l1'));
+    const { result } = renderHook(() => useListDetail('l1'), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     expect(repo.getListItems).toHaveBeenCalledWith('l1');
@@ -72,7 +73,7 @@ describe('useListDetail', () => {
   });
 
   it('addProduct agrega el producto y recarga en silencio', async () => {
-    const { result } = renderHook(() => useListDetail('l1'));
+    const { result } = renderHook(() => useListDetail('l1'), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     repo.getListItems.mockClear();
 
@@ -81,10 +82,12 @@ describe('useListDetail', () => {
     });
     expect(repo.addItem).toHaveBeenCalledWith('l1', product);
     expect(repo.getListItems).toHaveBeenCalledTimes(1);
+    // La recarga es en silencio: no se prende el spinner full-screen.
+    expect(result.current.isLoading).toBe(false);
   });
 
   it('addProduct no hace nada sin listId', async () => {
-    const { result } = renderHook(() => useListDetail(undefined));
+    const { result } = renderHook(() => useListDetail(undefined), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -94,7 +97,7 @@ describe('useListDetail', () => {
   });
 
   it('toggleItem, setQuantity y removeItem mutan y recargan', async () => {
-    const { result } = renderHook(() => useListDetail('l1'));
+    const { result } = renderHook(() => useListDetail('l1'), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -113,7 +116,7 @@ describe('useListDetail', () => {
   });
 
   it('refresh vuelve a leer los ítems', async () => {
-    const { result } = renderHook(() => useListDetail('l1'));
+    const { result } = renderHook(() => useListDetail('l1'), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     repo.getListItems.mockClear();
 
@@ -126,45 +129,45 @@ describe('useListDetail', () => {
   describe('errores traducidos por ErrorTranslationService', () => {
     it('setea error si falla la carga de ítems', async () => {
       repo.getListItems.mockRejectedValueOnce(new Error('boom'));
-      const { result } = renderHook(() => useListDetail('l1'));
+      const { result } = renderHook(() => useListDetail('l1'), { wrapper: createQueryWrapper() });
 
       await waitFor(() => expect(result.current.error).not.toBeNull());
-      expect(result.current.error?.code).toBe('UNKNOWN');
+      await waitFor(() => expect(result.current.error?.code).toBe('UNKNOWN'));
       expect(result.current.isLoading).toBe(false);
     });
 
     it('setea error si falla toggleItem', async () => {
       repo.toggleItem.mockRejectedValueOnce(new Error('boom'));
-      const { result } = renderHook(() => useListDetail('l1'));
+      const { result } = renderHook(() => useListDetail('l1'), { wrapper: createQueryWrapper() });
       await waitFor(() => expect(result.current.isLoading).toBe(false));
 
       await act(async () => {
         await result.current.toggleItem('i1');
       });
-      expect(result.current.error?.code).toBe('UNKNOWN');
+      await waitFor(() => expect(result.current.error?.code).toBe('UNKNOWN'));
     });
 
     it('setea error si falla addProduct, setQuantity o removeItem', async () => {
-      const { result } = renderHook(() => useListDetail('l1'));
+      const { result } = renderHook(() => useListDetail('l1'), { wrapper: createQueryWrapper() });
       await waitFor(() => expect(result.current.isLoading).toBe(false));
 
       repo.addItem.mockRejectedValueOnce(new Error('boom'));
       await act(async () => {
         await result.current.addProduct(product);
       });
-      expect(result.current.error?.code).toBe('UNKNOWN');
+      await waitFor(() => expect(result.current.error?.code).toBe('UNKNOWN'));
 
       repo.setItemQuantity.mockRejectedValueOnce(new Error('boom'));
       await act(async () => {
         await result.current.setQuantity('i1', 2);
       });
-      expect(result.current.error?.code).toBe('UNKNOWN');
+      await waitFor(() => expect(result.current.error?.code).toBe('UNKNOWN'));
 
       repo.deleteItem.mockRejectedValueOnce(new Error('boom'));
       await act(async () => {
         await result.current.removeItem('i1');
       });
-      expect(result.current.error?.code).toBe('UNKNOWN');
+      await waitFor(() => expect(result.current.error?.code).toBe('UNKNOWN'));
     });
   });
 });

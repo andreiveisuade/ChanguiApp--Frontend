@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import ProfileRepository, { UpdateProfilePayload } from '@/repositories/ProfileRepository';
 import { AuthSessionExpiredError } from '@/types/errors';
 import { User } from '@/types/auth';
@@ -22,81 +23,76 @@ export type UseProfileReturn = {
 
 export const useProfile = (): UseProfileReturn => {
   const { updateUser } = useAuth();
-  const [profile, setProfile] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const queryClient = useQueryClient();
   const [error, setError] = useState<ProfileError | null>(null);
 
-  const fetchProfile = useCallback(async (): Promise<void> => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await ProfileRepository.getProfile();
-      setProfile(data);
-    } catch (err) {
-      // 401 / sesion invalida: el httpClient ya limpio el storage y emitio el evento.
-      // El AuthContext va a limpiar estado y el guard del tabs layout redirige a login.
-      if (err instanceof AuthSessionExpiredError) {
-        return;
-      }
-      const message = err instanceof Error ? err.message : 'Unknown error';
-      logger.error(`getProfile: ${message}`);
-      setError({ message });
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const query = useQuery({
+    queryKey: ['profile'],
+    queryFn: () => ProfileRepository.getProfile(),
+  });
 
+  // Error de carga → {message}, silenciando AuthSessionExpiredError (el AuthContext
+  // ya limpió la sesión y dispara el redirect a login).
   useEffect(() => {
-    void fetchProfile();
-  }, [fetchProfile]);
+    if (!query.error || query.error instanceof AuthSessionExpiredError) {
+      return;
+    }
+    const message = query.error instanceof Error ? query.error.message : 'Unknown error';
+    logger.error(`getProfile: ${message}`);
+    setError({ message });
+  }, [query.error]);
+
+  const updateMutation = useMutation({
+    mutationFn: (payload: UpdateProfilePayload) => ProfileRepository.updateProfile(payload),
+    onSuccess: async (data) => {
+      queryClient.setQueryData(['profile'], data);
+      await updateUser(data);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => ProfileRepository.deleteProfile(),
+    onSuccess: () => {
+      queryClient.setQueryData(['profile'], null);
+    },
+  });
 
   const updateProfile = useCallback(
     async (payload: UpdateProfilePayload): Promise<void> => {
-      setIsSaving(true);
       setError(null);
       try {
-        const data = await ProfileRepository.updateProfile(payload);
-        setProfile(data);
-        await updateUser(data);
+        await updateMutation.mutateAsync(payload);
       } catch (err) {
         if (err instanceof AuthSessionExpiredError) return;
         const message = err instanceof Error ? err.message : 'Unknown error';
         setError({ message });
         throw err;
-      } finally {
-        setIsSaving(false);
       }
     },
-    [updateUser],
+    [updateMutation],
   );
 
   const deleteProfile = useCallback(async (): Promise<void> => {
-    setIsDeleting(true);
     setError(null);
     try {
-      await ProfileRepository.deleteProfile();
-      setProfile(null);
+      await deleteMutation.mutateAsync();
     } catch (err) {
       if (err instanceof AuthSessionExpiredError) return;
       const message = err instanceof Error ? err.message : 'Unknown error';
       setError({ message });
       throw err;
-    } finally {
-      setIsDeleting(false);
     }
-  }, []);
+  }, [deleteMutation]);
 
   const clearError = useCallback((): void => {
     setError(null);
   }, []);
 
   return {
-    profile,
-    isLoading,
-    isSaving,
-    isDeleting,
+    profile: query.data ?? null,
+    isLoading: query.isPending,
+    isSaving: updateMutation.isPending,
+    isDeleting: deleteMutation.isPending,
     error,
     updateProfile,
     deleteProfile,

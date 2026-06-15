@@ -1,11 +1,14 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import PurchaseRepository from '@/repositories/PurchaseRepository';
 import { Purchase } from '@/types/domain';
 import { UserFriendlyError } from '@/types/errors';
-import { useAsyncAction } from '@/hooks/useAsyncAction';
+import { translateQueryError } from '@/utils/queryError';
 
 export const DATE_FILTERS = ['thisWeek', 'thisMonth', 'thisYear'] as const;
 export type DateFilter = (typeof DATE_FILTERS)[number];
+
+const EMPTY_PURCHASES: Purchase[] = [];
 
 export type PurchaseSummary = {
   totalSpent: number;
@@ -45,25 +48,21 @@ function withinFilter(dateIso: string, filter: DateFilter): boolean {
 }
 
 export const usePurchaseHistory = (): UsePurchaseHistoryReturn => {
-  const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [search, setSearch] = useState<string>('');
   const [filter, setFilter] = useState<DateFilter>('thisYear');
-  const { isLoading, error, run } = useAsyncAction(true);
 
-  const fetchPurchases = useCallback(async () => {
-    const data = await run(() => PurchaseRepository.getPurchases());
-    if (data) {
-      setPurchases(data);
-    }
-  }, [run]);
+  const query = useQuery({
+    queryKey: ['purchases'],
+    queryFn: () => PurchaseRepository.getPurchases(),
+  });
 
-  useEffect(() => {
-    fetchPurchases();
-  }, [fetchPurchases]);
+  const purchases = query.data ?? EMPTY_PURCHASES;
+  const isLoading = query.isPending;
+  const error = translateQueryError(query.error);
 
-  const refresh = useCallback(async () => {
-    await fetchPurchases();
-  }, [fetchPurchases]);
+  const refresh = async (): Promise<void> => {
+    await query.refetch();
+  };
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
