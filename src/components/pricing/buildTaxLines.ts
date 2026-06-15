@@ -7,7 +7,7 @@ type TranslateFn = (key: string, opts?: Record<string, unknown>) => string;
 // partir de las alícuotas del dominio. Lo comparten el carrito (N alícuotas) y
 // el detalle de producto (una sola), para que el formato no diverja entre ambos.
 export function buildTaxLines(
-  taxes: Array<{ rate: number; amount: number }>,
+  taxes: { rate: number; amount: number }[],
   t: TranslateFn,
 ): TaxBreakdownLine[] {
   return taxes.map((tax) => ({

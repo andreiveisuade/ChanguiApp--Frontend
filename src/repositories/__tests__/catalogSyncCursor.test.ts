@@ -1,10 +1,10 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getSyncedAt, setSyncedAt } from '../catalogSyncCursor';
+
 jest.mock('@react-native-async-storage/async-storage', () => ({
   __esModule: true,
   default: { getItem: jest.fn(), setItem: jest.fn() },
 }));
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getSyncedAt, setSyncedAt } from '../catalogSyncCursor';
 
 const mockedAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>;
 

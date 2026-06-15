@@ -1,6 +1,6 @@
-jest.mock('@/i18n', () => ({ __esModule: true, default: { t: (key: string) => key } }));
-
 import { validateRegisterCredentials } from '@/utils/authValidators';
+
+jest.mock('@/i18n', () => ({ __esModule: true, default: { t: (key: string) => key } }));
 
 const validCredentials = {
   full_name: 'Juan Perez',
