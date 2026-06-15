@@ -1,7 +1,7 @@
 /**
  * Persistencia local de las listas de compra en SQLite (expo-sqlite).
  *
- * Reusa la conexión de ProductCatalogRepository (misma DB changuiapp.db) en vez
+ * Reusa la conexión singleton de repositories/db (misma DB changuiapp.db) en vez
  * de abrir una segunda. Las listas y sus ítems viven 100% on-device: ninguna
  * operación pega a la red. Cada ítem guarda un snapshot del producto del
  * catálogo (barcode + name/brand/price/image_url) al momento de agregarlo.
@@ -9,7 +9,7 @@
 
 import * as SQLite from 'expo-sqlite';
 import * as Crypto from 'expo-crypto';
-import { getDb } from '@/repositories/ProductCatalogRepository';
+import { getDb } from '@/repositories/db';
 import { Product, ShoppingList, ShoppingListItem } from '@/types/domain';
 
 interface ListRow {
