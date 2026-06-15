@@ -1,4 +1,4 @@
-import { NetworkError, UserFriendlyError } from '@/types/errors';
+import { ApiError, NetworkError, UserFriendlyError } from '@/types/errors';
 
 type ErrorCode =
   | 'NETWORK_ERROR'
@@ -85,6 +85,7 @@ const isParseError = (err: unknown): boolean =>
   err instanceof SyntaxError || named(err, 'SyntaxError');
 
 const extractStatusCode = (err: unknown): number | null => {
+  if (err instanceof ApiError) return err.status;
   const message = err instanceof Error ? err.message : typeof err === 'string' ? err : '';
   const match = message.match(/Request failed with status (\d+)/i);
   return match ? parseInt(match[1], 10) : null;
@@ -103,8 +104,6 @@ const resolveCode = (err: unknown): ErrorCode => {
 
 export const ErrorTranslationService = {
   translate(err: unknown): UserFriendlyError {
-    // Log the original error internally for debugging
-    console.error('[ErrorTranslationService]', err);
     return { ...MESSAGES[resolveCode(err)] };
   },
 };

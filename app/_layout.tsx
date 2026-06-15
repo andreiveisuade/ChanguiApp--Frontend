@@ -10,8 +10,10 @@ import { DebugOverlay } from '@/components/debug/DebugOverlay';
 import { queryClient } from '@/config/queryClient';
 import i18n from '@/i18n';
 import { colors } from '@/constants/theme';
+import { installConsoleCapture } from '@/utils/installConsoleCapture';
 
 WebBrowser.maybeCompleteAuthSession();
+installConsoleCapture();
 
 export default function RootLayout(): React.JSX.Element {
   useEffect(() => {
