@@ -31,7 +31,6 @@ interface RawCartItem {
 interface RawCart {
   id: string;
   user_id: string;
-  store_id?: string;
   status: string;
   created_at?: string;
   updated_at?: string;
@@ -43,10 +42,6 @@ interface GetCartResponse {
   items?: RawCartItem[];
   total?: number;
   summary?: TaxSummary;
-}
-
-interface Store {
-  id: string;
 }
 
 /** Maps a raw backend cart item to the typed domain object. */
@@ -97,7 +92,6 @@ export const CartRepository = {
       mappedCart = {
         id: rawCart.id,
         user_id: rawCart.user_id,
-        store_id: rawCart.store_id ?? '',
         status: rawCart.status,
         created_at: rawCart.created_at,
         updated_at: rawCart.updated_at,
@@ -139,30 +133,15 @@ export const CartRepository = {
   },
 
   /**
-   * Adds an item to the active cart. If no active cart exists,
-   * it retrieves the available stores and associates the new cart with the first store.
+   * Adds an item to the active cart. If no active cart exists, the backend
+   * creates one automatically.
    */
   async addItem(productId: string, quantity: number, unitPrice: number): Promise<void> {
-    const { cart } = await this.getCart();
-
-    let storeId: string | undefined = undefined;
-    if (!cart) {
-      const { data: stores } = await httpClient.get<Store[]>('/api/stores');
-      if (stores && stores.length > 0) {
-        storeId = stores[0].id;
-      }
-    }
-
-    const body: Record<string, unknown> = {
+    await httpClient.post('/api/cart/items', {
       product_id: productId,
       quantity,
       unit_price: unitPrice,
-    };
-    if (storeId) {
-      body.store_id = storeId;
-    }
-
-    await httpClient.post('/api/cart/items', body);
+    });
   },
 };
 

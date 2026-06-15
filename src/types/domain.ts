@@ -41,7 +41,6 @@ export interface CartItem {
 export interface Cart {
   id: string;
   user_id: string;
-  store_id: string;
   status: string;
   created_at?: string;
   updated_at?: string;

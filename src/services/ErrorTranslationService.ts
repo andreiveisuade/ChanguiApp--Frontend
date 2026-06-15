@@ -1,5 +1,4 @@
-import { NetworkError, UserFriendlyError } from '@/types/errors';
-import { logger } from '@/utils/debugStore';
+import { ApiError, NetworkError, UserFriendlyError } from '@/types/errors';
 
 type ErrorCode =
   | 'NETWORK_ERROR'
@@ -86,12 +85,7 @@ const isParseError = (err: unknown): boolean =>
   err instanceof SyntaxError || named(err, 'SyntaxError');
 
 const extractStatusCode = (err: unknown): number | null => {
-  // Preferimos el status estructurado (el httpClient lo adjunta como propiedad).
-  if (err && typeof err === 'object' && 'status' in err) {
-    const status = (err as { status?: unknown }).status;
-    if (typeof status === 'number') return status;
-  }
-  // Fallback: extraerlo del mensaje técnico de axios ("Request failed with status N").
+  if (err instanceof ApiError) return err.status;
   const message = err instanceof Error ? err.message : typeof err === 'string' ? err : '';
   const match = message.match(/Request failed with status (\d+)/i);
   return match ? parseInt(match[1], 10) : null;
@@ -110,9 +104,6 @@ const resolveCode = (err: unknown): ErrorCode => {
 
 export const ErrorTranslationService = {
   translate(err: unknown): UserFriendlyError {
-    // Log interno para debug (ring buffer del debugStore, visible también en
-    // builds release vía el overlay de debug; a diferencia de console.error).
-    logger.error('[ErrorTranslationService] ' + (err instanceof Error ? err.message : String(err)));
     return { ...MESSAGES[resolveCode(err)] };
   },
 };

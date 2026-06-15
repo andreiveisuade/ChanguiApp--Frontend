@@ -1,8 +1,16 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import AuthRepository from '@/repositories/AuthRepository';
 import { authEvents } from '@/utils/authEvents';
-import { AuthSessionExpiredError, NetworkError } from '@/types/errors';
+import { ApiError, AuthSessionExpiredError, NetworkError } from '@/types/errors';
 import { API_URL, API_TIMEOUT_MS } from '@/constants/api';
+import { logger } from '@/utils/debugStore';
+
+// Guarda el inicio de cada request para medir latencia en la respuesta.
+declare module 'axios' {
+  export interface InternalAxiosRequestConfig {
+    metadata?: { start: number };
+  }
+}
 
 const httpClient = axios.create({
   baseURL: API_URL,
@@ -22,8 +30,18 @@ export const authClient = axios.create({
   },
 });
 
+// `METHOD /ruta (123ms)` — etiqueta compacta de la request para los logs.
+const trace = (config?: InternalAxiosRequestConfig): string => {
+  const method = (config?.method ?? 'get').toUpperCase();
+  const url = config?.url ?? '?';
+  const start = config?.metadata?.start;
+  const elapsed = start != null ? ` (${Date.now() - start}ms)` : '';
+  return `${method} ${url}${elapsed}`;
+};
+
 httpClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    config.metadata = { start: Date.now() };
     const session = await AuthRepository.getStoredSession();
     if (!session) {
       authEvents.emitSessionExpired();
@@ -35,21 +53,32 @@ httpClient.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
+// Toda request OK o con error pasa por acá y queda registrada en el debug
+// overlay: así cualquier fallo de red es observable sin instrumentar cada hook.
 httpClient.interceptors.response.use(
-  (response) => response,
+  (response: AxiosResponse) => {
+    logger.log(`[HTTP ${response.status}] ${trace(response.config)}`);
+    return response;
+  },
   async (error: AxiosError) => {
+    const where = trace(error.config);
+
     if (!error.response) {
+      logger.error(`[HTTP red caída] ${where}`);
       throw new NetworkError();
     }
 
     if (error.response.status === 401) {
+      logger.error(`[HTTP 401] ${where} — sesión expirada`);
       await AuthRepository.clearSession();
       authEvents.emitSessionExpired();
       throw new AuthSessionExpiredError();
     }
 
     const status = error.response.status;
-    const data = error.response.data as { message?: string; error?: string } | undefined;
+    const data = error.response.data as
+      | { message?: string; error?: string; code?: string }
+      | undefined;
     // Si el backend manda un mensaje, lo respetamos. Si no (ej: 503 con body
     // vacío del cold start de Render), evitamos el técnico "Request failed
     // with status N" y mostramos algo entendible.
@@ -60,11 +89,8 @@ httpClient.interceptors.response.use(
           ? 'Hubo un error en el servidor. Reintentá más tarde.'
           : `Request failed with status ${status}`;
     const message = data?.message ?? data?.error ?? fallback;
-    // Adjuntamos el status como propiedad estructurada para que los consumidores
-    // (ErrorTranslationService) no tengan que parsear el mensaje por regex.
-    const httpError = new Error(message) as Error & { status?: number };
-    httpError.status = status;
-    throw httpError;
+    logger.error(`[HTTP ${status}] ${where} — ${message}`);
+    throw new ApiError(status, message, data?.code);
   },
 );
 

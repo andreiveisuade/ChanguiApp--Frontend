@@ -6,7 +6,6 @@ interface RawPurchase {
   total: number;
   payment_status: PaymentStatus;
   created_at: string;
-  store_id?: string | null;
   store_name?: string | null;
 }
 

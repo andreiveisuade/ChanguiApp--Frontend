@@ -46,7 +46,7 @@ const cartData: {
   total: number;
   summary: TaxSummary;
 } = {
-  cart: { id: 'c1', user_id: 'u1', store_id: 's1', status: 'active', cart_items: [item] },
+  cart: { id: 'c1', user_id: 'u1', status: 'active', cart_items: [item] },
   items: [item],
   total: 2000,
   summary: { subtotal_net: 1652.9, taxes: [], total: 2000 },

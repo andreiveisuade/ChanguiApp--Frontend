@@ -239,55 +239,16 @@ describe('CartRepository', () => {
   });
 
   describe('addItem', () => {
-    it('con carrito existente: POST sin store_id', async () => {
-      mockedGet.mockResolvedValueOnce(
-        axiosResponse({
-          cart: { id: 'c1', user_id: 'u1', store_id: 's1', status: 'active', cart_items: [] },
-          items: [],
-          total: 0,
-        }),
-      );
+    it('hace un único POST a /api/cart/items sin store_id (el backend crea el carrito)', async () => {
       mockedPost.mockResolvedValueOnce(axiosResponse({}));
 
       await CartRepository.addItem('p1', 2, 1000);
 
+      expect(mockedGet).not.toHaveBeenCalled();
       expect(mockedPost).toHaveBeenCalledWith('/api/cart/items', {
         product_id: 'p1',
         quantity: 2,
         unit_price: 1000,
-      });
-    });
-
-    it('sin carrito y sin stores disponibles: POST sin store_id', async () => {
-      mockedGet
-        .mockResolvedValueOnce(axiosResponse({ cart: null, items: [], total: 0 }))
-        .mockResolvedValueOnce(axiosResponse([]));
-      mockedPost.mockResolvedValueOnce(axiosResponse({}));
-
-      await CartRepository.addItem('p1', 1, 500);
-
-      expect(mockedGet).toHaveBeenNthCalledWith(2, '/api/stores');
-      expect(mockedPost).toHaveBeenCalledWith('/api/cart/items', {
-        product_id: 'p1',
-        quantity: 1,
-        unit_price: 500,
-      });
-    });
-
-    it('sin carrito: trae stores y POST con el store_id del primero', async () => {
-      mockedGet
-        .mockResolvedValueOnce(axiosResponse({ cart: null, items: [], total: 0 }))
-        .mockResolvedValueOnce(axiosResponse([{ id: 'store-1' }, { id: 'store-2' }]));
-      mockedPost.mockResolvedValueOnce(axiosResponse({}));
-
-      await CartRepository.addItem('p1', 1, 500);
-
-      expect(mockedGet).toHaveBeenNthCalledWith(2, '/api/stores');
-      expect(mockedPost).toHaveBeenCalledWith('/api/cart/items', {
-        product_id: 'p1',
-        quantity: 1,
-        unit_price: 500,
-        store_id: 'store-1',
       });
     });
   });
