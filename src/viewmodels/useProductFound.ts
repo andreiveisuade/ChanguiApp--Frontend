@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Product } from '@/types/domain';
 import CartRepository from '@/repositories/CartRepository';
 import { ErrorTranslationService } from '@/services/ErrorTranslationService';
+import { summarizeSingleProduct } from '@/services/TaxSummaryService';
 import { UserFriendlyError } from '@/types/errors';
 
 export type UseProductFoundReturn = {
@@ -49,12 +50,9 @@ export const useProductFound = (): UseProductFoundReturn => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
   });
 
-  const subtotal = product ? product.price * quantity : 0;
-  // El backend ya devuelve el desglose unitario; acá sólo se multiplica por
+  // El backend ya devuelve el desglose unitario; el service sólo multiplica por
   // la cantidad (no se recalcula la alícuota en el cliente).
-  const netSubtotal = product?.tax ? product.tax.net_price * quantity : subtotal;
-  const ivaSubtotal = product?.tax ? product.tax.tax_amount * quantity : 0;
-  const taxRate = product?.tax?.rate ?? 0;
+  const { subtotal, netSubtotal, ivaSubtotal, taxRate } = summarizeSingleProduct(product, quantity);
 
   const incrementQuantity = (): void => setQuantity((q) => q + 1);
 
