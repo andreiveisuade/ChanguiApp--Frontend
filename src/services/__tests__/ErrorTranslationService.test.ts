@@ -1,5 +1,5 @@
 import { ErrorTranslationService } from '@/services/ErrorTranslationService';
-import { NetworkError } from '@/types/errors';
+import { ApiError, NetworkError } from '@/types/errors';
 
 // Suppress console.error inside the test output
 beforeAll(() => {
@@ -89,6 +89,23 @@ describe('ErrorTranslationService', () => {
   it('extracts the status code from a string error', () => {
     const result = ErrorTranslationService.translate('Request failed with status 404');
     expect(result.code).toBe('NOT_FOUND');
+  });
+
+  it('reads the status from a structured ApiError (no string parsing)', () => {
+    expect(ErrorTranslationService.translate(new ApiError(404, 'No encontrado')).code).toBe(
+      'NOT_FOUND',
+    );
+  });
+
+  it('translates an ApiError with a custom backend message by its status', () => {
+    // El message ya no es "Request failed with status N"; igual resuelve por status.
+    expect(ErrorTranslationService.translate(new ApiError(400, 'Email ya registrado')).code).toBe(
+      'BAD_REQUEST',
+    );
+  });
+
+  it('maps a 5xx ApiError to SERVER_ERROR', () => {
+    expect(ErrorTranslationService.translate(new ApiError(503, 'caído')).code).toBe('SERVER_ERROR');
   });
 
   it('falls back to UNKNOWN for unexpected errors', () => {

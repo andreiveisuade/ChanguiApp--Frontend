@@ -1,7 +1,7 @@
 import httpClient from '../clients';
 import AuthRepository from '@/repositories/AuthRepository';
 import { authEvents } from '@/utils/authEvents';
-import { AuthSessionExpiredError, NetworkError } from '@/types/errors';
+import { ApiError, AuthSessionExpiredError, NetworkError } from '@/types/errors';
 
 jest.mock('@/repositories/AuthRepository', () => ({
   __esModule: true,
@@ -27,6 +27,12 @@ const responseRejected = (
     handlers: { rejected: (error: unknown) => Promise<never> }[];
   }
 ).handlers[0].rejected;
+
+const responseFulfilled = (
+  httpClient.interceptors.response as unknown as {
+    handlers: { fulfilled: (response: unknown) => unknown }[];
+  }
+).handlers[0].fulfilled;
 
 const validSession = {
   token: 'tk',
@@ -102,6 +108,21 @@ describe('httpClient interceptors', () => {
       await expect(responseRejected({ response: { status: 404, data: {} } })).rejects.toThrow(
         'Request failed with status 404',
       );
+    });
+
+    it('respuesta no-OK: lanza ApiError con status y code estructurados', async () => {
+      const err = await responseRejected({
+        response: { status: 409, data: { error: 'conflicto', code: 'DUP' } },
+        config: {},
+      }).catch((e) => e);
+
+      expect(err).toBeInstanceOf(ApiError);
+      expect(err).toMatchObject({ status: 409, message: 'conflicto', code: 'DUP' });
+    });
+
+    it('respuesta OK: devuelve la misma respuesta (y la registra en el overlay)', () => {
+      const response = { status: 200, config: { method: 'get', url: '/x' } };
+      expect(responseFulfilled(response)).toBe(response);
     });
   });
 });

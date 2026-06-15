@@ -25,3 +25,20 @@ export class NetworkError extends Error {
     this.name = 'NetworkError';
   }
 }
+
+/**
+ * Error de una respuesta HTTP no-OK del backend. Lleva el `status` de forma
+ * estructurada (en vez de embebido en el mensaje) para que la traducción de
+ * errores no dependa de parsear strings. `code` es el código opcional que
+ * mande el backend en el body.
+ */
+export class ApiError extends Error {
+  status: number;
+  code?: string;
+  constructor(status: number, message: string, code?: string) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.code = code;
+  }
+}
