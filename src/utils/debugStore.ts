@@ -19,8 +19,18 @@ let logs: LogEntry[] = [];
 let seq = 0;
 const listeners = new Set<() => void>();
 
+// Notifica de forma diferida (microtask) y coalescida: si un log se emite
+// durante el render de un componente (p. ej. un console.warn de una librería),
+// la actualización de los suscriptores NO debe ocurrir sincrónicamente dentro
+// de ese render — eso dispararía "setState during render" en el overlay.
+let notifyScheduled = false;
 const notify = (): void => {
-  listeners.forEach((listener) => listener());
+  if (notifyScheduled) return;
+  notifyScheduled = true;
+  queueMicrotask(() => {
+    notifyScheduled = false;
+    listeners.forEach((listener) => listener());
+  });
 };
 
 const append = (level: LogLevel, message: string): void => {
