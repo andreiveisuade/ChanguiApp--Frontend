@@ -3,8 +3,8 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { AppText } from '@/components/atoms/AppText';
 import { PriceBreakdown } from '@/components/pricing/PriceBreakdown';
+import { buildTaxLines } from '@/components/pricing/buildTaxLines';
 import { colors, spacing, touchTarget, radii } from '@/constants/theme';
-import { formatRate } from '@/utils/currency';
 import { TaxSummary } from '@/types/domain';
 
 interface CartSummaryProps {
@@ -16,10 +16,7 @@ export function CartSummary({ summary, onPay }: CartSummaryProps): React.JSX.Ele
   const { t } = useTranslation();
   const disabled = !onPay;
 
-  const taxLines = summary.taxes.map((tax) => ({
-    label: t('pricing.iva', { rate: formatRate(tax.rate) }),
-    amount: tax.amount,
-  }));
+  const taxLines = buildTaxLines(summary.taxes, t);
 
   return (
     <View style={styles.container}>
