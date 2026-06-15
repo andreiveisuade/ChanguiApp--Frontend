@@ -159,3 +159,13 @@ export const sizes = {
   progressBarHeight: 4,
   emptyStateOffset: 60,
 } as const;
+
+export type FontScaleOption = 'small' | 'medium' | 'large' | 'xlarge';
+
+// Factores de escala tipográfica para accesibilidad (multiplican fontSize).
+export const FONT_SCALES: Record<FontScaleOption, number> = {
+  small: 0.85,
+  medium: 1.0,
+  large: 1.2,
+  xlarge: 1.4,
+};

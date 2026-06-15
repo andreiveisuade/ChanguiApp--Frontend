@@ -9,21 +9,14 @@ import React, {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '@/i18n';
+import { FONT_SCALES, type FontScaleOption } from '@/constants/theme';
+import { STORAGE_KEYS } from '@/constants/storage';
 
-export type FontScaleOption = 'small' | 'medium' | 'large' | 'xlarge';
 export type LanguageOption = 'es' | 'en' | 'pt';
 
-export const FONT_SCALES: Record<FontScaleOption, number> = {
-  small: 0.85,
-  medium: 1.0,
-  large: 1.2,
-  xlarge: 1.4,
-};
-
-const STORAGE_KEYS = {
-  fontSize: '@changuiapp/font_size',
-  language: '@changuiapp/language',
-};
+// Re-export para los consumidores (p. ej. ConfigView) que ya importan estos
+// símbolos desde el context. La fuente de verdad vive en constants/theme.
+export { FONT_SCALES, type FontScaleOption };
 
 interface AccessibilityContextValue {
   fontScale: number;
