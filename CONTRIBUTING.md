@@ -71,12 +71,12 @@ feature/xxx  ──PR──►  dev  ──PR──►  test  ──PR──► 
 
 ### Convención de nombres de ramas
 
-| Prefijo | Cuándo usarlo | Ejemplo |
-|---------|--------------|---------|
-| `feature/` | Nueva funcionalidad | `feature/DEV-21-escaneo-barcode` |
-| `fix/` | Corrección de bug | `fix/DEV-35-precio-nulo-api` |
-| `chore/` | Configuración, docs, deps | `chore/DEV-03-setup-supabase` |
-| `hotfix/` | Fix crítico directo en test | `hotfix/crash-checkout` |
+| Prefijo    | Cuándo usarlo               | Ejemplo                          |
+| ---------- | --------------------------- | -------------------------------- |
+| `feature/` | Nueva funcionalidad         | `feature/DEV-21-escaneo-barcode` |
+| `fix/`     | Corrección de bug           | `fix/DEV-35-precio-nulo-api`     |
+| `chore/`   | Configuración, docs, deps   | `chore/DEV-03-setup-supabase`    |
+| `hotfix/`  | Fix crítico directo en test | `hotfix/crash-checkout`          |
 
 ---
 
@@ -101,6 +101,7 @@ git checkout -b feature/DEV-XX-nombre-de-tu-feature
 - Si el commit cierra un issue, agregá `DEV-XX` en el mensaje
 
 **Ejemplo completo:**
+
 ```
 feat(cart): agregar endpoint POST /api/cart/items
 
@@ -128,7 +129,7 @@ git push origin feature/DEV-XX-tu-feature
 Después de pushear tu branch, entrás a GitHub y creás el PR:
 
 1. **Entrá al repositorio en GitHub** (ej: github.com/andreiveisuade/ChanguiApp--Backend)
-2. GitHub te va a mostrar un banner amarillo que dice *"feature/DEV-XX-... had recent pushes — Compare & pull request"*. Hacé click en ese botón.
+2. GitHub te va a mostrar un banner amarillo que dice _"feature/DEV-XX-... had recent pushes — Compare & pull request"_. Hacé click en ese botón.
    - Si no aparece el banner: andá a la pestaña **Pull requests** → **New pull request**
 3. **Verificá las ramas:**
    - `base: dev` ← acá van tus cambios (rama destino)
@@ -175,17 +176,18 @@ Alguien del equipo abrió un PR y te asignó como reviewer. Esto es lo que hacé
 
 ### Aprobaciones requeridas por rama
 
-| Rama destino | Aprobaciones | Quién puede mergear |
-|-------------|-------------|---------------------|
-| `dev` | Mínimo **1 aprobación** (SM) | SM (Andrei) |
-| `test` | Mínimo **1 aprobación** (SM) | SM (Andrei) |
-| `main` | Mínimo **1 aprobación** (SM) | SM (Andrei) |
+| Rama destino | Aprobaciones                 | Quién puede mergear |
+| ------------ | ---------------------------- | ------------------- |
+| `dev`        | Mínimo **1 aprobación** (SM) | SM (Andrei)         |
+| `test`       | Mínimo **1 aprobación** (SM) | SM (Andrei)         |
+| `main`       | Mínimo **1 aprobación** (SM) | SM (Andrei)         |
 
 ### Qué tiene que tener un PR para ser válido
 
 **Título:** `[TIPO] DEV-XXX: Descripción breve` → ejemplo: `[FEATURE] DEV-30: Escaneo de barcode con cámara`
 
 **Descripción (template):**
+
 ```
 ## ¿Qué hace este PR?
 Descripción breve de los cambios.
@@ -200,6 +202,7 @@ Closes DEV-<número>
 
 ## Checklist
 - [ ] El código compila sin errores
+- [ ] Código formateado y sin errores de lint (`npm run format` && `npm run lint`)
 - [ ] Probé en emulador / dispositivo físico
 - [ ] No hay console.log / prints de debug innecesarios
 - [ ] Actualicé la documentación si corresponde
@@ -207,10 +210,10 @@ Closes DEV-<número>
 
 ### Tiempos de revisión
 
-| Acción | Tiempo máximo |
-|--------|--------------|
-| Revisar un PR asignado | 48 horas hábiles |
-| Responder a cambios pedidos | 24 horas hábiles |
+| Acción                            | Tiempo máximo                   |
+| --------------------------------- | ------------------------------- |
+| Revisar un PR asignado            | 48 horas hábiles                |
+| Responder a cambios pedidos       | 24 horas hábiles                |
 | Si no hay respuesta en ese tiempo | El SM puede reasignar el review |
 
 ---
@@ -235,6 +238,7 @@ No es un code review de producción profesional. El objetivo es que el equipo ap
 En **Settings → Branches** del repositorio:
 
 **Rama `main`:**
+
 - Require a pull request before merging
 - Required approvals: 1
 - Dismiss stale reviews
@@ -242,11 +246,13 @@ En **Settings → Branches** del repositorio:
 - Include administrators
 
 **Rama `test`:**
+
 - Require a pull request before merging
 - Required approvals: 1
 - Dismiss stale reviews
 
 **Rama `dev`:**
+
 - Require a pull request before merging
 - Required approvals: 1
 - Dismiss stale reviews
@@ -255,12 +261,12 @@ En **Settings → Branches** del repositorio:
 
 ## Sprints y releases
 
-| Evento | Acción en Git |
-|--------|--------------|
-| Fin de sprint | PR de `dev` → `test`, validar, luego PR de `test` → `main` con tag `sprint-N` |
-| Entrega 1 | PR `dev` → `test` → `main`, tag `v1.0-entrega1` |
-| Entrega 2 | PR `dev` → `test` → `main`, tag `v2.0-final` |
-| Hotfix en test | Crear `hotfix/xxx` desde `test`, mergear a `test` y bajar a `dev` |
+| Evento         | Acción en Git                                                                 |
+| -------------- | ----------------------------------------------------------------------------- |
+| Fin de sprint  | PR de `dev` → `test`, validar, luego PR de `test` → `main` con tag `sprint-N` |
+| Entrega 1      | PR `dev` → `test` → `main`, tag `v1.0-entrega1`                               |
+| Entrega 2      | PR `dev` → `test` → `main`, tag `v2.0-final`                                  |
+| Hotfix en test | Crear `hotfix/xxx` desde `test`, mergear a `test` y bajar a `dev`             |
 
 ---
 
@@ -268,13 +274,13 @@ En **Settings → Branches** del repositorio:
 
 ### Prefijos de ramas
 
-| Prefijo | Cuándo | Ejemplo |
-|---------|--------|---------|
-| `feature/` | Nueva funcionalidad o endpoint | `feature/DEV-20-crud-cart-items` |
-| `fix/` | Corrección de un bug | `fix/DEV-35-precio-nulo-api` |
-| `chore/` | Config, docs, deps, infra | `chore/DEV-109-setup-jest` |
-| `test/` | Agregar o mejorar tests | `test/DEV-34-cobertura-services` |
-| `hotfix/` | Fix crítico directo en test/main | `hotfix/crash-checkout` |
+| Prefijo    | Cuándo                           | Ejemplo                          |
+| ---------- | -------------------------------- | -------------------------------- |
+| `feature/` | Nueva funcionalidad o endpoint   | `feature/DEV-20-crud-cart-items` |
+| `fix/`     | Corrección de un bug             | `fix/DEV-35-precio-nulo-api`     |
+| `chore/`   | Config, docs, deps, infra        | `chore/DEV-109-setup-jest`       |
+| `test/`    | Agregar o mejorar tests          | `test/DEV-34-cobertura-services` |
+| `hotfix/`  | Fix crítico directo en test/main | `hotfix/crash-checkout`          |
 
 **Formato obligatorio:** `prefijo/DEV-XXX-descripcion-corta`
 
@@ -284,15 +290,15 @@ En **Settings → Branches** del repositorio:
 
 ### Tipos de commit (Conventional Commits)
 
-| Tipo | Cuándo usarlo | Ejemplo |
-|------|--------------|---------|
-| `feat` | Nueva funcionalidad | `feat(auth): implementar registro con Supabase Auth` |
-| `fix` | Corrección de bug | `fix(cart): manejar carrito vacío al intentar pagar` |
-| `docs` | Documentación | `docs(swagger): agregar endpoint GET /api/stores` |
-| `test` | Agregar o modificar tests | `test(cart): agregar tests del service de carrito` |
+| Tipo       | Cuándo usarlo                   | Ejemplo                                                |
+| ---------- | ------------------------------- | ------------------------------------------------------ |
+| `feat`     | Nueva funcionalidad             | `feat(auth): implementar registro con Supabase Auth`   |
+| `fix`      | Corrección de bug               | `fix(cart): manejar carrito vacío al intentar pagar`   |
+| `docs`     | Documentación                   | `docs(swagger): agregar endpoint GET /api/stores`      |
+| `test`     | Agregar o modificar tests       | `test(cart): agregar tests del service de carrito`     |
 | `refactor` | Refactoreo sin cambio funcional | `refactor(products): extraer lógica de sync a service` |
-| `chore` | Config, deps, CI/CD | `chore: actualizar dependencias de express` |
-| `style` | Formato, espacios, punto y coma | `style: correr linter en controllers/` |
+| `chore`    | Config, deps, CI/CD             | `chore: actualizar dependencias de express`            |
+| `style`    | Formato, espacios, punto y coma | `style: correr linter en controllers/`                 |
 
 **Formato:** `tipo(scope): descripción en imperativo`
 
@@ -305,13 +311,13 @@ En **Settings → Branches** del repositorio:
 
 **Formato:** `[TIPO] DEV-XXX: Descripción breve`
 
-| Tipo | Ejemplo |
-|------|---------|
-| `[FEATURE]` | `[FEATURE] DEV-20: CRUD de items de carrito` |
-| `[FIX]` | `[FIX] DEV-35: Manejar errores de conectividad` |
-| `[CHORE]` | `[CHORE] DEV-109: Configurar Jest + primer test` |
-| `[TEST]` | `[TEST] DEV-34: Tests unitarios de cart service` |
-| `[DOCS]` | `[DOCS] DEV-23: Documentar endpoints en Swagger` |
+| Tipo        | Ejemplo                                          |
+| ----------- | ------------------------------------------------ |
+| `[FEATURE]` | `[FEATURE] DEV-20: CRUD de items de carrito`     |
+| `[FIX]`     | `[FIX] DEV-35: Manejar errores de conectividad`  |
+| `[CHORE]`   | `[CHORE] DEV-109: Configurar Jest + primer test` |
+| `[TEST]`    | `[TEST] DEV-34: Tests unitarios de cart service` |
+| `[DOCS]`    | `[DOCS] DEV-23: Documentar endpoints en Swagger` |
 
 ---
 
@@ -354,6 +360,7 @@ npm run test:coverage  # reporte de cobertura
 ```
 
 Los tests están en `__tests__/` y siguen el patrón MVVM:
+
 - `unit/repositories/` — tests de repositorios (mockean fetch/axios)
 - `unit/viewmodels/` — tests de hooks (mockean repositorios)
 - `unit/utils/` — tests de helpers puros
@@ -362,5 +369,4 @@ Cada feature nueva debe incluir su suite de tests en el mismo PR.
 
 ---
 
-*Documento mantenido por el Scrum Master. Última actualización: 21 Marzo 2026.*
-
+_Documento mantenido por el Scrum Master. Última actualización: 21 Marzo 2026._
