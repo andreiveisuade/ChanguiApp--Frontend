@@ -160,4 +160,21 @@ describe('useCart', () => {
     await waitFor(() => expect(result.current.error).toEqual(translated));
     expect(result.current.isLoading).toBe(false);
   });
+
+  it('refresh limpia un error de mutación previo', async () => {
+    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    mockedDeleteItem.mockRejectedValueOnce(new Error('Request failed with status 500'));
+    await act(async () => {
+      await result.current.removeItem('i1');
+    });
+    await waitFor(() => expect(result.current.error).toEqual(translated));
+
+    await act(async () => {
+      await result.current.refresh();
+    });
+
+    await waitFor(() => expect(result.current.error).toBeNull());
+  });
 });

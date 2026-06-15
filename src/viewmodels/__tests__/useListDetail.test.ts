@@ -82,6 +82,8 @@ describe('useListDetail', () => {
     });
     expect(repo.addItem).toHaveBeenCalledWith('l1', product);
     expect(repo.getListItems).toHaveBeenCalledTimes(1);
+    // La recarga es en silencio: no se prende el spinner full-screen.
+    expect(result.current.isLoading).toBe(false);
   });
 
   it('addProduct no hace nada sin listId', async () => {

@@ -37,6 +37,8 @@ export const useLists = (): UseListsReturn => {
   const error = translateQueryError(query.error ?? createMutation.error ?? deleteMutation.error);
 
   const refresh = async (): Promise<void> => {
+    createMutation.reset();
+    deleteMutation.reset();
     await query.refetch();
   };
 

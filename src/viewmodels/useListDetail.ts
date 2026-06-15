@@ -65,6 +65,10 @@ export const useListDetail = (listId: string | undefined): UseListDetailReturn =
   );
 
   const refresh = async (): Promise<void> => {
+    addMutation.reset();
+    toggleMutation.reset();
+    quantityMutation.reset();
+    removeMutation.reset();
     await query.refetch();
   };
 

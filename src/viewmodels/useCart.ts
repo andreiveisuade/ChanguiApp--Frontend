@@ -43,6 +43,10 @@ export const useCart = (): UseCartReturn => {
   const error = translateQueryError(query.error ?? updateMutation.error ?? removeMutation.error);
 
   const refresh = async (): Promise<void> => {
+    // Limpia errores de mutaciones previas (antes lo hacía setError(null) en
+    // el fetch) para que el pull-to-refresh / cerrar el banner los descarte.
+    updateMutation.reset();
+    removeMutation.reset();
     await query.refetch();
   };
 
