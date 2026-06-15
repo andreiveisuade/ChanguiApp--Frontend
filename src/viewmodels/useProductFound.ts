@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Product } from '@/types/domain';
 import CartRepository from '@/repositories/CartRepository';
 import { ErrorTranslationService } from '@/services/ErrorTranslationService';
@@ -38,9 +39,15 @@ export const useProductFound = (): UseProductFoundReturn => {
   const product = useMemo<Product | null>(() => parseProduct(params.product), [params.product]);
   const barcode = params.barcode ?? '';
 
+  const queryClient = useQueryClient();
   const [quantity, setQuantity] = useState<number>(1);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<UserFriendlyError | null>(null);
+
+  const addMutation = useMutation({
+    mutationFn: ({ productId, qty, unitPrice }: { productId: string; qty: number; unitPrice: number }) =>
+      CartRepository.addItem(productId, qty, unitPrice),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
+  });
 
   const subtotal = product ? product.price * quantity : 0;
   // El backend ya devuelve el desglose unitario; acá sólo se multiplica por
@@ -59,15 +66,16 @@ export const useProductFound = (): UseProductFoundReturn => {
 
   const goToCart = async (): Promise<void> => {
     if (!product) return;
-    setIsLoading(true);
     setErrorMessage(null);
     try {
-      await CartRepository.addItem(product.id, quantity, product.price);
+      await addMutation.mutateAsync({
+        productId: product.id,
+        qty: quantity,
+        unitPrice: product.price,
+      });
       router.replace('/(tabs)/cart');
     } catch (err) {
       setErrorMessage(ErrorTranslationService.translate(err));
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -87,7 +95,7 @@ export const useProductFound = (): UseProductFoundReturn => {
     decrementQuantity,
     goToScanner,
     goToCart,
-    isLoading,
+    isLoading: addMutation.isPending,
     errorMessage,
     clearError,
   };

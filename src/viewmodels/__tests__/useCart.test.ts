@@ -1,5 +1,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { useCart } from '../useCart';
+import { createQueryWrapper } from '@/test-utils/queryWrapper';
 import CartRepository from '@/repositories/CartRepository';
 import { ErrorTranslationService } from '@/services/ErrorTranslationService';
 import { AuthSessionExpiredError, UserFriendlyError } from '@/types/errors';
@@ -67,7 +68,7 @@ describe('useCart', () => {
   });
 
   it('carga el carrito al montar y apaga el loading', async () => {
-    const { result } = renderHook(() => useCart());
+    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -80,7 +81,7 @@ describe('useCart', () => {
 
   it('error en la carga: traduce y expone el error', async () => {
     mockedGetCart.mockRejectedValueOnce(new Error('Request failed with status 500'));
-    const { result } = renderHook(() => useCart());
+    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -90,7 +91,7 @@ describe('useCart', () => {
 
   it('sesión expirada en la carga: no expone error al usuario', async () => {
     mockedGetCart.mockRejectedValueOnce(new AuthSessionExpiredError());
-    const { result } = renderHook(() => useCart());
+    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -99,7 +100,7 @@ describe('useCart', () => {
   });
 
   it('refresh vuelve a pedir el carrito', async () => {
-    const { result } = renderHook(() => useCart());
+    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -110,7 +111,7 @@ describe('useCart', () => {
   });
 
   it('updateQuantity actualiza y refresca el carrito', async () => {
-    const { result } = renderHook(() => useCart());
+    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -123,7 +124,7 @@ describe('useCart', () => {
   });
 
   it('updateQuantity con error: traduce y no deja loading colgado', async () => {
-    const { result } = renderHook(() => useCart());
+    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     mockedUpdateQty.mockRejectedValueOnce(new Error('Request failed with status 400'));
 
@@ -131,12 +132,12 @@ describe('useCart', () => {
       await result.current.updateQuantity('i1', 5);
     });
 
-    expect(result.current.error).toEqual(translated);
+    await waitFor(() => expect(result.current.error).toEqual(translated));
     expect(result.current.isLoading).toBe(false);
   });
 
   it('removeItem elimina y refresca el carrito', async () => {
-    const { result } = renderHook(() => useCart());
+    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -148,7 +149,7 @@ describe('useCart', () => {
   });
 
   it('removeItem con error: traduce y corta el loading', async () => {
-    const { result } = renderHook(() => useCart());
+    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     mockedDeleteItem.mockRejectedValueOnce(new Error('Request failed with status 500'));
 
@@ -156,7 +157,7 @@ describe('useCart', () => {
       await result.current.removeItem('i1');
     });
 
-    expect(result.current.error).toEqual(translated);
+    await waitFor(() => expect(result.current.error).toEqual(translated));
     expect(result.current.isLoading).toBe(false);
   });
 });

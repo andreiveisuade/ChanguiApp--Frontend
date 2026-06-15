@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import CartRepository from '@/repositories/CartRepository';
 import { CartWithItems, CartItemWithProduct, TaxSummary } from '@/types/domain';
-import { ErrorTranslationService } from '@/services/ErrorTranslationService';
 import { UserFriendlyError } from '@/types/errors';
-import { useAsyncAction } from '@/hooks/useAsyncAction';
+import { translateQueryError } from '@/utils/queryError';
 
 const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
 
@@ -20,66 +19,55 @@ export type UseCartReturn = {
 };
 
 export const useCart = (): UseCartReturn => {
-  const [cart, setCart] = useState<CartWithItems | null>(null);
-  const [items, setItems] = useState<CartItemWithProduct[]>([]);
-  const [total, setTotal] = useState<number>(0);
-  const [summary, setSummary] = useState<TaxSummary>(EMPTY_SUMMARY);
-  const { isLoading, error, setError, setIsLoading, run } = useAsyncAction(true);
+  const queryClient = useQueryClient();
 
-  const fetchCart = useCallback(async () => {
-    const data = await run(() => CartRepository.getCart());
-    if (data) {
-      setCart(data.cart);
-      setItems(data.items);
-      setTotal(data.total);
-      setSummary(data.summary);
+  const query = useQuery({
+    queryKey: ['cart'],
+    queryFn: () => CartRepository.getCart(),
+  });
+
+  // onSuccess retorna el invalidate para que mutateAsync espere el refetch.
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ['cart'] });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ itemId, quantity }: { itemId: string; quantity: number }) =>
+      CartRepository.updateItemQuantity(itemId, quantity),
+    onSuccess: invalidate,
+  });
+
+  const removeMutation = useMutation({
+    mutationFn: (itemId: string) => CartRepository.deleteItem(itemId),
+    onSuccess: invalidate,
+  });
+
+  const error = translateQueryError(query.error ?? updateMutation.error ?? removeMutation.error);
+
+  const refresh = async (): Promise<void> => {
+    await query.refetch();
+  };
+
+  const updateQuantity = async (itemId: string, quantity: number): Promise<void> => {
+    try {
+      await updateMutation.mutateAsync({ itemId, quantity });
+    } catch {
+      // El error se expone vía `error`.
     }
-  }, [run]);
+  };
 
-  useEffect(() => {
-    fetchCart();
-  }, [fetchCart]);
-
-  const refresh = useCallback(async () => {
-    await fetchCart();
-  }, [fetchCart]);
-
-  const updateQuantity = useCallback(
-    async (itemId: string, quantity: number) => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        await CartRepository.updateItemQuantity(itemId, quantity);
-        await fetchCart();
-      } catch (err) {
-        setError(ErrorTranslationService.translate(err));
-        setIsLoading(false);
-      }
-    },
-    [fetchCart, setError, setIsLoading],
-  );
-
-  const removeItem = useCallback(
-    async (itemId: string) => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        await CartRepository.deleteItem(itemId);
-        await fetchCart();
-      } catch (err) {
-        setError(ErrorTranslationService.translate(err));
-        setIsLoading(false);
-      }
-    },
-    [fetchCart, setError, setIsLoading],
-  );
+  const removeItem = async (itemId: string): Promise<void> => {
+    try {
+      await removeMutation.mutateAsync(itemId);
+    } catch {
+      // El error se expone vía `error`.
+    }
+  };
 
   return {
-    cart,
-    items,
-    total,
-    summary,
-    isLoading,
+    cart: query.data?.cart ?? null,
+    items: query.data?.items ?? [],
+    total: query.data?.total ?? 0,
+    summary: query.data?.summary ?? EMPTY_SUMMARY,
+    isLoading: query.isPending || updateMutation.isPending || removeMutation.isPending,
     error,
     refresh,
     updateQuantity,
