@@ -1,5 +1,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { useProfile } from '../useProfile';
+import { createQueryWrapper } from '@/test-utils/queryWrapper';
 import ProfileRepository from '@/repositories/ProfileRepository';
 import { AuthSessionExpiredError } from '@/types/errors';
 import { User } from '@/types/auth';
@@ -40,7 +41,7 @@ describe('useProfile', () => {
   });
 
   it('carga el perfil al montar', async () => {
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper: createQueryWrapper() });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -50,16 +51,14 @@ describe('useProfile', () => {
 
   it('error en la carga: expone el mensaje', async () => {
     mockedGetProfile.mockRejectedValueOnce(new Error('boom'));
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper: createQueryWrapper() });
 
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
-
-    expect(result.current.error).toEqual({ message: 'boom' });
+    await waitFor(() => expect(result.current.error).toEqual({ message: 'boom' }));
   });
 
   it('sesión expirada en la carga: no expone error', async () => {
     mockedGetProfile.mockRejectedValueOnce(new AuthSessionExpiredError());
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper: createQueryWrapper() });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -69,7 +68,7 @@ describe('useProfile', () => {
   it('updateProfile guarda y sincroniza el usuario en el AuthContext', async () => {
     const updated: User = { ...user, full_name: 'Andrei V' };
     mockedUpdateProfile.mockResolvedValueOnce(updated);
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -77,14 +76,14 @@ describe('useProfile', () => {
     });
 
     expect(mockedUpdateProfile).toHaveBeenCalledWith({ full_name: 'Andrei V' });
-    expect(result.current.profile).toEqual(updated);
+    await waitFor(() => expect(result.current.profile).toEqual(updated));
     expect(mockUpdateUser).toHaveBeenCalledWith(updated);
     expect(result.current.isSaving).toBe(false);
   });
 
   it('updateProfile con error: expone el error y re-lanza', async () => {
     mockedUpdateProfile.mockRejectedValueOnce(new Error('no se pudo'));
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -97,7 +96,7 @@ describe('useProfile', () => {
 
   it('updateProfile con sesión expirada: no expone error ni re-lanza', async () => {
     mockedUpdateProfile.mockRejectedValueOnce(new AuthSessionExpiredError());
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -108,7 +107,7 @@ describe('useProfile', () => {
   });
 
   it('deleteProfile limpia el perfil', async () => {
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -116,13 +115,13 @@ describe('useProfile', () => {
     });
 
     expect(mockedDeleteProfile).toHaveBeenCalledTimes(1);
-    expect(result.current.profile).toBeNull();
+    await waitFor(() => expect(result.current.profile).toBeNull());
     expect(result.current.isDeleting).toBe(false);
   });
 
   it('deleteProfile con error: expone el error y re-lanza', async () => {
     mockedDeleteProfile.mockRejectedValueOnce(new Error('fallo borrar'));
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {
@@ -134,7 +133,7 @@ describe('useProfile', () => {
 
   it('clearError limpia el error', async () => {
     mockedGetProfile.mockRejectedValueOnce(new Error('x'));
-    const { result } = renderHook(() => useProfile());
+    const { result } = renderHook(() => useProfile(), { wrapper: createQueryWrapper() });
     await waitFor(() => expect(result.current.error).toEqual({ message: 'x' }));
 
     act(() => result.current.clearError());

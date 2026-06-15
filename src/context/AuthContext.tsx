@@ -33,6 +33,7 @@ import AuthRepository from '@/repositories/AuthRepository';
 import { AuthError, RegisterCredentials, User } from '@/types/auth';
 import { mapAuthError } from '@/utils/authErrors';
 import { authEvents } from '@/utils/authEvents';
+import { queryClient } from '@/config/queryClient';
 import {
   doPasswordsMatch,
   isValidEmail,
@@ -164,6 +165,7 @@ function useAuthSession(): AuthSession {
   useEffect(() => {
     const unsubscribe = authEvents.onSessionExpired(() => {
       clearLocalSession();
+      queryClient.clear();
     });
     return unsubscribe;
   }, [clearLocalSession]);
@@ -297,6 +299,7 @@ function useAccountActions(session: AuthSession) {
     } finally {
       await AuthRepository.clearSession();
       clearLocalSession();
+      queryClient.clear();
       setIsLoading(false);
     }
   }, [clearLocalSession, setError, setIsLoading]);

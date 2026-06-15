@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useProductFound } from '../useProductFound';
+import { createQueryWrapper } from '@/test-utils/queryWrapper';
 import CartRepository from '@/repositories/CartRepository';
 import { Product } from '@/types/domain';
 
@@ -39,13 +40,13 @@ describe('useProductFound', () => {
   });
 
   it('parsea el producto de los params y expone el barcode', () => {
-    const { result } = renderHook(() => useProductFound());
+    const { result } = renderHook(() => useProductFound(), { wrapper: createQueryWrapper() });
     expect(result.current.product).toEqual(productConTax);
     expect(result.current.barcode).toBe('7790001');
   });
 
   it('calcula subtotal, neto, IVA y tasa según la cantidad', () => {
-    const { result } = renderHook(() => useProductFound());
+    const { result } = renderHook(() => useProductFound(), { wrapper: createQueryWrapper() });
 
     expect(result.current.subtotal).toBe(1000);
     expect(result.current.netSubtotal).toBe(826.45);
@@ -62,7 +63,7 @@ describe('useProductFound', () => {
     const sinTax: Product = { ...productConTax, tax: undefined };
     setParams({ product: JSON.stringify(sinTax), barcode: '7790001' });
 
-    const { result } = renderHook(() => useProductFound());
+    const { result } = renderHook(() => useProductFound(), { wrapper: createQueryWrapper() });
 
     expect(result.current.netSubtotal).toBe(1000);
     expect(result.current.ivaSubtotal).toBe(0);
@@ -71,7 +72,7 @@ describe('useProductFound', () => {
 
   it('params sin producto: product null, subtotal 0 y barcode vacío', () => {
     setParams({ product: undefined, barcode: undefined });
-    const { result } = renderHook(() => useProductFound());
+    const { result } = renderHook(() => useProductFound(), { wrapper: createQueryWrapper() });
     expect(result.current.product).toBeNull();
     expect(result.current.subtotal).toBe(0);
     expect(result.current.barcode).toBe('');
@@ -79,12 +80,12 @@ describe('useProductFound', () => {
 
   it('JSON inválido en params: product null', () => {
     setParams({ product: '{no-es-json', barcode: '7790001' });
-    const { result } = renderHook(() => useProductFound());
+    const { result } = renderHook(() => useProductFound(), { wrapper: createQueryWrapper() });
     expect(result.current.product).toBeNull();
   });
 
   it('decrementQuantity no baja de 1', () => {
-    const { result } = renderHook(() => useProductFound());
+    const { result } = renderHook(() => useProductFound(), { wrapper: createQueryWrapper() });
 
     act(() => result.current.decrementQuantity());
     expect(result.current.quantity).toBe(1);
@@ -98,14 +99,14 @@ describe('useProductFound', () => {
   });
 
   it('goToScanner navega al scanner', () => {
-    const { result } = renderHook(() => useProductFound());
+    const { result } = renderHook(() => useProductFound(), { wrapper: createQueryWrapper() });
     act(() => result.current.goToScanner());
     expect(mockReplace).toHaveBeenCalledWith('/(tabs)/scanner');
   });
 
   it('goToCart agrega el item y navega al carrito', async () => {
     mockedAddItem.mockResolvedValue(undefined);
-    const { result } = renderHook(() => useProductFound());
+    const { result } = renderHook(() => useProductFound(), { wrapper: createQueryWrapper() });
 
     await act(async () => {
       await result.current.goToCart();
@@ -117,7 +118,7 @@ describe('useProductFound', () => {
 
   it('goToCart sin producto no hace nada', async () => {
     setParams({ product: undefined, barcode: undefined });
-    const { result } = renderHook(() => useProductFound());
+    const { result } = renderHook(() => useProductFound(), { wrapper: createQueryWrapper() });
 
     await act(async () => {
       await result.current.goToCart();
@@ -129,7 +130,7 @@ describe('useProductFound', () => {
 
   it('goToCart con error setea errorMessage y corta el loading', async () => {
     mockedAddItem.mockRejectedValue(new Error('falló agregar'));
-    const { result } = renderHook(() => useProductFound());
+    const { result } = renderHook(() => useProductFound(), { wrapper: createQueryWrapper() });
 
     await act(async () => {
       await result.current.goToCart();
@@ -144,7 +145,7 @@ describe('useProductFound', () => {
 
   it('clearError limpia el mensaje', async () => {
     mockedAddItem.mockRejectedValue(new Error('x'));
-    const { result } = renderHook(() => useProductFound());
+    const { result } = renderHook(() => useProductFound(), { wrapper: createQueryWrapper() });
 
     await act(async () => {
       await result.current.goToCart();
