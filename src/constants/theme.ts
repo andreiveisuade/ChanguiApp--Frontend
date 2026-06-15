@@ -68,6 +68,7 @@ export const fonts = {
 } as const;
 
 export const spacing = {
+  xxs: 2,
   xs: 4,
   sm: 8,
   md: 12,
@@ -78,6 +79,7 @@ export const spacing = {
 } as const;
 
 export const radii = {
+  xs: 2,
   sm: 8,
   md: 12,
   lg: 18,
@@ -104,6 +106,7 @@ export const touchTarget = {
 
 export const opacity = {
   disabled: 0.5,
+  muted: 0.7,
   pressed: 0.86,
 } as const;
 
@@ -141,4 +144,18 @@ export const shadow = {
     shadowRadius: 4,
     elevation: 2,
   },
+} as const;
+
+export const borderWidth = {
+  hairline: 1,
+} as const;
+
+export const control = {
+  height: 48,
+} as const;
+
+export const sizes = {
+  dropdownMaxHeight: 260,
+  progressBarHeight: 4,
+  emptyStateOffset: 60,
 } as const;

@@ -2,19 +2,21 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ShoppingListItem } from '@/types/domain';
-import { colors, iconSize, spacing, touchTarget } from '@/constants/theme';
+import { borderWidth, colors, iconSize, opacity, spacing, touchTarget } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
 interface ListItemRowProps {
   item: ShoppingListItem;
   onToggle: () => void;
+  onDelete?: () => void;
   isLast?: boolean;
 }
 
 export function ListItemRow({
   item,
   onToggle,
+  onDelete,
   isLast = false,
 }: ListItemRowProps): React.JSX.Element {
   const { t } = useTranslation();
@@ -48,6 +50,17 @@ export function ListItemRow({
       {item.quantity > 1 ? (
         <AppText variant="Label" style={styles.qty}>×{item.quantity}</AppText>
       ) : null}
+
+      {onDelete ? (
+        <Pressable
+          onPress={onDelete}
+          accessibilityLabel={t('lists.deleteItem')}
+          accessibilityRole="button"
+          style={({ pressed }) => [styles.delete, pressed && styles.checkboxPressed]}
+        >
+          <AppIcon name="eliminar" size={iconSize.smd} color={colors.textSecondary} />
+        </Pressable>
+      ) : null}
     </View>
   );
 }
@@ -56,7 +69,7 @@ const styles = StyleSheet.create({
   row: {
     alignItems: 'center',
     borderBottomColor: colors.border,
-    borderBottomWidth: 1,
+    borderBottomWidth: borderWidth.hairline,
     flexDirection: 'row',
     gap: spacing.md,
     paddingVertical: spacing.sm,
@@ -71,7 +84,7 @@ const styles = StyleSheet.create({
     minWidth: touchTarget.minWidth,
   },
   checkboxPressed: {
-    opacity: 0.6,
+    opacity: opacity.pressed,
   },
   name: {
     flex: 1,
@@ -83,6 +96,12 @@ const styles = StyleSheet.create({
   },
   qty: {
     textTransform: 'none',
+  },
+  delete: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: touchTarget.minHeight,
+    minWidth: touchTarget.minWidth,
   },
 });
 

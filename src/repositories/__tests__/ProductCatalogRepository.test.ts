@@ -1,13 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as repo from '../ProductCatalogRepository';
-import type { CatalogApiItem } from '../ProductCatalogRepository';
 jest.mock('@react-native-async-storage/async-storage', () => ({
   __esModule: true,
   default: { getItem: jest.fn(), setItem: jest.fn() },
 }));
 
- 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { __mockDb: mockDb } = require('expo-sqlite');
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as repo from '../ProductCatalogRepository';
+import type { CatalogApiItem } from '../ProductCatalogRepository';
 
 const mockedAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>;
 
@@ -112,6 +112,41 @@ describe('ProductCatalogRepository', () => {
         '@changuiapp/catalog_synced_at',
         '2026-06-08T10:00:00.000Z',
       );
+    });
+  });
+
+  describe('searchProducts', () => {
+    const productRow = {
+      barcode: '779', id: 'p1', name: 'Leche Serenísima', brand: 'La Serenísima',
+      image_url: null, price: 1500, tax_category: 'Leche fluida', tax_rate: 0,
+      tax_net_price: 1500, tax_amount: 0, updated_at: '2026-06-08T10:00:00.000Z',
+    };
+
+    it('devuelve [] sin tocar la DB cuando la query queda vacía tras sanitizar', async () => {
+      expect(await repo.searchProducts('   @#$  ', 10)).toEqual([]);
+      expect(mockDb.getAllAsync).not.toHaveBeenCalled();
+    });
+
+    it('construye una prefix-query FTS por token y mapea las filas', async () => {
+      mockDb.getAllAsync.mockResolvedValueOnce([productRow]);
+
+      const result = await repo.searchProducts('Sere lec', 5);
+
+      const [sql, params] = mockDb.getAllAsync.mock.calls[0];
+      expect(sql).toContain('products_fts MATCH ?');
+      expect(params).toEqual(['sere* lec*', 5]);
+      expect(result).toEqual([
+        {
+          id: 'p1', name: 'Leche Serenísima', barcode: '779', brand: 'La Serenísima',
+          image_url: null, price: 1500,
+          tax: { category: 'Leche fluida', rate: 0, net_price: 1500, tax_amount: 0 },
+        },
+      ]);
+    });
+
+    it('devuelve [] ante un error de la DB (no rompe la UI)', async () => {
+      mockDb.getAllAsync.mockRejectedValueOnce(new Error('db fail'));
+      expect(await repo.searchProducts('leche', 5)).toEqual([]);
     });
   });
 });

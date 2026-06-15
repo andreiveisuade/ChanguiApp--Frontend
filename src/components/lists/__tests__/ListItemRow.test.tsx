@@ -22,7 +22,11 @@ jest.mock('@/components/atoms/AppIcon', () => {
 const makeItem = (overrides: Partial<ShoppingListItem> = {}): ShoppingListItem => ({
   id: '1',
   list_id: 'l1',
+  barcode: '779',
   name: 'Manzanas',
+  brand: null,
+  price: 100,
+  image_url: null,
   quantity: 1,
   purchased: false,
   ...overrides,
@@ -70,5 +74,17 @@ describe('ListItemRow Component', () => {
 
     fireEvent.press(getByLabelText('lists.markPurchased'));
     expect(mockOnToggle).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders the delete button only when onDelete is provided', () => {
+    const onDelete = jest.fn();
+    const { queryByLabelText, rerender } = render(
+      <ListItemRow item={makeItem()} onToggle={mockOnToggle} />
+    );
+    expect(queryByLabelText('lists.deleteItem')).toBeNull();
+
+    rerender(<ListItemRow item={makeItem()} onToggle={mockOnToggle} onDelete={onDelete} />);
+    fireEvent.press(queryByLabelText('lists.deleteItem')!);
+    expect(onDelete).toHaveBeenCalledTimes(1);
   });
 });

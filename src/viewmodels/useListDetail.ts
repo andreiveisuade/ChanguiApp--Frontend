@@ -1,61 +1,107 @@
 import { useState, useEffect, useCallback } from 'react';
-import ListRepository from '@/repositories/ListRepository';
-import { ShoppingListItem } from '@/types/domain';
+import * as ListRepository from '@/repositories/ListRepository';
+import { Product, ShoppingListItem } from '@/types/domain';
 import { UserFriendlyError } from '@/types/errors';
-import { useAsyncAction } from '@/hooks/useAsyncAction';
+import { ErrorTranslationService } from '@/services/ErrorTranslationService';
 
 export type UseListDetailReturn = {
   items: ShoppingListItem[];
   isLoading: boolean;
   error: UserFriendlyError | null;
   refresh: () => Promise<void>;
-  addItem: (name: string) => Promise<void>;
-  toggleItem: (item: ShoppingListItem) => Promise<void>;
-  removeList: () => Promise<boolean>;
+  addProduct: (product: Product) => Promise<void>;
+  toggleItem: (itemId: string) => Promise<void>;
+  setQuantity: (itemId: string, quantity: number) => Promise<void>;
+  removeItem: (itemId: string) => Promise<void>;
 };
 
-export const useListDetail = (listId: string): UseListDetailReturn => {
+/**
+ * Ítems de una lista de compra (persistencia local, sin red). Las mutaciones
+ * recargan en silencio para no parpadear el spinner en cada toggle/cantidad.
+ */
+export const useListDetail = (listId: string | undefined): UseListDetailReturn => {
   const [items, setItems] = useState<ShoppingListItem[]>([]);
-  const { isLoading, error, run } = useAsyncAction(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<UserFriendlyError | null>(null);
 
-  const fetchDetail = useCallback(async () => {
-    const data = await run(() => ListRepository.getList(listId));
-    if (data) setItems(data.items);
-  }, [run, listId]);
+  const loadItems = useCallback(
+    async (showSpinner: boolean) => {
+      if (!listId) {
+        setIsLoading(false);
+        return;
+      }
+      if (showSpinner) setIsLoading(true);
+      setError(null);
+      try {
+        const data = await ListRepository.getListItems(listId);
+        setItems(data);
+      } catch (err) {
+        setError(ErrorTranslationService.translate(err));
+      } finally {
+        if (showSpinner) setIsLoading(false);
+      }
+    },
+    [listId],
+  );
 
   useEffect(() => {
-    fetchDetail();
-  }, [fetchDetail]);
+    loadItems(true);
+  }, [loadItems]);
 
   const refresh = useCallback(async () => {
-    await fetchDetail();
-  }, [fetchDetail]);
+    await loadItems(true);
+  }, [loadItems]);
 
-  const addItem = useCallback(
-    async (name: string) => {
-      const item = await run(() => ListRepository.addItem(listId, name));
-      if (item) setItems((prev) => [...prev, item]);
+  const addProduct = useCallback(
+    async (product: Product) => {
+      if (!listId) return;
+      try {
+        await ListRepository.addItem(listId, product);
+        await loadItems(false);
+      } catch (err) {
+        setError(ErrorTranslationService.translate(err));
+      }
     },
-    [run, listId]
+    [listId, loadItems],
   );
 
   const toggleItem = useCallback(
-    async (item: ShoppingListItem) => {
-      const updated = await run(() => ListRepository.setPurchased(listId, item.id, !item.purchased));
-      if (updated) setItems((prev) => prev.map((i) => (i.id === updated.id ? updated : i)));
+    async (itemId: string) => {
+      try {
+        await ListRepository.toggleItem(itemId);
+        await loadItems(false);
+      } catch (err) {
+        setError(ErrorTranslationService.translate(err));
+      }
     },
-    [run, listId]
+    [loadItems],
   );
 
-  const removeList = useCallback(async (): Promise<boolean> => {
-    const result = await run(async () => {
-      await ListRepository.deleteList(listId);
-      return true;
-    });
-    return result === true;
-  }, [run, listId]);
+  const setQuantity = useCallback(
+    async (itemId: string, quantity: number) => {
+      try {
+        await ListRepository.setItemQuantity(itemId, quantity);
+        await loadItems(false);
+      } catch (err) {
+        setError(ErrorTranslationService.translate(err));
+      }
+    },
+    [loadItems],
+  );
 
-  return { items, isLoading, error, refresh, addItem, toggleItem, removeList };
+  const removeItem = useCallback(
+    async (itemId: string) => {
+      try {
+        await ListRepository.deleteItem(itemId);
+        await loadItems(false);
+      } catch (err) {
+        setError(ErrorTranslationService.translate(err));
+      }
+    },
+    [loadItems],
+  );
+
+  return { items, isLoading, error, refresh, addProduct, toggleItem, setQuantity, removeItem };
 };
 
 export default useListDetail;

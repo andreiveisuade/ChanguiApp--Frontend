@@ -2,18 +2,29 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ShoppingList } from '@/types/domain';
-import { colors, iconSize, radii, spacing, touchTarget } from '@/constants/theme';
+import {
+  colors,
+  iconSize,
+  opacity,
+  radii,
+  shadow,
+  sizes,
+  spacing,
+  touchTarget,
+} from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
 interface ShoppingListCardProps {
   list: ShoppingList;
   onPress: () => void;
+  onLongPress?: () => void;
 }
 
 export function ShoppingListCard({
   list,
   onPress,
+  onLongPress,
 }: ShoppingListCardProps): React.JSX.Element {
   const { t } = useTranslation();
   const progress =
@@ -22,6 +33,7 @@ export function ShoppingListCard({
   return (
     <Pressable
       onPress={onPress}
+      onLongPress={onLongPress}
       accessibilityLabel={list.name}
       accessibilityRole="button"
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
@@ -51,17 +63,13 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
     borderRadius: radii.md,
-    elevation: 2,
     gap: spacing.sm,
     minHeight: touchTarget.minHeight,
     padding: spacing.lg,
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
+    ...shadow.card,
   },
   pressed: {
-    opacity: 0.8,
+    opacity: opacity.pressed,
   },
   header: {
     alignItems: 'center',
@@ -74,13 +82,13 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     backgroundColor: colors.border,
-    borderRadius: 2,
-    height: 4,
+    borderRadius: radii.xs,
+    height: sizes.progressBarHeight,
     overflow: 'hidden',
   },
   progressFill: {
     backgroundColor: colors.success,
-    borderRadius: 2,
+    borderRadius: radii.xs,
     height: '100%',
   },
 });
