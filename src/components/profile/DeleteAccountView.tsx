@@ -33,9 +33,20 @@ export function DeleteAccountView({
   };
 
   const listItems = [
-    { icon: 'carrito', text: t('profile.deleteItems.history', { defaultValue: 'Todo tu historial de compras' }) },
-    { icon: 'perfil', text: t('profile.deleteItems.info', { defaultValue: 'Tu información personal y preferencias' }) },
-    { icon: 'tarjeta', text: t('profile.deleteItems.payment', { defaultValue: 'Métodos de pago guardados' }) },
+    {
+      icon: 'carrito',
+      text: t('profile.deleteItems.history', { defaultValue: 'Todo tu historial de compras' }),
+    },
+    {
+      icon: 'perfil',
+      text: t('profile.deleteItems.info', {
+        defaultValue: 'Tu información personal y preferencias',
+      }),
+    },
+    {
+      icon: 'tarjeta',
+      text: t('profile.deleteItems.payment', { defaultValue: 'Métodos de pago guardados' }),
+    },
   ];
 
   return (
@@ -53,14 +64,18 @@ export function DeleteAccountView({
           {t('profile.deleteAccount', { defaultValue: 'Eliminar cuenta' })}
         </AppText>
         <AppText variant="Body" style={styles.subtitle}>
-          {t('profile.deleteConfirmSubtitle', { defaultValue: 'Esta acción es permanente y no se puede deshacer' })}
+          {t('profile.deleteConfirmSubtitle', {
+            defaultValue: 'Esta acción es permanente y no se puede deshacer',
+          })}
         </AppText>
       </View>
 
       {/* Caja de peligro */}
       <InfoBox
         variant="danger"
-        boldText={t('profile.deleteBoxBold', { defaultValue: '¡Atención! Esta acción es irreversible. ' })}
+        boldText={t('profile.deleteBoxBold', {
+          defaultValue: '¡Atención! Esta acción es irreversible. ',
+        })}
         text={t('profile.deleteBoxText', {
           defaultValue: 'Al eliminar tu cuenta perderás permanentemente:',
         })}
@@ -75,7 +90,12 @@ export function DeleteAccountView({
 
         {listItems.map((item, idx) => (
           <View key={idx} style={styles.listItemCard}>
-            <AppIcon name={item.icon} size={iconSize.smd} color={colors.textMuted} style={styles.listItemIcon} />
+            <AppIcon
+              name={item.icon}
+              size={iconSize.smd}
+              color={colors.textMuted}
+              style={styles.listItemIcon}
+            />
             <AppText variant="Body" style={styles.listItemText}>
               {item.text}
             </AppText>
@@ -90,7 +110,8 @@ export function DeleteAccountView({
         </AppText>
         <AppText variant="Body" style={styles.breakText}>
           {t('profile.needABreakText', {
-            defaultValue: 'En lugar de eliminar tu cuenta, puedes simplemente cerrar sesión y volver cuando quieras.',
+            defaultValue:
+              'En lugar de eliminar tu cuenta, puedes simplemente cerrar sesión y volver cuando quieras.',
           })}
         </AppText>
         <Pressable onPress={onNavigateToLogout}>
@@ -108,12 +129,14 @@ export function DeleteAccountView({
             {CONFIRM_PHRASE}
           </AppText>
         </AppText>
-        
+
         <View style={[styles.inputContainer, isConfirmed && styles.inputContainerConfirmed]}>
           <TextInput
             value={confirmationText}
             onChangeText={setConfirmationText}
-            placeholder={t('profile.confirmDeletePlaceholder', { defaultValue: 'Escribe la frase exacta' })}
+            placeholder={t('profile.confirmDeletePlaceholder', {
+              defaultValue: 'Escribe la frase exacta',
+            })}
             placeholderTextColor={colors.textPlaceholder}
             autoCapitalize="characters"
             style={styles.input}

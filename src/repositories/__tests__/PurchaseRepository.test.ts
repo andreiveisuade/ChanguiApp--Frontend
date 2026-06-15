@@ -23,7 +23,13 @@ describe('PurchaseRepository', () => {
     it('mapea created_at→date, payment_status→status y normaliza store_name null', async () => {
       mockedGet.mockResolvedValueOnce(
         axiosResponse([
-          { id: 'pu1', total: 1500, payment_status: 'completed', created_at: '2026-06-09T10:00:00Z', store_name: 'Coto' },
+          {
+            id: 'pu1',
+            total: 1500,
+            payment_status: 'completed',
+            created_at: '2026-06-09T10:00:00Z',
+            store_name: 'Coto',
+          },
           { id: 'pu2', total: 800, payment_status: 'failed', created_at: '2026-06-08T10:00:00Z' },
         ]),
       );
@@ -32,7 +38,13 @@ describe('PurchaseRepository', () => {
 
       expect(mockedGet).toHaveBeenCalledWith('/api/purchases', { params: undefined });
       expect(result).toEqual([
-        { id: 'pu1', store_name: 'Coto', date: '2026-06-09T10:00:00Z', total: 1500, status: 'completed' },
+        {
+          id: 'pu1',
+          store_name: 'Coto',
+          date: '2026-06-09T10:00:00Z',
+          total: 1500,
+          status: 'completed',
+        },
         { id: 'pu2', store_name: null, date: '2026-06-08T10:00:00Z', total: 800, status: 'failed' },
       ]);
     });
@@ -64,7 +76,14 @@ describe('PurchaseRepository', () => {
           created_at: '2026-06-09T10:00:00Z',
           store_name: 'Coto',
           items: [
-            { id: 'it1', purchase_id: 'pu1', product_name: 'Yerba', barcode: '779', quantity: 2, unit_price: 500 },
+            {
+              id: 'it1',
+              purchase_id: 'pu1',
+              product_name: 'Yerba',
+              barcode: '779',
+              quantity: 2,
+              unit_price: 500,
+            },
           ],
           summary: { subtotal_net: 909, taxes: [], total: 1000 },
         }),
@@ -81,7 +100,12 @@ describe('PurchaseRepository', () => {
 
     it('detalle sin items mapea a lista vacía y item_count 0', async () => {
       mockedGet.mockResolvedValueOnce(
-        axiosResponse({ id: 'pu1', total: 0, payment_status: 'pending', created_at: '2026-06-09T10:00:00Z' }),
+        axiosResponse({
+          id: 'pu1',
+          total: 0,
+          payment_status: 'pending',
+          created_at: '2026-06-09T10:00:00Z',
+        }),
       );
 
       const result = await PurchaseRepository.getPurchaseById('pu1');

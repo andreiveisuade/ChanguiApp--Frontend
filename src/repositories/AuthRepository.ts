@@ -47,7 +47,11 @@ const normalizeUser = (rawUser: unknown): User => {
         [metadata, 'full_name'],
         [metadata, 'name'],
       ) ?? '',
-    avatar_url: pickString([rawUser, 'avatar_url'], [rawUser, 'avatarUrl'], [metadata, 'avatar_url']),
+    avatar_url: pickString(
+      [rawUser, 'avatar_url'],
+      [rawUser, 'avatarUrl'],
+      [metadata, 'avatar_url'],
+    ),
     created_at:
       pickString([rawUser, 'created_at'], [rawUser, 'createdAt']) ?? new Date().toISOString(),
   };
@@ -95,7 +99,11 @@ const extractApiErrorMessage = (payload: unknown): string | null => {
   if (direct) {
     return direct;
   }
-  if (Array.isArray(payload.errors) && payload.errors.length > 0 && isObjectRecord(payload.errors[0])) {
+  if (
+    Array.isArray(payload.errors) &&
+    payload.errors.length > 0 &&
+    isObjectRecord(payload.errors[0])
+  ) {
     return getString(payload.errors[0], 'msg');
   }
   return null;
@@ -128,11 +136,8 @@ export const AuthRepository = {
   login: (email: string, password: string): Promise<StoredAuthSession> =>
     requestAuth('login', { email, password }),
 
-  register: (
-    full_name: string,
-    email: string,
-    password: string,
-  ): Promise<StoredAuthSession> => requestAuth('register', { name: full_name, email, password }),
+  register: (full_name: string, email: string, password: string): Promise<StoredAuthSession> =>
+    requestAuth('register', { name: full_name, email, password }),
 
   loginWithGoogle: async (): Promise<StoredAuthSession> => {
     const redirectTo = AuthSession.makeRedirectUri();
@@ -183,15 +188,15 @@ export const AuthRepository = {
     }
 
     const parsedUrl = Linking.parse(redirectUrl);
-    const code = typeof parsedUrl.queryParams?.code === 'string' ? parsedUrl.queryParams.code : null;
+    const code =
+      typeof parsedUrl.queryParams?.code === 'string' ? parsedUrl.queryParams.code : null;
 
     if (!code) {
       throw new Error('Google OAuth code missing');
     }
 
-    const { data: sessionData, error: sessionError } = await supabase.auth.exchangeCodeForSession(
-      code,
-    );
+    const { data: sessionData, error: sessionError } =
+      await supabase.auth.exchangeCodeForSession(code);
 
     if (sessionError) {
       throw sessionError;
@@ -255,7 +260,10 @@ export const AuthRepository = {
   },
 
   clearSession: async (): Promise<void> => {
-    await Promise.all([AsyncStorage.removeItem(STORAGE_KEYS.token), AsyncStorage.removeItem(STORAGE_KEYS.user)]);
+    await Promise.all([
+      AsyncStorage.removeItem(STORAGE_KEYS.token),
+      AsyncStorage.removeItem(STORAGE_KEYS.user),
+    ]);
   },
 };
 

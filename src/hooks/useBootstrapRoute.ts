@@ -3,10 +3,7 @@ import AuthRepository from '@/repositories/AuthRepository';
 import OnboardingRepository from '@/repositories/OnboardingRepository';
 import { ROUTES } from '@/constants/routes';
 
-type BootstrapRoute =
-  | typeof ROUTES.onboarding
-  | typeof ROUTES.tabs.home
-  | typeof ROUTES.auth.login;
+type BootstrapRoute = typeof ROUTES.onboarding | typeof ROUTES.tabs.home | typeof ROUTES.auth.login;
 
 /**
  * Decide la ruta inicial del splash. Usa el check débil de sesión

@@ -42,7 +42,7 @@ describe('CartItem Component', () => {
         imageUrl={null}
         onUpdateQuantity={mockOnUpdateQuantity}
         onDelete={mockOnDelete}
-      />
+      />,
     );
 
     expect(getByText('Product ABC')).toBeTruthy();
@@ -58,15 +58,15 @@ describe('CartItem Component', () => {
         imageUrl="https://example.com/product.png"
         onUpdateQuantity={mockOnUpdateQuantity}
         onDelete={mockOnDelete}
-      />
+      />,
     );
 
     const { Image } = require('react-native');
     expect(UNSAFE_getByType(Image)).toBeTruthy();
-    
+
     // Check that there is no package icon rendered (only the delete icon should be present)
     const icons = queryAllByTestId('app-icon');
-    const packageIcon = icons.find(icon => icon.props.children === 'package');
+    const packageIcon = icons.find((icon) => icon.props.children === 'package');
     expect(packageIcon).toBeUndefined();
   });
 
@@ -79,7 +79,7 @@ describe('CartItem Component', () => {
         imageUrl={null}
         onUpdateQuantity={mockOnUpdateQuantity}
         onDelete={mockOnDelete}
-      />
+      />,
     );
 
     const incButton = getByTestId('btn-inc');
@@ -96,7 +96,7 @@ describe('CartItem Component', () => {
         imageUrl={null}
         onUpdateQuantity={mockOnUpdateQuantity}
         onDelete={mockOnDelete}
-      />
+      />,
     );
 
     const decButton = getByTestId('btn-dec');
@@ -113,7 +113,7 @@ describe('CartItem Component', () => {
         imageUrl={null}
         onUpdateQuantity={mockOnUpdateQuantity}
         onDelete={mockOnDelete}
-      />
+      />,
     );
 
     const deleteButton = getByLabelText('Eliminar producto del carrito');

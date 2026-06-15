@@ -11,7 +11,10 @@ interface HistoryHeaderProps {
   onProfilePress: () => void;
 }
 
-export const HistoryHeader = ({ userName, onProfilePress }: HistoryHeaderProps): React.JSX.Element => {
+export const HistoryHeader = ({
+  userName,
+  onProfilePress,
+}: HistoryHeaderProps): React.JSX.Element => {
   const { t } = useTranslation();
   const firstName = userName ? userName.trim().split(' ')[0] : '';
 
@@ -19,7 +22,12 @@ export const HistoryHeader = ({ userName, onProfilePress }: HistoryHeaderProps):
     <SafeAreaView edges={['top']} style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.textContainer}>
-          <AppIcon name="carrito" size={iconSize.lgl} color={colors.white} style={styles.cartIcon} />
+          <AppIcon
+            name="carrito"
+            size={iconSize.lgl}
+            color={colors.white}
+            style={styles.cartIcon}
+          />
           <AppText variant="Display" style={styles.title} numberOfLines={1}>
             {t('historyScreen.title', { name: firstName })}
           </AppText>

@@ -68,7 +68,13 @@ describe('AuthRepository', () => {
         password: 'secret123',
       });
       expect(result.token).toBe('tk');
-      expect(result.user).toEqual({ id: 'u1', email: 'a@b.com', full_name: 'Andrei', avatar_url: null, created_at: expect.any(String) });
+      expect(result.user).toEqual({
+        id: 'u1',
+        email: 'a@b.com',
+        full_name: 'Andrei',
+        avatar_url: null,
+        created_at: expect.any(String),
+      });
     });
 
     it('register: manda name (no full_name) al backend', async () => {
@@ -99,7 +105,9 @@ describe('AuthRepository', () => {
         isAxiosError: true,
         response: {
           status: 400,
-          data: { errors: [{ msg: 'La password debe tener al menos 6 caracteres', path: 'password' }] },
+          data: {
+            errors: [{ msg: 'La password debe tener al menos 6 caracteres', path: 'password' }],
+          },
         },
       });
 
@@ -125,7 +133,10 @@ describe('AuthRepository', () => {
 
     it('toma email/full_name desde user_metadata si faltan en la raíz', async () => {
       mockedPost.mockResolvedValueOnce({
-        data: { token: 'tk', user: { id: 'u1', user_metadata: { email: 'meta@b.com', name: 'Meta User' } } },
+        data: {
+          token: 'tk',
+          user: { id: 'u1', user_metadata: { email: 'meta@b.com', name: 'Meta User' } },
+        },
       });
 
       const result = await AuthRepository.login('a@b.com', 'x');
@@ -149,11 +160,20 @@ describe('AuthRepository', () => {
 
   describe('loginWithGoogle', () => {
     it('flujo OK: OAuth → browser success → exchange → token + user', async () => {
-      mockedSignInOAuth.mockResolvedValueOnce({ data: { url: 'https://google/oauth', provider: 'google' }, error: null } as never);
-      mockedOpenAuth.mockResolvedValueOnce({ type: 'success', url: 'changuiapp://redirect?code=abc' } as never);
+      mockedSignInOAuth.mockResolvedValueOnce({
+        data: { url: 'https://google/oauth', provider: 'google' },
+        error: null,
+      } as never);
+      mockedOpenAuth.mockResolvedValueOnce({
+        type: 'success',
+        url: 'changuiapp://redirect?code=abc',
+      } as never);
       mockedParse.mockReturnValueOnce({ queryParams: { code: 'abc' } } as never);
       mockedExchange.mockResolvedValueOnce({
-        data: { session: { access_token: 'tk' }, user: { id: 'u1', email: 'a@b.com', full_name: 'Andrei' } },
+        data: {
+          session: { access_token: 'tk' },
+          user: { id: 'u1', email: 'a@b.com', full_name: 'Andrei' },
+        },
         error: null,
       } as never);
 
@@ -165,17 +185,25 @@ describe('AuthRepository', () => {
 
     it('lanza si el usuario cancela el browser', async () => {
       jest.useFakeTimers();
-      mockedSignInOAuth.mockResolvedValueOnce({ data: { url: 'https://google/oauth' }, error: null } as never);
+      mockedSignInOAuth.mockResolvedValueOnce({
+        data: { url: 'https://google/oauth' },
+        error: null,
+      } as never);
       mockedOpenAuth.mockResolvedValueOnce({ type: 'cancel' } as never);
 
-      const assertion = expect(AuthRepository.loginWithGoogle()).rejects.toThrow('Google OAuth cancelled');
+      const assertion = expect(AuthRepository.loginWithGoogle()).rejects.toThrow(
+        'Google OAuth cancelled',
+      );
       await jest.advanceTimersByTimeAsync(2000);
       await assertion;
       jest.useRealTimers();
     });
 
     it('lanza el error de supabase en signInWithOAuth', async () => {
-      mockedSignInOAuth.mockResolvedValueOnce({ data: {}, error: new Error('oauth fail') } as never);
+      mockedSignInOAuth.mockResolvedValueOnce({
+        data: {},
+        error: new Error('oauth fail'),
+      } as never);
 
       await expect(AuthRepository.loginWithGoogle()).rejects.toThrow('oauth fail');
     });
@@ -187,8 +215,14 @@ describe('AuthRepository', () => {
     });
 
     it('lanza si el redirect no trae el code', async () => {
-      mockedSignInOAuth.mockResolvedValueOnce({ data: { url: 'https://google/oauth' }, error: null } as never);
-      mockedOpenAuth.mockResolvedValueOnce({ type: 'success', url: 'changuiapp://redirect' } as never);
+      mockedSignInOAuth.mockResolvedValueOnce({
+        data: { url: 'https://google/oauth' },
+        error: null,
+      } as never);
+      mockedOpenAuth.mockResolvedValueOnce({
+        type: 'success',
+        url: 'changuiapp://redirect',
+      } as never);
       mockedParse.mockReturnValueOnce({ queryParams: {} } as never);
 
       await expect(AuthRepository.loginWithGoogle()).rejects.toThrow('Google OAuth code missing');
@@ -201,7 +235,10 @@ describe('AuthRepository', () => {
 
       await AuthRepository.resetPassword('a@b.com');
 
-      expect(mockedResetPwd).toHaveBeenCalledWith('a@b.com', expect.objectContaining({ redirectTo: expect.any(String) }));
+      expect(mockedResetPwd).toHaveBeenCalledWith(
+        'a@b.com',
+        expect.objectContaining({ redirectTo: expect.any(String) }),
+      );
     });
 
     it('logout lanza si supabase devuelve error', async () => {
@@ -213,7 +250,13 @@ describe('AuthRepository', () => {
 
   describe('sesión en AsyncStorage', () => {
     it('getStoredSession devuelve token + user parseado', async () => {
-      const storedUser = { id: 'u1', email: 'a@b.com', full_name: 'Andrei', avatar_url: null, created_at: '2026-01-01' };
+      const storedUser = {
+        id: 'u1',
+        email: 'a@b.com',
+        full_name: 'Andrei',
+        avatar_url: null,
+        created_at: '2026-01-01',
+      };
       mockedGetItem.mockResolvedValueOnce('tk').mockResolvedValueOnce(JSON.stringify(storedUser));
 
       const result = await AuthRepository.getStoredSession();
@@ -241,7 +284,13 @@ describe('AuthRepository', () => {
     });
 
     it('saveSession persiste token y user', async () => {
-      await AuthRepository.saveSession('tk', { id: 'u1', email: 'a@b.com', full_name: 'A', avatar_url: null, created_at: '2026-01-01' });
+      await AuthRepository.saveSession('tk', {
+        id: 'u1',
+        email: 'a@b.com',
+        full_name: 'A',
+        avatar_url: null,
+        created_at: '2026-01-01',
+      });
 
       expect(mockedSetItem).toHaveBeenCalledWith(STORAGE_KEYS.token, 'tk');
       expect(mockedSetItem).toHaveBeenCalledWith(STORAGE_KEYS.user, expect.stringContaining('u1'));

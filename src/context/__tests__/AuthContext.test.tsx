@@ -21,7 +21,10 @@ jest.mock('@/repositories/AuthRepository', () => ({
     clearSession: jest.fn(),
   },
 }));
-jest.mock('@/config/supabase', () => ({ __esModule: true, default: { auth: { getUser: jest.fn() } } }));
+jest.mock('@/config/supabase', () => ({
+  __esModule: true,
+  default: { auth: { getUser: jest.fn() } },
+}));
 jest.mock('@react-native-async-storage/async-storage', () => ({
   __esModule: true,
   default: { getItem: jest.fn(), setItem: jest.fn(), removeItem: jest.fn() },
@@ -40,7 +43,9 @@ const user: User = {
 };
 const session = { token: 'tk', user };
 
-const wrapper = ({ children }: { children: React.ReactNode }) => <AuthProvider>{children}</AuthProvider>;
+const wrapper = ({ children }: { children: React.ReactNode }) => (
+  <AuthProvider>{children}</AuthProvider>
+);
 
 const renderAuth = async () => {
   const utils = renderHook(() => useAuthContext(), { wrapper });
@@ -75,7 +80,10 @@ describe('AuthContext', () => {
 
     it('con token inválido limpia la sesión', async () => {
       mockedAuthRepo.getStoredSession.mockResolvedValueOnce(session);
-      mockedGetUser.mockResolvedValueOnce({ data: { user: null }, error: { message: 'bad' } } as never);
+      mockedGetUser.mockResolvedValueOnce({
+        data: { user: null },
+        error: { message: 'bad' },
+      } as never);
 
       const { result } = await renderAuth();
 
@@ -102,7 +110,9 @@ describe('AuthContext', () => {
       const { result } = await renderAuth();
 
       await act(async () => {
-        await expect(result.current.login('mal-email', 'secret123')).rejects.toMatchObject({ field: 'email' });
+        await expect(result.current.login('mal-email', 'secret123')).rejects.toMatchObject({
+          field: 'email',
+        });
       });
 
       expect(mockedAuthRepo.login).not.toHaveBeenCalled();
@@ -137,7 +147,11 @@ describe('AuthContext', () => {
         });
       });
 
-      expect(mockedAuthRepo.register).toHaveBeenCalledWith('Andrei Veis', 'andrei@uade.edu.ar', 'secret123');
+      expect(mockedAuthRepo.register).toHaveBeenCalledWith(
+        'Andrei Veis',
+        'andrei@uade.edu.ar',
+        'secret123',
+      );
       expect(result.current.isAuthenticated).toBe(true);
     });
 
@@ -146,7 +160,12 @@ describe('AuthContext', () => {
 
       await act(async () => {
         await expect(
-          result.current.register({ full_name: '', email: 'andrei@uade.edu.ar', password: 'secret123', confirmPassword: 'secret123' }),
+          result.current.register({
+            full_name: '',
+            email: 'andrei@uade.edu.ar',
+            password: 'secret123',
+            confirmPassword: 'secret123',
+          }),
         ).rejects.toMatchObject({ field: 'full_name' });
       });
 
@@ -275,7 +294,9 @@ describe('AuthContext', () => {
 
   it('useAuthContext fuera del provider lanza error', () => {
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    expect(() => renderHook(() => useAuthContext())).toThrow('useAuth must be used within an AuthProvider');
+    expect(() => renderHook(() => useAuthContext())).toThrow(
+      'useAuth must be used within an AuthProvider',
+    );
     spy.mockRestore();
   });
 });

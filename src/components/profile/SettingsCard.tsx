@@ -39,7 +39,12 @@ export function SettingsCard({
           {description}
         </AppText>
       </View>
-      <AppIcon name="chevron-derecha" size={iconSize.smd} color={colors.textPlaceholder} style={styles.arrow} />
+      <AppIcon
+        name="chevron-derecha"
+        size={iconSize.smd}
+        color={colors.textPlaceholder}
+        style={styles.arrow}
+      />
     </Pressable>
   );
 }

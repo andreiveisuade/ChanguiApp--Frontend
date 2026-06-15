@@ -34,7 +34,12 @@ jest.mock('@/components/atoms/AppIcon', () => {
 jest.mock('@/components/lists/ProductSearchInput', () => {
   const { Text, Pressable } = require('react-native');
   const product = {
-    id: 'p1', name: 'Leche', barcode: '779', brand: null, image_url: null, price: 1500,
+    id: 'p1',
+    name: 'Leche',
+    barcode: '779',
+    brand: null,
+    image_url: null,
+    price: 1500,
   };
   return {
     ProductSearchInput: ({ onSelect }: any) => (

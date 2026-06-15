@@ -15,21 +15,17 @@ describe('SecondaryButton Component', () => {
         title="Cancel"
         accessibilityHint="Cancels the action"
         onPress={mockOnPress}
-      />
+      />,
     );
     expect(getByText('Cancel')).toBeTruthy();
-    
+
     const button = getByRole('button');
     expect(button.props.accessibilityHint).toBe('Cancels the action');
   });
 
   it('calls onPress when clicked and not disabled/loading', () => {
     const { getByRole } = render(
-      <SecondaryButton
-        title="Cancel"
-        accessibilityHint="Cancels"
-        onPress={mockOnPress}
-      />
+      <SecondaryButton title="Cancel" accessibilityHint="Cancels" onPress={mockOnPress} />,
     );
     const button = getByRole('button');
     fireEvent.press(button);
@@ -43,7 +39,7 @@ describe('SecondaryButton Component', () => {
         accessibilityHint="Cancels"
         onPress={mockOnPress}
         disabled={true}
-      />
+      />,
     );
     const button = getByRole('button');
     fireEvent.press(button);
@@ -58,7 +54,7 @@ describe('SecondaryButton Component', () => {
         accessibilityHint="Cancels"
         onPress={mockOnPress}
         isLoading={true}
-      />
+      />,
     );
     const button = getByRole('button');
     fireEvent.press(button);

@@ -27,8 +27,7 @@ export function ShoppingListCard({
   onLongPress,
 }: ShoppingListCardProps): React.JSX.Element {
   const { t } = useTranslation();
-  const progress =
-    list.total_items > 0 ? list.done_items / list.total_items : 0;
+  const progress = list.total_items > 0 ? list.done_items / list.total_items : 0;
 
   return (
     <Pressable
@@ -48,12 +47,7 @@ export function ShoppingListCard({
         {t('lists.progress', { done: list.done_items, total: list.total_items })}
       </AppText>
       <View style={styles.progressBar}>
-        <View
-          style={[
-            styles.progressFill,
-            { width: `${Math.round(progress * 100)}%` },
-          ]}
-        />
+        <View style={[styles.progressFill, { width: `${Math.round(progress * 100)}%` }]} />
       </View>
     </Pressable>
   );

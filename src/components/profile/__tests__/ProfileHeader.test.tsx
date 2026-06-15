@@ -30,21 +30,21 @@ describe('ProfileHeader Component', () => {
 
   it('renders the greeting with the first name only', () => {
     const { getByText } = render(
-      <ProfileHeader userName="John Doe" onProfilePress={mockOnProfilePress} />
+      <ProfileHeader userName="John Doe" onProfilePress={mockOnProfilePress} />,
     );
     expect(getByText('John')).toBeTruthy();
   });
 
   it('renders the greeting key with empty name when userName is empty', () => {
     const { queryByText } = render(
-      <ProfileHeader userName="" onProfilePress={mockOnProfilePress} />
+      <ProfileHeader userName="" onProfilePress={mockOnProfilePress} />,
     );
     expect(queryByText('John')).toBeNull();
   });
 
   it('calls onProfilePress when the profile button is pressed', () => {
     const { getByRole } = render(
-      <ProfileHeader userName="John Doe" onProfilePress={mockOnProfilePress} />
+      <ProfileHeader userName="John Doe" onProfilePress={mockOnProfilePress} />,
     );
     fireEvent.press(getByRole('button'));
     expect(mockOnProfilePress).toHaveBeenCalledTimes(1);

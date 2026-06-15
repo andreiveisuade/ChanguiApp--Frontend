@@ -39,8 +39,12 @@ export function ListDetailScreen(): React.JSX.Element {
       return (
         <View style={styles.stateContainer}>
           <AppIcon name="lista" size={iconSize.hero} color={colors.border} />
-          <AppText variant="H3" style={styles.emptyTitle}>{t('lists.emptyListTitle')}</AppText>
-          <AppText variant="Body" style={styles.emptySubtitle}>{t('lists.emptyListSubtitle')}</AppText>
+          <AppText variant="H3" style={styles.emptyTitle}>
+            {t('lists.emptyListTitle')}
+          </AppText>
+          <AppText variant="Body" style={styles.emptySubtitle}>
+            {t('lists.emptyListSubtitle')}
+          </AppText>
         </View>
       );
     }
@@ -71,7 +75,9 @@ export function ListDetailScreen(): React.JSX.Element {
           >
             <AppIcon name="atras" size={iconSize.md} color={colors.textPrimary} />
           </Pressable>
-          <AppText variant="H2" style={styles.headerTitle} numberOfLines={1}>{title}</AppText>
+          <AppText variant="H2" style={styles.headerTitle} numberOfLines={1}>
+            {title}
+          </AppText>
         </View>
       </SafeAreaView>
 

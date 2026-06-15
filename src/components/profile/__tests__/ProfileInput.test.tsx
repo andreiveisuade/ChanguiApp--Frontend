@@ -26,8 +26,7 @@ jest.mock('@/components/forms/InlineError', () => {
   const { Text } = require('react-native');
   return {
     __esModule: true,
-    default: ({ message }: any) =>
-      message ? <Text testID="inline-error">{message}</Text> : null,
+    default: ({ message }: any) => (message ? <Text testID="inline-error">{message}</Text> : null),
     InlineError: ({ message }: any) =>
       message ? <Text testID="inline-error">{message}</Text> : null,
   };
@@ -42,7 +41,7 @@ describe('ProfileInput Component', () => {
 
   it('renders the label, value and icon', () => {
     const { getByText, getByDisplayValue, getByTestId } = render(
-      <ProfileInput label="Email" value="a@b.com" iconName="mail" />
+      <ProfileInput label="Email" value="a@b.com" iconName="mail" />,
     );
     expect(getByText('Email')).toBeTruthy();
     expect(getByDisplayValue('a@b.com')).toBeTruthy();
@@ -51,12 +50,7 @@ describe('ProfileInput Component', () => {
 
   it('calls onChangeText when the text changes', () => {
     const { UNSAFE_getByType } = render(
-      <ProfileInput
-        label="Email"
-        value=""
-        iconName="mail"
-        onChangeText={mockOnChangeText}
-      />
+      <ProfileInput label="Email" value="" iconName="mail" onChangeText={mockOnChangeText} />,
     );
     fireEvent.changeText(UNSAFE_getByType(TextInput), 'hello');
     expect(mockOnChangeText).toHaveBeenCalledWith('hello');
@@ -64,26 +58,21 @@ describe('ProfileInput Component', () => {
 
   it('renders the inline error when an error is provided', () => {
     const { getByTestId } = render(
-      <ProfileInput
-        label="Email"
-        value="bad"
-        iconName="mail"
-        error="Invalid email"
-      />
+      <ProfileInput label="Email" value="bad" iconName="mail" error="Invalid email" />,
     );
     expect(getByTestId('inline-error').props.children).toBe('Invalid email');
   });
 
   it('does not render an inline error when error is null', () => {
     const { queryByTestId } = render(
-      <ProfileInput label="Email" value="a@b.com" iconName="mail" error={null} />
+      <ProfileInput label="Email" value="a@b.com" iconName="mail" error={null} />,
     );
     expect(queryByTestId('inline-error')).toBeNull();
   });
 
   it('marks the TextInput as non-editable when editable is false', () => {
     const { UNSAFE_getByType } = render(
-      <ProfileInput label="Email" value="a@b.com" iconName="mail" editable={false} />
+      <ProfileInput label="Email" value="a@b.com" iconName="mail" editable={false} />,
     );
     expect(UNSAFE_getByType(TextInput).props.editable).toBe(false);
   });
@@ -96,7 +85,7 @@ describe('ProfileInput Component', () => {
         iconName="mail"
         keyboardType="email-address"
         autoCapitalize="none"
-      />
+      />,
     );
     const input = UNSAFE_getByType(TextInput);
     expect(input.props.keyboardType).toBe('email-address');

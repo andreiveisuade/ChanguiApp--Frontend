@@ -25,9 +25,7 @@ export function ListItemRow({
     <View style={[styles.row, isLast && styles.noBorder]}>
       <Pressable
         onPress={onToggle}
-        accessibilityLabel={
-          item.purchased ? t('lists.markUnpurchased') : t('lists.markPurchased')
-        }
+        accessibilityLabel={item.purchased ? t('lists.markUnpurchased') : t('lists.markPurchased')}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: item.purchased }}
         style={({ pressed }) => [styles.checkbox, pressed && styles.checkboxPressed]}
@@ -48,7 +46,9 @@ export function ListItemRow({
       </AppText>
 
       {item.quantity > 1 ? (
-        <AppText variant="Label" style={styles.qty}>×{item.quantity}</AppText>
+        <AppText variant="Label" style={styles.qty}>
+          ×{item.quantity}
+        </AppText>
       ) : null}
 
       {onDelete ? (

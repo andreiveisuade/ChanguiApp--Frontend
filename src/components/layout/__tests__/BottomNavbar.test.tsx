@@ -29,13 +29,20 @@ jest.mock('@/components/atoms/AppIcon', () => {
 
 const ROUTES = ['home', 'cart', 'scanner', 'history', 'settings'];
 
-function buildProps(focusedIndex: number, navigate = jest.fn(), emit?: jest.Mock): BottomTabBarProps {
+function buildProps(
+  focusedIndex: number,
+  navigate = jest.fn(),
+  emit?: jest.Mock,
+): BottomTabBarProps {
   const emitMock = emit ?? jest.fn(() => ({ defaultPrevented: false }));
   const routes = ROUTES.map((name) => ({ key: `${name}-key`, name }));
-  const descriptors = routes.reduce((acc, route) => {
-    acc[route.key] = { options: {} };
-    return acc;
-  }, {} as Record<string, any>);
+  const descriptors = routes.reduce(
+    (acc, route) => {
+      acc[route.key] = { options: {} };
+      return acc;
+    },
+    {} as Record<string, any>,
+  );
 
   return {
     state: { index: focusedIndex, routes },

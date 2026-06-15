@@ -38,7 +38,14 @@ describe('CartRepository', () => {
                 product_id: 'p1',
                 quantity: 2,
                 unit_price: 1000,
-                products: { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 },
+                products: {
+                  id: 'p1',
+                  name: 'Yerba',
+                  barcode: '779',
+                  brand: 'Playadito',
+                  image_url: null,
+                  price: 1000,
+                },
               },
             ],
           },
@@ -49,7 +56,14 @@ describe('CartRepository', () => {
               product_id: 'p1',
               quantity: 2,
               unit_price: 1000,
-              product: { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 },
+              product: {
+                id: 'p1',
+                name: 'Yerba',
+                barcode: '779',
+                brand: 'Playadito',
+                image_url: null,
+                price: 1000,
+              },
             },
           ],
           total: 2000,
@@ -106,7 +120,14 @@ describe('CartRepository', () => {
               product_id: 'p1',
               quantity: 1,
               unit_price: 1210,
-              product: { id: 'p1', name: 'Yerba', barcode: '779', brand: null, image_url: null, price: 1210 },
+              product: {
+                id: 'p1',
+                name: 'Yerba',
+                barcode: '779',
+                brand: null,
+                image_url: null,
+                price: 1210,
+              },
             },
           ],
         }),
@@ -153,12 +174,21 @@ describe('CartRepository', () => {
 
       expect(result.total).toBe(221); // 110.5 * 2
       expect(result.summary.taxes).toHaveLength(1);
-      expect(result.summary.taxes[0]).toEqual({ rate: 10.5, label: 'IVA 10.5%', base: 200, amount: 21 });
+      expect(result.summary.taxes[0]).toEqual({
+        rate: 10.5,
+        label: 'IVA 10.5%',
+        base: 200,
+        amount: 21,
+      });
       expect(result.summary.subtotal_net).toBe(200);
     });
 
     it('respeta el summary del backend cuando viene con valores (no recalcula)', async () => {
-      const backendSummary = { subtotal_net: 826.4, taxes: [{ rate: 21, label: 'IVA 21%', base: 826.4, amount: 173.6 }], total: 1000 };
+      const backendSummary = {
+        subtotal_net: 826.4,
+        taxes: [{ rate: 21, label: 'IVA 21%', base: 826.4, amount: 173.6 }],
+        total: 1000,
+      };
       mockedGet.mockResolvedValueOnce(
         axiosResponse({
           cart: null,
@@ -169,7 +199,14 @@ describe('CartRepository', () => {
               product_id: 'p1',
               quantity: 1,
               unit_price: 1000,
-              product: { id: 'p1', name: 'X', barcode: '1', brand: null, image_url: null, price: 1000 },
+              product: {
+                id: 'p1',
+                name: 'X',
+                barcode: '1',
+                brand: null,
+                image_url: null,
+                price: 1000,
+              },
             },
           ],
           total: 1000,
@@ -204,7 +241,11 @@ describe('CartRepository', () => {
   describe('addItem', () => {
     it('con carrito existente: POST sin store_id', async () => {
       mockedGet.mockResolvedValueOnce(
-        axiosResponse({ cart: { id: 'c1', user_id: 'u1', store_id: 's1', status: 'active', cart_items: [] }, items: [], total: 0 }),
+        axiosResponse({
+          cart: { id: 'c1', user_id: 'u1', store_id: 's1', status: 'active', cart_items: [] },
+          items: [],
+          total: 0,
+        }),
       );
       mockedPost.mockResolvedValueOnce(axiosResponse({}));
 

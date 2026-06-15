@@ -17,14 +17,8 @@ const CAMERA_BACKGROUND = '#101827';
 export default function ScannerScreen(): React.JSX.Element {
   const { t } = useTranslation();
   const [permission, requestPermission] = useCameraPermissions();
-  const {
-    scanned,
-    loading,
-    errorMessage,
-    handleBarcodeScanned,
-    resetScanner,
-    clearError,
-  } = useScanner();
+  const { scanned, loading, errorMessage, handleBarcodeScanned, resetScanner, clearError } =
+    useScanner();
 
   if (!permission) {
     return <View />;

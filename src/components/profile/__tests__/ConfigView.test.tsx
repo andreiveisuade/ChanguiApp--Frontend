@@ -44,9 +44,7 @@ const mockedUseAccessibility = jest.mocked(useAccessibility);
 
 type AccessibilityValue = ReturnType<typeof useAccessibility>;
 
-const makeAccessibility = (
-  overrides: Partial<AccessibilityValue> = {}
-): AccessibilityValue => ({
+const makeAccessibility = (overrides: Partial<AccessibilityValue> = {}): AccessibilityValue => ({
   fontScale: 1,
   fontScaleName: 'medium',
   language: 'es',

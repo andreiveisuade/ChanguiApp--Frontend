@@ -166,9 +166,7 @@ describe('ProductFoundScreen', () => {
     });
 
     it('isLoading deshabilita escanear otro y decrementar', () => {
-      mockedUseProductFound.mockReturnValue(
-        buildState({ quantity: 2, isLoading: true }),
-      );
+      mockedUseProductFound.mockReturnValue(buildState({ quantity: 2, isLoading: true }));
       const { getByText } = render(<ProductFoundScreen />);
 
       fireEvent.press(getByText('scanner.scanAnother'));
