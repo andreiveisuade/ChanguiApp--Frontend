@@ -2,7 +2,17 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ShoppingList } from '@/types/domain';
-import { colors, radii, spacing, touchTarget } from '@/constants/theme';
+import {
+  colors,
+  elevation,
+  iconSize,
+  opacity,
+  radii,
+  shadow,
+  sizes,
+  spacing,
+  touchTarget,
+} from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -30,7 +40,7 @@ export function ShoppingListCard({
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
       <View style={styles.header}>
-        <AppIcon name="lista" size={22} color={colors.primary} />
+        <AppIcon name="lista" size={iconSize.md} color={colors.primary} />
         <AppText variant="H3" style={styles.name} numberOfLines={1}>
           {list.name}
         </AppText>
@@ -54,17 +64,14 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
     borderRadius: radii.md,
-    elevation: 2,
+    elevation: elevation.card,
     gap: spacing.sm,
     minHeight: touchTarget.minHeight,
     padding: spacing.lg,
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
+    ...shadow.card,
   },
   pressed: {
-    opacity: 0.8,
+    opacity: opacity.pressed,
   },
   header: {
     alignItems: 'center',
@@ -77,13 +84,13 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     backgroundColor: colors.border,
-    borderRadius: 2,
-    height: 4,
+    borderRadius: radii.xs,
+    height: sizes.progressBarHeight,
     overflow: 'hidden',
   },
   progressFill: {
     backgroundColor: colors.success,
-    borderRadius: 2,
+    borderRadius: radii.xs,
     height: '100%',
   },
 });

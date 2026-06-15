@@ -3,7 +3,19 @@ import { Alert, FlatList, Pressable, StyleSheet, TextInput, View } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
-import { colors, fonts, radii, spacing, touchTarget } from '@/constants/theme';
+import {
+  borderWidth,
+  colors,
+  control,
+  fontSize,
+  fonts,
+  iconSize,
+  opacity,
+  radii,
+  sizes,
+  spacing,
+  touchTarget,
+} from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { ShoppingListCard } from '@/components/lists/ShoppingListCard';
@@ -39,7 +51,7 @@ export function ListsScreen(): React.JSX.Element {
     if (isLoading) return null;
     return (
       <View style={styles.stateContainer}>
-        <AppIcon name="lista" size={48} color={colors.border} />
+        <AppIcon name="lista" size={iconSize.lg} color={colors.border} />
         <AppText variant="H3" style={styles.emptyTitle}>{t('lists.emptyTitle')}</AppText>
         <AppText variant="Body" style={styles.emptySubtitle}>{t('lists.emptySubtitle')}</AppText>
       </View>
@@ -58,7 +70,7 @@ export function ListsScreen(): React.JSX.Element {
             accessibilityRole="button"
             accessibilityLabel={t('lists.back')}
           >
-            <AppIcon name="atras" size={22} color={colors.textPrimary} />
+            <AppIcon name="atras" size={iconSize.md} color={colors.textPrimary} />
           </Pressable>
           <AppText variant="H2" style={styles.headerTitle}>{t('lists.title')}</AppText>
         </View>
@@ -86,7 +98,7 @@ export function ListsScreen(): React.JSX.Element {
             pressed && styles.pressed,
           ]}
         >
-          <AppIcon name="mas" size={22} color={colors.white} />
+          <AppIcon name="mas" size={iconSize.md} color={colors.white} />
         </Pressable>
       </View>
 
@@ -120,7 +132,7 @@ const styles = StyleSheet.create({
   headerBar: {
     alignItems: 'center',
     borderBottomColor: colors.border,
-    borderBottomWidth: 1,
+    borderBottomWidth: borderWidth.hairline,
     flexDirection: 'row',
     gap: spacing.sm,
     paddingBottom: spacing.md,
@@ -149,29 +161,29 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     flex: 1,
     fontFamily: fonts.body,
-    fontSize: 15,
-    minHeight: 48,
+    fontSize: fontSize.input,
+    minHeight: control.height,
     paddingHorizontal: spacing.lg,
   },
   addButton: {
     alignItems: 'center',
     backgroundColor: colors.primary,
     borderRadius: radii.md,
-    height: 48,
+    height: control.height,
     justifyContent: 'center',
     minHeight: touchTarget.minHeight,
     minWidth: touchTarget.minWidth,
-    width: 48,
+    width: control.height,
   },
   addButtonDisabled: {
-    opacity: 0.4,
+    opacity: opacity.disabled,
   },
   pressed: {
-    opacity: 0.8,
+    opacity: opacity.pressed,
   },
   content: {
     flexGrow: 1,
-    paddingBottom: 40,
+    paddingBottom: spacing.xxxl,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.sm,
   },
@@ -182,7 +194,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
     justifyContent: 'center',
-    marginTop: 60,
+    marginTop: sizes.emptyStateOffset,
     padding: spacing.xl,
   },
   emptyTitle: {
@@ -191,7 +203,7 @@ const styles = StyleSheet.create({
     textTransform: 'none',
   },
   emptySubtitle: {
-    opacity: 0.7,
+    opacity: opacity.muted,
     textAlign: 'center',
   },
 });

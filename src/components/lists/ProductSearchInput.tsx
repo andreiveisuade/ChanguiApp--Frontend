@@ -2,7 +2,17 @@ import React from 'react';
 import { Keyboard, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Product } from '@/types/domain';
-import { colors, radii, spacing, touchTarget } from '@/constants/theme';
+import {
+  borderWidth,
+  colors,
+  elevation,
+  opacity,
+  radii,
+  shadow,
+  sizes,
+  spacing,
+  touchTarget,
+} from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { SearchBar } from '@/components/forms/SearchBar';
 import { formatARS } from '@/utils/currency';
@@ -86,18 +96,15 @@ const styles = StyleSheet.create({
   dropdown: {
     backgroundColor: colors.white,
     borderRadius: radii.md,
-    elevation: 2,
-    maxHeight: 260,
+    elevation: elevation.card,
+    maxHeight: sizes.dropdownMaxHeight,
     overflow: 'hidden',
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
+    ...shadow.card,
   },
   row: {
     alignItems: 'center',
     borderBottomColor: colors.border,
-    borderBottomWidth: 1,
+    borderBottomWidth: borderWidth.hairline,
     flexDirection: 'row',
     gap: spacing.md,
     minHeight: touchTarget.minHeight,
@@ -108,11 +115,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   rowPressed: {
-    opacity: 0.7,
+    opacity: opacity.pressed,
   },
   info: {
     flex: 1,
-    gap: 2,
+    gap: spacing.xxs,
   },
   name: {
     textTransform: 'none',

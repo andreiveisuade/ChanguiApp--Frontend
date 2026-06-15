@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ShoppingListItem } from '@/types/domain';
-import { colors, spacing, touchTarget } from '@/constants/theme';
+import { borderWidth, colors, iconSize, opacity, spacing, touchTarget } from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 
@@ -33,9 +33,9 @@ export function ListItemRow({
         style={({ pressed }) => [styles.checkbox, pressed && styles.checkboxPressed]}
       >
         {item.purchased ? (
-          <AppIcon name="exito" size={22} color={colors.success} />
+          <AppIcon name="exito" size={iconSize.md} color={colors.success} />
         ) : (
-          <AppIcon name="circulo" size={22} color={colors.border} />
+          <AppIcon name="circulo" size={iconSize.md} color={colors.border} />
         )}
       </Pressable>
 
@@ -58,7 +58,7 @@ export function ListItemRow({
           accessibilityRole="button"
           style={({ pressed }) => [styles.delete, pressed && styles.checkboxPressed]}
         >
-          <AppIcon name="eliminar" size={20} color={colors.textSecondary} />
+          <AppIcon name="eliminar" size={iconSize.sm} color={colors.textSecondary} />
         </Pressable>
       ) : null}
     </View>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   row: {
     alignItems: 'center',
     borderBottomColor: colors.border,
-    borderBottomWidth: 1,
+    borderBottomWidth: borderWidth.hairline,
     flexDirection: 'row',
     gap: spacing.md,
     paddingVertical: spacing.sm,
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     minWidth: touchTarget.minWidth,
   },
   checkboxPressed: {
-    opacity: 0.6,
+    opacity: opacity.pressed,
   },
   name: {
     flex: 1,

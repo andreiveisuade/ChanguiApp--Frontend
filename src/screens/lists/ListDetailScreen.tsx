@@ -3,7 +3,16 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { colors, radii, spacing, touchTarget } from '@/constants/theme';
+import {
+  borderWidth,
+  colors,
+  iconSize,
+  opacity,
+  radii,
+  sizes,
+  spacing,
+  touchTarget,
+} from '@/constants/theme';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import { ProductSearchInput } from '@/components/lists/ProductSearchInput';
@@ -29,7 +38,7 @@ export function ListDetailScreen(): React.JSX.Element {
     if (items.length === 0) {
       return (
         <View style={styles.stateContainer}>
-          <AppIcon name="lista" size={48} color={colors.border} />
+          <AppIcon name="lista" size={iconSize.lg} color={colors.border} />
           <AppText variant="H3" style={styles.emptyTitle}>{t('lists.emptyListTitle')}</AppText>
           <AppText variant="Body" style={styles.emptySubtitle}>{t('lists.emptyListSubtitle')}</AppText>
         </View>
@@ -60,7 +69,7 @@ export function ListDetailScreen(): React.JSX.Element {
             accessibilityRole="button"
             accessibilityLabel={t('lists.back')}
           >
-            <AppIcon name="atras" size={22} color={colors.textPrimary} />
+            <AppIcon name="atras" size={iconSize.md} color={colors.textPrimary} />
           </Pressable>
           <AppText variant="H2" style={styles.headerTitle} numberOfLines={1}>{title}</AppText>
         </View>
@@ -89,7 +98,7 @@ const styles = StyleSheet.create({
   headerBar: {
     alignItems: 'center',
     borderBottomColor: colors.border,
-    borderBottomWidth: 1,
+    borderBottomWidth: borderWidth.hairline,
     flexDirection: 'row',
     gap: spacing.sm,
     paddingBottom: spacing.md,
@@ -114,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderColor: colors.border,
     borderRadius: radii.md,
-    borderWidth: 1,
+    borderWidth: borderWidth.hairline,
     marginTop: spacing.md,
     paddingHorizontal: spacing.lg,
   },
@@ -122,7 +131,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
     justifyContent: 'center',
-    marginTop: 60,
+    marginTop: sizes.emptyStateOffset,
     padding: spacing.xl,
   },
   emptyTitle: {
@@ -131,7 +140,7 @@ const styles = StyleSheet.create({
     textTransform: 'none',
   },
   emptySubtitle: {
-    opacity: 0.7,
+    opacity: opacity.muted,
     textAlign: 'center',
   },
 });
