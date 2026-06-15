@@ -1,4 +1,5 @@
 import { NetworkError, UserFriendlyError } from '@/types/errors';
+import { logger } from '@/utils/debugStore';
 
 type ErrorCode =
   | 'NETWORK_ERROR'
@@ -103,8 +104,9 @@ const resolveCode = (err: unknown): ErrorCode => {
 
 export const ErrorTranslationService = {
   translate(err: unknown): UserFriendlyError {
-    // Log the original error internally for debugging
-    console.error('[ErrorTranslationService]', err);
+    // Log interno para debug (ring buffer del debugStore, visible también en
+    // builds release vía el overlay de debug; a diferencia de console.error).
+    logger.error('[ErrorTranslationService] ' + (err instanceof Error ? err.message : String(err)));
     return { ...MESSAGES[resolveCode(err)] };
   },
 };
