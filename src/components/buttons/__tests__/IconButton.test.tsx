@@ -19,11 +19,7 @@ describe('IconButton Component', () => {
 
   it('renders the icon and accessibility props', () => {
     const { getByRole, getByTestId } = render(
-      <IconButton
-        icon="cerrar"
-        onPress={mockOnPress}
-        accessibilityLabel="Cerrar"
-      />
+      <IconButton icon="cerrar" onPress={mockOnPress} accessibilityLabel="Cerrar" />,
     );
 
     expect(getByTestId('app-icon').props.children).toBe('cerrar');
@@ -34,7 +30,7 @@ describe('IconButton Component', () => {
 
   it('calls onPress when pressed and not disabled', () => {
     const { getByRole } = render(
-      <IconButton icon="cerrar" onPress={mockOnPress} accessibilityLabel="Cerrar" />
+      <IconButton icon="cerrar" onPress={mockOnPress} accessibilityLabel="Cerrar" />,
     );
 
     fireEvent.press(getByRole('button'));
@@ -48,7 +44,7 @@ describe('IconButton Component', () => {
         onPress={mockOnPress}
         accessibilityLabel="Cerrar"
         disabled={true}
-      />
+      />,
     );
 
     const button = getByRole('button');

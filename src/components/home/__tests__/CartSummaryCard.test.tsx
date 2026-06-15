@@ -26,7 +26,7 @@ jest.mock('@/components/atoms/AppIcon', () => {
 describe('CartSummaryCard Component', () => {
   it('muestra indicadores de carga (ActivityIndicator) cuando isLoading es true', () => {
     const { UNSAFE_queryAllByType } = render(
-      <CartSummaryCard itemCount={5} total={1500} isLoading={true} />
+      <CartSummaryCard itemCount={5} total={1500} isLoading={true} />,
     );
 
     const { ActivityIndicator } = require('react-native');
@@ -35,27 +35,21 @@ describe('CartSummaryCard Component', () => {
   });
 
   it('muestra mensaje de carrito vacío cuando itemCount es 0', () => {
-    const { getByText } = render(
-      <CartSummaryCard itemCount={0} total={0} isLoading={false} />
-    );
+    const { getByText } = render(<CartSummaryCard itemCount={0} total={0} isLoading={false} />);
 
     expect(getByText('home.emptyCart')).toBeTruthy();
     expect(getByText('$0')).toBeTruthy();
   });
 
   it('muestra texto singular de productos cuando itemCount es 1', () => {
-    const { getByText } = render(
-      <CartSummaryCard itemCount={1} total={250} isLoading={false} />
-    );
+    const { getByText } = render(<CartSummaryCard itemCount={1} total={250} isLoading={false} />);
 
     expect(getByText('home.products_one (1)')).toBeTruthy();
     expect(getByText('$250')).toBeTruthy();
   });
 
   it('muestra texto plural de productos cuando itemCount es mayor a 1', () => {
-    const { getByText } = render(
-      <CartSummaryCard itemCount={3} total={750} isLoading={false} />
-    );
+    const { getByText } = render(<CartSummaryCard itemCount={3} total={750} isLoading={false} />);
 
     expect(getByText('home.products_other (3)')).toBeTruthy();
     expect(getByText('$750')).toBeTruthy();

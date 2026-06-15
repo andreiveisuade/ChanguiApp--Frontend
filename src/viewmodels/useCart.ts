@@ -57,29 +57,35 @@ export const useCart = (): UseCartReturn => {
     await fetchCart();
   }, [fetchCart]);
 
-  const updateQuantity = useCallback(async (itemId: string, quantity: number) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await CartRepository.updateItemQuantity(itemId, quantity);
-      await fetchCart();
-    } catch (err) {
-      setError(ErrorTranslationService.translate(err));
-      setIsLoading(false);
-    }
-  }, [fetchCart]);
+  const updateQuantity = useCallback(
+    async (itemId: string, quantity: number) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        await CartRepository.updateItemQuantity(itemId, quantity);
+        await fetchCart();
+      } catch (err) {
+        setError(ErrorTranslationService.translate(err));
+        setIsLoading(false);
+      }
+    },
+    [fetchCart],
+  );
 
-  const removeItem = useCallback(async (itemId: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await CartRepository.deleteItem(itemId);
-      await fetchCart();
-    } catch (err) {
-      setError(ErrorTranslationService.translate(err));
-      setIsLoading(false);
-    }
-  }, [fetchCart]);
+  const removeItem = useCallback(
+    async (itemId: string) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        await CartRepository.deleteItem(itemId);
+        await fetchCart();
+      } catch (err) {
+        setError(ErrorTranslationService.translate(err));
+        setIsLoading(false);
+      }
+    },
+    [fetchCart],
+  );
 
   return {
     cart,

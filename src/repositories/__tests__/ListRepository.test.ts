@@ -37,11 +37,23 @@ describe('ListRepository', () => {
 
   it('getLists mapea filas con su progreso', async () => {
     mockDb.getAllAsync.mockResolvedValueOnce([
-      { id: 'l1', name: 'Súper', created_at: '2026-06-10T00:00:00.000Z', total_items: 3, done_items: 1 },
+      {
+        id: 'l1',
+        name: 'Súper',
+        created_at: '2026-06-10T00:00:00.000Z',
+        total_items: 3,
+        done_items: 1,
+      },
     ]);
     const lists = await repo.getLists();
     expect(lists).toEqual([
-      { id: 'l1', name: 'Súper', total_items: 3, done_items: 1, created_at: '2026-06-10T00:00:00.000Z' },
+      {
+        id: 'l1',
+        name: 'Súper',
+        total_items: 3,
+        done_items: 1,
+        created_at: '2026-06-10T00:00:00.000Z',
+      },
     ]);
   });
 
@@ -100,21 +112,42 @@ describe('ListRepository', () => {
   it('getListItems mapea las filas y normaliza purchased a boolean', async () => {
     mockDb.getAllAsync.mockResolvedValueOnce([
       {
-        id: 'i1', list_id: 'l1', barcode: '779', name: 'Leche', brand: 'La Serenísima',
-        price: 1500, image_url: null, quantity: 2, purchased: 1,
+        id: 'i1',
+        list_id: 'l1',
+        barcode: '779',
+        name: 'Leche',
+        brand: 'La Serenísima',
+        price: 1500,
+        image_url: null,
+        quantity: 2,
+        purchased: 1,
         created_at: '2026-06-10T00:00:00.000Z',
       },
       {
-        id: 'i2', list_id: 'l1', barcode: '780', name: 'Pan', brand: null,
-        price: 800, image_url: null, quantity: 1, purchased: 0,
+        id: 'i2',
+        list_id: 'l1',
+        barcode: '780',
+        name: 'Pan',
+        brand: null,
+        price: 800,
+        image_url: null,
+        quantity: 1,
+        purchased: 0,
         created_at: '2026-06-10T00:01:00.000Z',
       },
     ]);
     const items = await repo.getListItems('l1');
     expect(mockDb.getAllAsync.mock.calls[0][1]).toEqual(['l1']);
     expect(items[0]).toEqual({
-      id: 'i1', list_id: 'l1', barcode: '779', name: 'Leche', brand: 'La Serenísima',
-      price: 1500, image_url: null, quantity: 2, purchased: true,
+      id: 'i1',
+      list_id: 'l1',
+      barcode: '779',
+      name: 'Leche',
+      brand: 'La Serenísima',
+      price: 1500,
+      image_url: null,
+      quantity: 2,
+      purchased: true,
       created_at: '2026-06-10T00:00:00.000Z',
     });
     expect(items[1].purchased).toBe(false);

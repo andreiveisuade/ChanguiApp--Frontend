@@ -1,11 +1,5 @@
 import { apiFetch } from '@/utils/apiFetch';
-import {
-  PaymentStatus,
-  Purchase,
-  PurchaseDetail,
-  PurchaseItem,
-  TaxSummary,
-} from '@/types/domain';
+import { PaymentStatus, Purchase, PurchaseDetail, PurchaseItem, TaxSummary } from '@/types/domain';
 
 interface RawPurchase {
   id: string;

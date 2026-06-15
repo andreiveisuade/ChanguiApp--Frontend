@@ -30,7 +30,7 @@ export const CheckoutRepository = {
    */
   async getStatus(preferenceId: string): Promise<CheckoutStatus> {
     const response = await apiFetch(
-      `/api/checkout/status?preference_id=${encodeURIComponent(preferenceId)}`
+      `/api/checkout/status?preference_id=${encodeURIComponent(preferenceId)}`,
     );
     return response.json();
   },

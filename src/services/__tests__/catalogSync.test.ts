@@ -58,7 +58,10 @@ describe('catalogSync.syncCatalog', () => {
     mockedApiFetch
       .mockResolvedValueOnce(
         jsonResponse({
-          products: [product('1', '2026-06-08T09:00:00.000Z'), product('2', '2026-06-08T09:30:00.000Z')],
+          products: [
+            product('1', '2026-06-08T09:00:00.000Z'),
+            product('2', '2026-06-08T09:30:00.000Z'),
+          ],
           count: 2,
           has_more: true,
           next_cursor: '2026-06-08T09:30:00.000Z',

@@ -20,7 +20,9 @@ export function ProfileField({
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <AppText variant="Label" style={styles.label}>{label}</AppText>
+        <AppText variant="Label" style={styles.label}>
+          {label}
+        </AppText>
         <AppText variant="H3">{value}</AppText>
       </View>
       {onEdit ? (

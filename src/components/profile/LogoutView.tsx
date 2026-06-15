@@ -36,7 +36,9 @@ export function LogoutView({ user, onLogout, onCancel }: LogoutViewProps): React
           {t('profile.logoutConfirmTitle', { defaultValue: '¿Cerrar sesión?' })}
         </AppText>
         <AppText variant="Body" style={styles.subtitle}>
-          {t('profile.logoutConfirmSubtitle', { defaultValue: 'Podrás volver a iniciar sesión en cualquier momento' })}
+          {t('profile.logoutConfirmSubtitle', {
+            defaultValue: 'Podrás volver a iniciar sesión en cualquier momento',
+          })}
         </AppText>
       </View>
 

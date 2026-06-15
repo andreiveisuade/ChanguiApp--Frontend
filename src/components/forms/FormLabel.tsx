@@ -8,7 +8,11 @@ type FormLabelProps = {
 };
 
 export function FormLabel({ children }: FormLabelProps): React.JSX.Element {
-  return <AppText variant="Body" style={styles.label}>{children}</AppText>;
+  return (
+    <AppText variant="Body" style={styles.label}>
+      {children}
+    </AppText>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -19,10 +19,7 @@ export function ErrorMessage({
   }
 
   const isUserFriendly =
-    typeof message === 'object' &&
-    message !== null &&
-    'title' in message &&
-    'message' in message;
+    typeof message === 'object' && message !== null && 'title' in message && 'message' in message;
 
   return (
     <View style={styles.card} accessibilityRole="alert">
@@ -32,9 +29,7 @@ export function ErrorMessage({
             <Text style={[styles.text, styles.titleText]}>
               {(message as UserFriendlyError).title}
             </Text>
-            <Text style={styles.descriptionText}>
-              {(message as UserFriendlyError).message}
-            </Text>
+            <Text style={styles.descriptionText}>{(message as UserFriendlyError).message}</Text>
           </>
         ) : (
           <Text style={styles.text}>{message as string}</Text>
@@ -101,4 +96,3 @@ const styles = StyleSheet.create({
 });
 
 export default ErrorMessage;
-

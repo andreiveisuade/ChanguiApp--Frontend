@@ -68,14 +68,22 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
     if (error) {
       return (
         <View style={styles.stateContainer}>
-          <ErrorMessage message={error} closeAccessibilityHint={t('common.retry')} onClose={refresh} />
+          <ErrorMessage
+            message={error}
+            closeAccessibilityHint={t('common.retry')}
+            onClose={refresh}
+          />
         </View>
       );
     }
     return (
       <View style={styles.stateContainer}>
-        <AppText variant="H3" style={styles.emptyTitle}>{t('historyScreen.emptyTitle')}</AppText>
-        <AppText variant="Body" style={styles.emptySubtitle}>{t('historyScreen.emptySubtitle')}</AppText>
+        <AppText variant="H3" style={styles.emptyTitle}>
+          {t('historyScreen.emptyTitle')}
+        </AppText>
+        <AppText variant="Body" style={styles.emptySubtitle}>
+          {t('historyScreen.emptySubtitle')}
+        </AppText>
       </View>
     );
   };
@@ -100,13 +108,21 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
           <View>
             <View style={styles.summary}>
               <View style={styles.summaryCol}>
-                <AppText variant="Label" style={styles.summaryLabel}>{t('historyScreen.totalSpent')}</AppText>
-                <AppText variant="Display" style={styles.summaryValue}>{formatARS(summary.totalSpent)}</AppText>
+                <AppText variant="Label" style={styles.summaryLabel}>
+                  {t('historyScreen.totalSpent')}
+                </AppText>
+                <AppText variant="Display" style={styles.summaryValue}>
+                  {formatARS(summary.totalSpent)}
+                </AppText>
               </View>
               <View style={styles.summaryDivider} />
               <View style={styles.summaryCol}>
-                <AppText variant="Label" style={styles.summaryLabel}>{t('historyScreen.completed')}</AppText>
-                <AppText variant="Display" style={styles.summaryValue}>{summary.completedCount}</AppText>
+                <AppText variant="Label" style={styles.summaryLabel}>
+                  {t('historyScreen.completed')}
+                </AppText>
+                <AppText variant="Display" style={styles.summaryValue}>
+                  {summary.completedCount}
+                </AppText>
               </View>
             </View>
 
@@ -132,7 +148,10 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
                     onPress={() => setFilter(option)}
                     style={[styles.filterButton, active && styles.filterButtonActive]}
                   >
-                    <AppText variant="Body" style={[styles.filterText, active && styles.filterTextActive]}>
+                    <AppText
+                      variant="Body"
+                      style={[styles.filterText, active && styles.filterTextActive]}
+                    >
                       {t(`historyScreen.filters.${option}`)}
                     </AppText>
                   </Pressable>

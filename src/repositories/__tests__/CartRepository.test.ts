@@ -27,7 +27,14 @@ describe('CartRepository', () => {
                 product_id: 'p1',
                 quantity: 2,
                 unit_price: 1000,
-                products: { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 },
+                products: {
+                  id: 'p1',
+                  name: 'Yerba',
+                  barcode: '779',
+                  brand: 'Playadito',
+                  image_url: null,
+                  price: 1000,
+                },
               },
             ],
           },
@@ -38,7 +45,14 @@ describe('CartRepository', () => {
               product_id: 'p1',
               quantity: 2,
               unit_price: 1000,
-              product: { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 },
+              product: {
+                id: 'p1',
+                name: 'Yerba',
+                barcode: '779',
+                brand: 'Playadito',
+                image_url: null,
+                price: 1000,
+              },
             },
           ],
           total: 2000,
@@ -108,7 +122,11 @@ describe('CartRepository', () => {
     it('con carrito existente: POST sin store_id', async () => {
       mockedFetch
         .mockResolvedValueOnce(
-          jsonResponse({ cart: { id: 'c1', user_id: 'u1', store_id: 's1', status: 'active', cart_items: [] }, items: [], total: 0 }),
+          jsonResponse({
+            cart: { id: 'c1', user_id: 'u1', store_id: 's1', status: 'active', cart_items: [] },
+            items: [],
+            total: 0,
+          }),
         )
         .mockResolvedValueOnce(jsonResponse({}));
 
@@ -146,7 +164,12 @@ describe('CartRepository', () => {
       expect(mockedFetch).toHaveBeenNthCalledWith(2, '/api/stores');
       expect(mockedFetch).toHaveBeenLastCalledWith('/api/cart/items', {
         method: 'POST',
-        body: JSON.stringify({ product_id: 'p1', quantity: 1, unit_price: 500, store_id: 'store-1' }),
+        body: JSON.stringify({
+          product_id: 'p1',
+          quantity: 1,
+          unit_price: 500,
+          store_id: 'store-1',
+        }),
       });
     });
   });

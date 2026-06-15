@@ -106,10 +106,11 @@ export async function createList(name: string): Promise<ShoppingList> {
   const db = await getListDb();
   const id = Crypto.randomUUID();
   const createdAt = new Date().toISOString();
-  await db.runAsync(
-    `INSERT INTO shopping_lists (id, name, created_at) VALUES (?, ?, ?)`,
-    [id, name, createdAt],
-  );
+  await db.runAsync(`INSERT INTO shopping_lists (id, name, created_at) VALUES (?, ?, ?)`, [
+    id,
+    name,
+    createdAt,
+  ]);
   return { id, name, total_items: 0, done_items: 0, created_at: createdAt };
 }
 
@@ -134,21 +135,17 @@ export async function getListItems(listId: string): Promise<ShoppingListItem[]> 
  * Agrega un producto del catálogo a la lista. Si el producto ya está en la
  * lista, suma la cantidad en vez de duplicar la fila.
  */
-export async function addItem(
-  listId: string,
-  product: Product,
-  quantity = 1,
-): Promise<void> {
+export async function addItem(listId: string, product: Product, quantity = 1): Promise<void> {
   const db = await getListDb();
   const existing = await db.getFirstAsync<{ id: string; quantity: number }>(
     `SELECT id, quantity FROM shopping_list_items WHERE list_id = ? AND barcode = ?`,
     [listId, product.barcode],
   );
   if (existing) {
-    await db.runAsync(
-      `UPDATE shopping_list_items SET quantity = ? WHERE id = ?`,
-      [existing.quantity + quantity, existing.id],
-    );
+    await db.runAsync(`UPDATE shopping_list_items SET quantity = ? WHERE id = ?`, [
+      existing.quantity + quantity,
+      existing.id,
+    ]);
     return;
   }
   await db.runAsync(
@@ -176,10 +173,7 @@ export async function setItemQuantity(itemId: string, quantity: number): Promise
     await db.runAsync(`DELETE FROM shopping_list_items WHERE id = ?`, [itemId]);
     return;
   }
-  await db.runAsync(
-    `UPDATE shopping_list_items SET quantity = ? WHERE id = ?`,
-    [quantity, itemId],
-  );
+  await db.runAsync(`UPDATE shopping_list_items SET quantity = ? WHERE id = ?`, [quantity, itemId]);
 }
 
 export async function toggleItem(itemId: string): Promise<void> {

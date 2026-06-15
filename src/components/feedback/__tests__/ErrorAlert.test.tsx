@@ -33,9 +33,7 @@ describe('ErrorAlert', () => {
 
   it('shows close button and handles onDismiss when provided', () => {
     const onDismissMock = jest.fn();
-    const { getByRole } = render(
-      <ErrorAlert error={mockError} onDismiss={onDismissMock} />
-    );
+    const { getByRole } = render(<ErrorAlert error={mockError} onDismiss={onDismissMock} />);
 
     const closeButton = getByRole('button', { name: 'Cerrar alerta' });
     expect(closeButton).toBeTruthy();
@@ -52,9 +50,7 @@ describe('ErrorAlert', () => {
 
   it('shows action button and handles onAction when actionLabel and onAction are provided', () => {
     const onActionMock = jest.fn();
-    const { getByRole } = render(
-      <ErrorAlert error={mockError} onAction={onActionMock} />
-    );
+    const { getByRole } = render(<ErrorAlert error={mockError} onAction={onActionMock} />);
 
     const actionButton = getByRole('button', { name: 'Try Again' });
     expect(actionButton).toBeTruthy();

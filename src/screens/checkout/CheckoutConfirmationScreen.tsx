@@ -11,7 +11,10 @@ import { colors, spacing } from '@/constants/theme';
 import { ROUTES } from '@/constants/routes';
 import useCheckoutStatus, { CheckoutStatus } from '@/viewmodels/useCheckoutStatus';
 
-const ICON_BY_STATUS: Record<Exclude<CheckoutStatus, 'checking'>, { name: string; color: string }> = {
+const ICON_BY_STATUS: Record<
+  Exclude<CheckoutStatus, 'checking'>,
+  { name: string; color: string }
+> = {
   success: { name: 'exito', color: colors.success },
   pending: { name: 'alerta', color: colors.warning },
   timeout: { name: 'error', color: colors.error },

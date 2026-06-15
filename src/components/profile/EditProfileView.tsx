@@ -101,7 +101,8 @@ export function EditProfileView({
           variant="info"
           boldText={t('profile.infoBoxBold', { defaultValue: 'Importante: ' })}
           text={t('profile.infoBoxText', {
-            defaultValue: 'Asegúrate de que tus datos sean correctos. Algunos cambios pueden requerir verificación.',
+            defaultValue:
+              'Asegúrate de que tus datos sean correctos. Algunos cambios pueden requerir verificación.',
           })}
           style={styles.infoBox}
         />

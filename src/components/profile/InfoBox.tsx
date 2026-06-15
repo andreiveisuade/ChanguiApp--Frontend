@@ -13,7 +13,12 @@ interface InfoBoxProps {
   style?: ViewStyle;
 }
 
-export function InfoBox({ variant = 'info', text, boldText, style }: InfoBoxProps): React.JSX.Element {
+export function InfoBox({
+  variant = 'info',
+  text,
+  boldText,
+  style,
+}: InfoBoxProps): React.JSX.Element {
   const getStyles = () => {
     switch (variant) {
       case 'warning':
@@ -45,12 +50,7 @@ export function InfoBox({ variant = 'info', text, boldText, style }: InfoBoxProp
 
   return (
     <View style={[styles.container, config.container, style]}>
-      <AppIcon 
-        name={config.iconName} 
-        size={20} 
-        color={config.iconColor} 
-        style={styles.icon}
-      />
+      <AppIcon name={config.iconName} size={20} color={config.iconColor} style={styles.icon} />
       <AppText variant="Body" style={[styles.text, { color: config.textColor }]}>
         {boldText ? (
           <AppText variant="Body" style={[styles.boldText, { color: config.textColor }]}>

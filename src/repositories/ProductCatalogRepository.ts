@@ -138,10 +138,11 @@ export async function upsertProducts(items: CatalogApiItem[]): Promise<void> {
       // Mantener el índice FTS en sync por barcode (DELETE+INSERT evita depender
       // del rowid, que el INSERT OR REPLACE de arriba reescribe).
       await db.runAsync(`DELETE FROM products_fts WHERE barcode = ?`, [p.barcode]);
-      await db.runAsync(
-        `INSERT INTO products_fts (barcode, name, brand) VALUES (?, ?, ?)`,
-        [p.barcode, p.name, p.brand ?? ''],
-      );
+      await db.runAsync(`INSERT INTO products_fts (barcode, name, brand) VALUES (?, ?, ?)`, [
+        p.barcode,
+        p.name,
+        p.brand ?? '',
+      ]);
     }
   });
 }
@@ -149,10 +150,9 @@ export async function upsertProducts(items: CatalogApiItem[]): Promise<void> {
 /** Busca un producto por barcode en el cache local. null si no está. */
 export async function getProductByBarcode(barcode: string): Promise<Product | null> {
   const db = await getDb();
-  const row = await db.getFirstAsync<ProductRow>(
-    `SELECT * FROM products WHERE barcode = ?`,
-    [barcode],
-  );
+  const row = await db.getFirstAsync<ProductRow>(`SELECT * FROM products WHERE barcode = ?`, [
+    barcode,
+  ]);
   return row ? rowToProduct(row) : null;
 }
 

@@ -93,8 +93,7 @@ jest.mock('@/components/feedback/LoadingOverlay', () => {
   const { Text } = require('react-native');
   return {
     __esModule: true,
-    default: ({ visible }: any) =>
-      visible ? <Text testID="loading-overlay">loading</Text> : null,
+    default: ({ visible }: any) => (visible ? <Text testID="loading-overlay">loading</Text> : null),
   };
 });
 
@@ -108,7 +107,14 @@ const item: CartItemWithProduct = {
   product_id: 'p1',
   quantity: 2,
   unit_price: 1000,
-  product: { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 },
+  product: {
+    id: 'p1',
+    name: 'Yerba',
+    barcode: '779',
+    brand: 'Playadito',
+    image_url: null,
+    price: 1000,
+  },
 };
 
 const summary: TaxSummary = { subtotal_net: 1652.9, taxes: [], total: 2000 };

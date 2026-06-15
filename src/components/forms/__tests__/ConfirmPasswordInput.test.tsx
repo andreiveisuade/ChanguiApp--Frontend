@@ -30,7 +30,7 @@ describe('ConfirmPasswordInput Component', () => {
         showPasswordLabel="Show"
         hidePasswordLabel="Hide"
         mismatchMessage="Contraseñas no coinciden"
-      />
+      />,
     );
 
     const mockedInput = getByTestId('password-input');
@@ -49,7 +49,7 @@ describe('ConfirmPasswordInput Component', () => {
         showPasswordLabel="Show"
         hidePasswordLabel="Hide"
         mismatchMessage="Contraseñas no coinciden"
-      />
+      />,
     );
 
     const mockedInput = getByTestId('password-input');
@@ -67,7 +67,7 @@ describe('ConfirmPasswordInput Component', () => {
         showPasswordLabel="Show"
         hidePasswordLabel="Hide"
         mismatchMessage="Contraseñas no coinciden"
-      />
+      />,
     );
 
     const mockedInput = getByTestId('password-input');
@@ -86,7 +86,7 @@ describe('ConfirmPasswordInput Component', () => {
         hidePasswordLabel="Hide"
         mismatchMessage="Contraseñas no coinciden"
         error="Custom error message"
-      />
+      />,
     );
 
     const mockedInput = getByTestId('password-input');

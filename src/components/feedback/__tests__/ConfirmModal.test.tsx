@@ -38,7 +38,7 @@ describe('ConfirmModal Component', () => {
 
   it('usa confirmLabel y cancelLabel custom cuando se proveen', () => {
     const { getByText } = render(
-      <ConfirmModal {...baseProps} confirmLabel="Sí, borrar" cancelLabel="No, volver" />
+      <ConfirmModal {...baseProps} confirmLabel="Sí, borrar" cancelLabel="No, volver" />,
     );
     expect(getByText('Sí, borrar')).toBeTruthy();
     expect(getByText('No, volver')).toBeTruthy();
@@ -60,12 +60,10 @@ describe('ConfirmModal Component', () => {
 
   it('deshabilita el botón de cancelar mientras isLoading', () => {
     const { getAllByRole } = render(
-      <ConfirmModal {...baseProps} cancelLabel="Cancelar" isLoading />
+      <ConfirmModal {...baseProps} cancelLabel="Cancelar" isLoading />,
     );
     const buttons = getAllByRole('button');
-    const cancelButton = buttons.find(
-      (b) => b.props.accessibilityState?.disabled === true
-    );
+    const cancelButton = buttons.find((b) => b.props.accessibilityState?.disabled === true);
     expect(cancelButton).toBeTruthy();
   });
 });

@@ -23,7 +23,7 @@ describe('FormField Component', () => {
     const { getByTestId, getByText } = render(
       <FormField label="Nombre">
         <Text>Child content</Text>
-      </FormField>
+      </FormField>,
     );
 
     expect(getByTestId('form-label').props.children).toBe('Nombre');
@@ -34,7 +34,7 @@ describe('FormField Component', () => {
     const { queryByTestId } = render(
       <FormField label="Nombre">
         <Text>Child content</Text>
-      </FormField>
+      </FormField>,
     );
 
     expect(queryByTestId('inline-error')).toBeNull();
@@ -44,7 +44,7 @@ describe('FormField Component', () => {
     const { getByTestId } = render(
       <FormField label="Nombre" error="Campo requerido">
         <Text>Child content</Text>
-      </FormField>
+      </FormField>,
     );
 
     expect(getByTestId('inline-error').props.children).toBe('Campo requerido');
@@ -54,7 +54,7 @@ describe('FormField Component', () => {
     const { queryByTestId } = render(
       <FormField label="Nombre" error={null}>
         <Text>Child content</Text>
-      </FormField>
+      </FormField>,
     );
 
     expect(queryByTestId('inline-error')).toBeNull();

@@ -52,8 +52,12 @@ export function ListsScreen(): React.JSX.Element {
     return (
       <View style={styles.stateContainer}>
         <AppIcon name="lista" size={iconSize.lg} color={colors.border} />
-        <AppText variant="H3" style={styles.emptyTitle}>{t('lists.emptyTitle')}</AppText>
-        <AppText variant="Body" style={styles.emptySubtitle}>{t('lists.emptySubtitle')}</AppText>
+        <AppText variant="H3" style={styles.emptyTitle}>
+          {t('lists.emptyTitle')}
+        </AppText>
+        <AppText variant="Body" style={styles.emptySubtitle}>
+          {t('lists.emptySubtitle')}
+        </AppText>
       </View>
     );
   };
@@ -72,7 +76,9 @@ export function ListsScreen(): React.JSX.Element {
           >
             <AppIcon name="atras" size={iconSize.md} color={colors.textPrimary} />
           </Pressable>
-          <AppText variant="H2" style={styles.headerTitle}>{t('lists.title')}</AppText>
+          <AppText variant="H2" style={styles.headerTitle}>
+            {t('lists.title')}
+          </AppText>
         </View>
       </SafeAreaView>
 

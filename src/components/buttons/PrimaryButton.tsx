@@ -31,7 +31,11 @@ export function PrimaryButton({
         pressed ? styles.buttonPressed : null,
       ]}
     >
-      {isLoading ? <ActivityIndicator color={colors.white} /> : <Text style={styles.text}>{title}</Text>}
+      {isLoading ? (
+        <ActivityIndicator color={colors.white} />
+      ) : (
+        <Text style={styles.text}>{title}</Text>
+      )}
     </Pressable>
   );
 }

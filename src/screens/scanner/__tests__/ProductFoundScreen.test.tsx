@@ -145,9 +145,7 @@ describe('ProductFoundScreen', () => {
     });
 
     it('con errorMessage muestra el banner de error', () => {
-      mockedUseProductFound.mockReturnValue(
-        buildState({ errorMessage: 'fallo agregar' }),
-      );
+      mockedUseProductFound.mockReturnValue(buildState({ errorMessage: 'fallo agregar' }));
       const { getByText } = render(<ProductFoundScreen />);
 
       expect(getByText('fallo agregar')).toBeTruthy();
@@ -156,9 +154,7 @@ describe('ProductFoundScreen', () => {
     });
 
     it('cerrar el error invoca clearError', () => {
-      mockedUseProductFound.mockReturnValue(
-        buildState({ errorMessage: 'fallo agregar' }),
-      );
+      mockedUseProductFound.mockReturnValue(buildState({ errorMessage: 'fallo agregar' }));
       const { getByText } = render(<ProductFoundScreen />);
       // el boton de cerrar del ErrorMessage renderiza una "X"
       fireEvent.press(getByText('X'));
@@ -166,9 +162,7 @@ describe('ProductFoundScreen', () => {
     });
 
     it('isLoading deshabilita escanear otro y decrementar', () => {
-      mockedUseProductFound.mockReturnValue(
-        buildState({ quantity: 2, isLoading: true }),
-      );
+      mockedUseProductFound.mockReturnValue(buildState({ quantity: 2, isLoading: true }));
       const { getByText } = render(<ProductFoundScreen />);
 
       fireEvent.press(getByText('scanner.scanAnother'));

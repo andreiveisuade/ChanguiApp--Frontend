@@ -4,7 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { AppText } from '@/components/atoms/AppText';
 import { AppIcon } from '@/components/atoms/AppIcon';
 import ProfileButton from '@/components/profile/ProfileButton';
-import { useAccessibility, FontScaleOption, LanguageOption, FONT_SCALES } from '@/context/AccessibilityContext';
+import {
+  useAccessibility,
+  FontScaleOption,
+  LanguageOption,
+  FONT_SCALES,
+} from '@/context/AccessibilityContext';
 import { colors, spacing, radii } from '@/constants/theme';
 
 interface ConfigViewProps {
@@ -17,11 +22,12 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
 
   // Estados temporales locales antes de guardar
   const [tempLanguage, setTempLanguage] = useState<LanguageOption>(accessibility.language);
-  const [tempFontScaleName, setTempFontScaleName] = useState<FontScaleOption>(accessibility.fontScaleName);
+  const [tempFontScaleName, setTempFontScaleName] = useState<FontScaleOption>(
+    accessibility.fontScaleName,
+  );
 
   const hasChanges =
-    tempLanguage !== accessibility.language ||
-    tempFontScaleName !== accessibility.fontScaleName;
+    tempLanguage !== accessibility.language || tempFontScaleName !== accessibility.fontScaleName;
 
   const handleSave = async () => {
     await accessibility.setLanguage(tempLanguage);
@@ -42,7 +48,9 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
         {t('profile.configTitle', { defaultValue: 'Configuración' })}
       </AppText>
       <AppText variant="Body" style={styles.screenSubtitle}>
-        {t('profile.configSubtitle', { defaultValue: 'Personaliza la apariencia y el idioma de la aplicación' })}
+        {t('profile.configSubtitle', {
+          defaultValue: 'Personaliza la apariencia y el idioma de la aplicación',
+        })}
       </AppText>
 
       {/* Sección 1: Idioma */}
@@ -57,10 +65,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
         {/* Tarjeta de Español */}
         <Pressable
           onPress={() => setTempLanguage('es')}
-          style={[
-            styles.optionCard,
-            tempLanguage === 'es' ? styles.optionCardSelected : null,
-          ]}
+          style={[styles.optionCard, tempLanguage === 'es' ? styles.optionCardSelected : null]}
         >
           <View style={styles.optionLeft}>
             <AppText variant="H2" style={styles.flagEmoji}>
@@ -70,18 +75,13 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
               {t('lang_es', { defaultValue: 'Español' })}
             </AppText>
           </View>
-          {tempLanguage === 'es' && (
-            <AppIcon name="check-circulo" size={22} color="#10B981" />
-          )}
+          {tempLanguage === 'es' && <AppIcon name="check-circulo" size={22} color="#10B981" />}
         </Pressable>
 
         {/* Tarjeta de Inglés */}
         <Pressable
           onPress={() => setTempLanguage('en')}
-          style={[
-            styles.optionCard,
-            tempLanguage === 'en' ? styles.optionCardSelected : null,
-          ]}
+          style={[styles.optionCard, tempLanguage === 'en' ? styles.optionCardSelected : null]}
         >
           <View style={styles.optionLeft}>
             <AppText variant="H2" style={styles.flagEmoji}>
@@ -91,9 +91,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
               {t('lang_en', { defaultValue: 'English' })}
             </AppText>
           </View>
-          {tempLanguage === 'en' && (
-            <AppIcon name="check-circulo" size={22} color="#10B981" />
-          )}
+          {tempLanguage === 'en' && <AppIcon name="check-circulo" size={22} color="#10B981" />}
         </Pressable>
       </View>
 
@@ -109,23 +107,17 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
         {fontScaleOptions.map((opt) => {
           const isSelected = tempFontScaleName === opt.key;
           const scaleFactor = FONT_SCALES[opt.key];
-          
+
           return (
             <Pressable
               key={opt.key}
               onPress={() => setTempFontScaleName(opt.key)}
-              style={[
-                styles.optionCard,
-                isSelected ? styles.optionCardSelected : null,
-              ]}
+              style={[styles.optionCard, isSelected ? styles.optionCardSelected : null]}
             >
               <View style={styles.optionLeft}>
                 <AppText
                   variant="Body"
-                  style={[
-                    styles.fontSizePrefix,
-                    { fontSize: 16 * scaleFactor }
-                  ]}
+                  style={[styles.fontSizePrefix, { fontSize: 16 * scaleFactor }]}
                 >
                   Aa
                 </AppText>
@@ -133,9 +125,7 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
                   {opt.label}
                 </AppText>
               </View>
-              {isSelected && (
-                <AppIcon name="check-circulo" size={22} color="#10B981" />
-              )}
+              {isSelected && <AppIcon name="check-circulo" size={22} color="#10B981" />}
             </Pressable>
           );
         })}
@@ -149,13 +139,11 @@ export function ConfigView({ onBack }: ConfigViewProps): React.JSX.Element {
         <View style={styles.previewContainer}>
           <AppText
             variant="Body"
-            style={[
-              styles.previewText,
-              { fontSize: 14 * FONT_SCALES[tempFontScaleName] }
-            ]}
+            style={[styles.previewText, { fontSize: 14 * FONT_SCALES[tempFontScaleName] }]}
           >
             {t('profile.previewText', {
-              defaultValue: 'Este es un texto de ejemplo para visualizar el tamaño de fuente seleccionado.',
+              defaultValue:
+                'Este es un texto de ejemplo para visualizar el tamaño de fuente seleccionado.',
             })}
           </AppText>
         </View>

@@ -4,7 +4,9 @@ import { CartSummary } from '../CartSummary';
 import { TaxSummary } from '@/types/domain';
 
 jest.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (key: string, opts?: any) => opts?.rate ? `${key}_${opts.rate}` : key }),
+  useTranslation: () => ({
+    t: (key: string, opts?: any) => (opts?.rate ? `${key}_${opts.rate}` : key),
+  }),
 }));
 
 jest.mock('@/components/atoms/AppText', () => {
@@ -28,15 +30,11 @@ describe('CartSummary Component', () => {
   const mockSummary: TaxSummary = {
     subtotal_net: 1000,
     total: 1210,
-    taxes: [
-      { rate: 21, amount: 210, label: 'IVA (21%)', base: 1000 },
-    ],
+    taxes: [{ rate: 21, amount: 210, label: 'IVA (21%)', base: 1000 }],
   };
 
   it('renders correct subtotal, total, and formatted tax lines inside PriceBreakdown', () => {
-    const { getByTestId } = render(
-      <CartSummary summary={mockSummary} onPay={jest.fn()} />
-    );
+    const { getByTestId } = render(<CartSummary summary={mockSummary} onPay={jest.fn()} />);
 
     const priceBreakdown = getByTestId('mock-price-breakdown');
     const childrenString = Array.isArray(priceBreakdown.props.children)
@@ -51,9 +49,7 @@ describe('CartSummary Component', () => {
 
   it('renders pay button enabled and calls onPay when clicked', () => {
     const mockOnPay = jest.fn();
-    const { getByRole } = render(
-      <CartSummary summary={mockSummary} onPay={mockOnPay} />
-    );
+    const { getByRole } = render(<CartSummary summary={mockSummary} onPay={mockOnPay} />);
 
     const payButton = getByRole('button');
     expect(payButton.props.accessibilityState?.disabled).toBe(false);
@@ -63,9 +59,7 @@ describe('CartSummary Component', () => {
   });
 
   it('renders pay button disabled when onPay is undefined', () => {
-    const { getByRole } = render(
-      <CartSummary summary={mockSummary} onPay={undefined} />
-    );
+    const { getByRole } = render(<CartSummary summary={mockSummary} onPay={undefined} />);
 
     const payButton = getByRole('button');
     expect(payButton.props.accessibilityState?.disabled).toBe(true);

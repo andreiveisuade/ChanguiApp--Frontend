@@ -18,8 +18,12 @@ export function ProductNotFound({ onRetry }: ProductNotFoundProps): React.JSX.El
       <View style={styles.iconCircle}>
         <AppIcon name="alerta" size={40} color={colors.error} />
       </View>
-      <AppText variant="H2" style={styles.centered}>{t('scanner.productNotFound')}</AppText>
-      <AppText variant="Body" style={styles.centered}>{t('scanner.productNotFoundSubtitle')}</AppText>
+      <AppText variant="H2" style={styles.centered}>
+        {t('scanner.productNotFound')}
+      </AppText>
+      <AppText variant="Body" style={styles.centered}>
+        {t('scanner.productNotFoundSubtitle')}
+      </AppText>
       <SecondaryButton
         title={t('scanner.tryAgain')}
         accessibilityHint={t('scanner.tryAgain')}

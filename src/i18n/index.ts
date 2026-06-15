@@ -6,7 +6,7 @@ import en from './locales/en.json';
 i18n.use(initReactI18next).init({
   resources: {
     es: { translation: es },
-    en: { translation: en }
+    en: { translation: en },
   },
   lng: 'es',
   fallbackLng: 'es',

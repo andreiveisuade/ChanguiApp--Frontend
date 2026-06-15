@@ -15,7 +15,7 @@ describe('DestructiveButton Component', () => {
         title="Eliminar"
         accessibilityHint="Elimina la cuenta"
         onPress={mockOnPress}
-      />
+      />,
     );
 
     expect(getByText('Eliminar')).toBeTruthy();
@@ -26,11 +26,7 @@ describe('DestructiveButton Component', () => {
 
   it('calls onPress when clicked and not disabled/loading', () => {
     const { getByRole } = render(
-      <DestructiveButton
-        title="Eliminar"
-        accessibilityHint="Elimina"
-        onPress={mockOnPress}
-      />
+      <DestructiveButton title="Eliminar" accessibilityHint="Elimina" onPress={mockOnPress} />,
     );
 
     fireEvent.press(getByRole('button'));
@@ -44,7 +40,7 @@ describe('DestructiveButton Component', () => {
         accessibilityHint="Elimina"
         onPress={mockOnPress}
         disabled={true}
-      />
+      />,
     );
 
     const button = getByRole('button');
@@ -60,7 +56,7 @@ describe('DestructiveButton Component', () => {
         accessibilityHint="Elimina"
         onPress={mockOnPress}
         isLoading={true}
-      />
+      />,
     );
 
     const button = getByRole('button');

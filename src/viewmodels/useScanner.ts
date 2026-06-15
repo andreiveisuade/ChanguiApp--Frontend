@@ -17,7 +17,7 @@ export const useScanner = (): UseScannerReturn => {
   const [scanned, setScanned] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  
+
   // Synchronous lock ref to prevent multiple triggers in rapid succession
   const isScanningRef = useRef<boolean>(false);
 

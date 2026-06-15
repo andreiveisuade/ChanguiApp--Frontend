@@ -39,7 +39,9 @@ describe('useProductSearch', () => {
 
   it('busca tras el debounce y expone los resultados', async () => {
     mockedSearch.mockResolvedValue([product]);
-    const { result } = renderHook(() => useProductSearch({ minChars: 2, debounceMs: 250, limit: 20 }));
+    const { result } = renderHook(() =>
+      useProductSearch({ minChars: 2, debounceMs: 250, limit: 20 }),
+    );
 
     act(() => result.current.setQuery('leche'));
     expect(mockedSearch).not.toHaveBeenCalled();
@@ -53,7 +55,9 @@ describe('useProductSearch', () => {
   });
 
   it('cancela el debounce anterior al seguir tipeando (solo busca la última query)', async () => {
-    const { result } = renderHook(() => useProductSearch({ minChars: 2, debounceMs: 250, limit: 20 }));
+    const { result } = renderHook(() =>
+      useProductSearch({ minChars: 2, debounceMs: 250, limit: 20 }),
+    );
 
     act(() => result.current.setQuery('le'));
     act(() => jest.advanceTimersByTime(100));

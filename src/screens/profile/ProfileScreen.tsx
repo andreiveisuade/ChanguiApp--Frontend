@@ -75,11 +75,7 @@ export default function ProfileScreen(): React.JSX.Element {
           />
         );
       case 'config':
-        return (
-          <ConfigView
-            onBack={() => setViewState('main')}
-          />
-        );
+        return <ConfigView onBack={() => setViewState('main')} />;
       case 'logout':
         return (
           <LogoutView
@@ -99,12 +95,7 @@ export default function ProfileScreen(): React.JSX.Element {
         );
       case 'main':
       default:
-        return (
-          <ProfileMainView
-            user={profile}
-            onNavigate={(nextView) => setViewState(nextView)}
-          />
-        );
+        return <ProfileMainView user={profile} onNavigate={(nextView) => setViewState(nextView)} />;
     }
   };
 
@@ -113,22 +104,19 @@ export default function ProfileScreen(): React.JSX.Element {
   return (
     <View style={styles.container}>
       <LoadingOverlay visible={isLoading} />
-      
+
       {/* Header fijo coincidente en posición con los de home/carrito */}
-      <ProfileHeader 
-        userName={userName} 
-        onProfilePress={() => setViewState('main')}
-      />
+      <ProfileHeader userName={userName} onProfilePress={() => setViewState('main')} />
 
       <View style={styles.divider} />
 
       {/* Contenido dinámico según el estado interno de la pantalla */}
-      <View style={styles.content}>
-        {renderContent()}
-      </View>
+      <View style={styles.content}>{renderContent()}</View>
 
       <ErrorMessage
-        closeAccessibilityHint={t('common.dismissError', { defaultValue: 'Cerrar mensaje de error' })}
+        closeAccessibilityHint={t('common.dismissError', {
+          defaultValue: 'Cerrar mensaje de error',
+        })}
         message={error?.message}
         onClose={clearError}
       />

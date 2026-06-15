@@ -14,8 +14,12 @@ export function InlineError({ message }: InlineErrorProps): React.JSX.Element | 
 
   return (
     <View style={styles.container} accessibilityRole="alert">
-      <AppText variant="Body" style={styles.icon}>!</AppText>
-      <AppText variant="Body" style={styles.message}>{message}</AppText>
+      <AppText variant="Body" style={styles.icon}>
+        !
+      </AppText>
+      <AppText variant="Body" style={styles.message}>
+        {message}
+      </AppText>
     </View>
   );
 }

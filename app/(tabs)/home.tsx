@@ -55,11 +55,7 @@ export default function HomeRoute(): React.JSX.Element {
         ) : (
           <View style={styles.mainCard}>
             {/* Top row showing cart active status and total */}
-            <CartSummaryCard
-              itemCount={items.length}
-              total={total}
-              isLoading={isLoading}
-            />
+            <CartSummaryCard itemCount={items.length} total={total} isLoading={isLoading} />
 
             {/* List separator divider, matching Figma design */}
             {items.length > 0 && <View style={styles.divider} />}
@@ -68,11 +64,7 @@ export default function HomeRoute(): React.JSX.Element {
             {items.length > 0 && (
               <View style={styles.listContainer}>
                 {items.map((item, index) => (
-                  <CartItemRow
-                    key={item.id}
-                    item={item}
-                    isLast={index === items.length - 1}
-                  />
+                  <CartItemRow key={item.id} item={item} isLast={index === items.length - 1} />
                 ))}
               </View>
             )}
@@ -80,9 +72,7 @@ export default function HomeRoute(): React.JSX.Element {
         )}
 
         {/* Empty state message, displayed below the card if cart has 0 items */}
-        {items.length === 0 && !isLoading && !error && (
-          <EmptyCartMessage />
-        )}
+        {items.length === 0 && !isLoading && !error && <EmptyCartMessage />}
 
         {/* Acceso a las listas de compra */}
         <Pressable

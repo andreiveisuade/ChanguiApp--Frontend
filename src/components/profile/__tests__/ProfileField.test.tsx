@@ -32,7 +32,7 @@ describe('ProfileField Component', () => {
 
   it('renders the edit button and calls onEdit when pressed', () => {
     const { getByRole } = render(
-      <ProfileField label="Email" value="a@b.com" onEdit={mockOnEdit} />
+      <ProfileField label="Email" value="a@b.com" onEdit={mockOnEdit} />,
     );
     const button = getByRole('button');
     fireEvent.press(button);
@@ -41,7 +41,7 @@ describe('ProfileField Component', () => {
 
   it('uses the label as the default accessibility label of the edit button', () => {
     const { getByLabelText } = render(
-      <ProfileField label="Email" value="a@b.com" onEdit={mockOnEdit} />
+      <ProfileField label="Email" value="a@b.com" onEdit={mockOnEdit} />,
     );
     expect(getByLabelText('Email')).toBeTruthy();
   });
@@ -53,7 +53,7 @@ describe('ProfileField Component', () => {
         value="a@b.com"
         onEdit={mockOnEdit}
         editAccessibilityLabel="Edit email"
-      />
+      />,
     );
     expect(getByLabelText('Edit email')).toBeTruthy();
   });

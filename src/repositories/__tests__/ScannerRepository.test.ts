@@ -24,12 +24,25 @@ describe('ScannerRepository.getProductByBarcode', () => {
     mockedLocalLookup.mockResolvedValue(null);
     mockedGetSession.mockResolvedValue({
       token: 'tk',
-      user: { id: 'u1', email: 'a@b.com', full_name: 'A', avatar_url: null, created_at: '2026-01-01' },
+      user: {
+        id: 'u1',
+        email: 'a@b.com',
+        full_name: 'A',
+        avatar_url: null,
+        created_at: '2026-01-01',
+      },
     });
   });
 
   it('cache-first: si el producto está en el catálogo local lo devuelve sin pegarle a la red', async () => {
-    const local = { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 };
+    const local = {
+      id: 'p1',
+      name: 'Yerba',
+      barcode: '779',
+      brand: 'Playadito',
+      image_url: null,
+      price: 1000,
+    };
     mockedLocalLookup.mockResolvedValueOnce(local);
 
     const result = await getProductByBarcode('779');
@@ -41,7 +54,14 @@ describe('ScannerRepository.getProductByBarcode', () => {
 
   it('si el cache local falla, cae a la red sin romper el escaneo', async () => {
     mockedLocalLookup.mockRejectedValueOnce(new Error('sqlite down'));
-    const product = { id: 'p1', name: 'Yerba', barcode: '779', brand: null, image_url: null, price: 1000 };
+    const product = {
+      id: 'p1',
+      name: 'Yerba',
+      barcode: '779',
+      brand: null,
+      image_url: null,
+      price: 1000,
+    };
     fetchMock.mockResolvedValueOnce({ status: 200, ok: true, json: async () => product });
 
     const result = await getProductByBarcode('779');
@@ -51,7 +71,14 @@ describe('ScannerRepository.getProductByBarcode', () => {
   });
 
   it('devuelve el producto y manda el header Authorization con el token', async () => {
-    const product = { id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null, price: 1000 };
+    const product = {
+      id: 'p1',
+      name: 'Yerba',
+      barcode: '779',
+      brand: 'Playadito',
+      image_url: null,
+      price: 1000,
+    };
     fetchMock.mockResolvedValueOnce({ status: 200, ok: true, json: async () => product });
 
     const result = await getProductByBarcode('779');
@@ -71,13 +98,21 @@ describe('ScannerRepository.getProductByBarcode', () => {
   });
 
   it('lanza el mensaje del backend en error no-OK', async () => {
-    fetchMock.mockResolvedValueOnce({ status: 500, ok: false, json: async () => ({ message: 'boom server' }) });
+    fetchMock.mockResolvedValueOnce({
+      status: 500,
+      ok: false,
+      json: async () => ({ message: 'boom server' }),
+    });
 
     await expect(getProductByBarcode('779')).rejects.toThrow('boom server');
   });
 
   it('usa errorData.error cuando el body no trae message', async () => {
-    fetchMock.mockResolvedValueOnce({ status: 500, ok: false, json: async () => ({ error: 'campo error' }) });
+    fetchMock.mockResolvedValueOnce({
+      status: 500,
+      ok: false,
+      json: async () => ({ error: 'campo error' }),
+    });
 
     await expect(getProductByBarcode('779')).rejects.toThrow('campo error');
   });
@@ -104,7 +139,14 @@ describe('ScannerRepository.getProductByBarcode', () => {
 
   it('funciona sin sesión guardada (sin header Authorization)', async () => {
     mockedGetSession.mockResolvedValueOnce(null);
-    const product = { id: 'p1', name: 'Yerba', barcode: '779', brand: null, image_url: null, price: 1000 };
+    const product = {
+      id: 'p1',
+      name: 'Yerba',
+      barcode: '779',
+      brand: null,
+      image_url: null,
+      price: 1000,
+    };
     fetchMock.mockResolvedValueOnce({ status: 200, ok: true, json: async () => product });
 
     await getProductByBarcode('779');

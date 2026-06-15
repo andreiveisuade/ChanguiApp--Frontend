@@ -73,13 +73,21 @@ describe('apiFetch', () => {
   });
 
   it('no-OK: usa el message del backend', async () => {
-    fetchMock.mockResolvedValueOnce({ ok: false, status: 500, json: async () => ({ message: 'server msg' }) });
+    fetchMock.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      json: async () => ({ message: 'server msg' }),
+    });
 
     await expect(apiFetch('/api/cart')).rejects.toThrow('server msg');
   });
 
   it('no-OK: cae al campo error si no hay message', async () => {
-    fetchMock.mockResolvedValueOnce({ ok: false, status: 400, json: async () => ({ error: 'bad request' }) });
+    fetchMock.mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      json: async () => ({ error: 'bad request' }),
+    });
 
     await expect(apiFetch('/api/cart')).rejects.toThrow('bad request');
   });

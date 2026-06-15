@@ -12,12 +12,7 @@ interface EmptyStateProps {
   action?: React.ReactNode;
 }
 
-export function EmptyState({
-  icon,
-  title,
-  subtitle,
-  action,
-}: EmptyStateProps): React.JSX.Element {
+export function EmptyState({ icon, title, subtitle, action }: EmptyStateProps): React.JSX.Element {
   const { t } = useTranslation();
 
   return (
@@ -31,7 +26,9 @@ export function EmptyState({
         {title ?? t('common.emptyTitle')}
       </AppText>
       {subtitle ? (
-        <AppText variant="Body" style={styles.centered}>{subtitle}</AppText>
+        <AppText variant="Body" style={styles.centered}>
+          {subtitle}
+        </AppText>
       ) : null}
       {action ?? null}
     </View>

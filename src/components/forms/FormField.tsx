@@ -10,11 +10,7 @@ interface FormFieldProps {
   children: React.ReactNode;
 }
 
-export function FormField({
-  label,
-  error,
-  children,
-}: FormFieldProps): React.JSX.Element {
+export function FormField({ label, error, children }: FormFieldProps): React.JSX.Element {
   return (
     <View style={styles.wrapper}>
       <FormLabel>{label}</FormLabel>

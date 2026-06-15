@@ -25,7 +25,9 @@ describe('EmptyCartMessage Component', () => {
   });
 
   it('renders custom title when message is provided', () => {
-    const { getByText, queryByText } = render(<EmptyCartMessage message="Tu changuito está vacío" />);
+    const { getByText, queryByText } = render(
+      <EmptyCartMessage message="Tu changuito está vacío" />,
+    );
 
     expect(getByText('Tu changuito está vacío')).toBeTruthy();
     expect(queryByText('home.emptyCart')).toBeNull();

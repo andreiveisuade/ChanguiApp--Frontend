@@ -38,7 +38,16 @@ describe('ProductCatalogRepository', () => {
       expect(mockDb.withTransactionAsync).toHaveBeenCalledTimes(1);
       const params = mockDb.runAsync.mock.calls[0][1];
       expect(params).toEqual([
-        '779', 'p1', 'Yerba', 'Playadito', null, 1210, 'General', 21, 1000, 210,
+        '779',
+        'p1',
+        'Yerba',
+        'Playadito',
+        null,
+        1210,
+        'General',
+        21,
+        1000,
+        210,
         '2026-06-08T10:00:00.000Z',
       ]);
     });
@@ -54,15 +63,27 @@ describe('ProductCatalogRepository', () => {
   describe('getProductByBarcode', () => {
     it('reconstruye el Product con su desglose de IVA', async () => {
       mockDb.getFirstAsync.mockResolvedValueOnce({
-        barcode: '779', id: 'p1', name: 'Yerba', brand: 'Playadito', image_url: null,
-        price: 1210, tax_category: 'General', tax_rate: 21, tax_net_price: 1000,
-        tax_amount: 210, updated_at: '2026-06-08T10:00:00.000Z',
+        barcode: '779',
+        id: 'p1',
+        name: 'Yerba',
+        brand: 'Playadito',
+        image_url: null,
+        price: 1210,
+        tax_category: 'General',
+        tax_rate: 21,
+        tax_net_price: 1000,
+        tax_amount: 210,
+        updated_at: '2026-06-08T10:00:00.000Z',
       });
 
       const result = await repo.getProductByBarcode('779');
 
       expect(result).toEqual({
-        id: 'p1', name: 'Yerba', barcode: '779', brand: 'Playadito', image_url: null,
+        id: 'p1',
+        name: 'Yerba',
+        barcode: '779',
+        brand: 'Playadito',
+        image_url: null,
         price: 1210,
         tax: { category: 'General', rate: 21, net_price: 1000, tax_amount: 210 },
       });
@@ -70,9 +91,17 @@ describe('ProductCatalogRepository', () => {
 
     it('devuelve el producto sin tax cuando tax_rate es null', async () => {
       mockDb.getFirstAsync.mockResolvedValueOnce({
-        barcode: '779', id: 'p1', name: 'Yerba', brand: null, image_url: null,
-        price: 1210, tax_category: null, tax_rate: null, tax_net_price: null,
-        tax_amount: null, updated_at: '2026-06-08T10:00:00.000Z',
+        barcode: '779',
+        id: 'p1',
+        name: 'Yerba',
+        brand: null,
+        image_url: null,
+        price: 1210,
+        tax_category: null,
+        tax_rate: null,
+        tax_net_price: null,
+        tax_amount: null,
+        updated_at: '2026-06-08T10:00:00.000Z',
       });
 
       const result = await repo.getProductByBarcode('779');
@@ -117,9 +146,17 @@ describe('ProductCatalogRepository', () => {
 
   describe('searchProducts', () => {
     const productRow = {
-      barcode: '779', id: 'p1', name: 'Leche Serenísima', brand: 'La Serenísima',
-      image_url: null, price: 1500, tax_category: 'Leche fluida', tax_rate: 0,
-      tax_net_price: 1500, tax_amount: 0, updated_at: '2026-06-08T10:00:00.000Z',
+      barcode: '779',
+      id: 'p1',
+      name: 'Leche Serenísima',
+      brand: 'La Serenísima',
+      image_url: null,
+      price: 1500,
+      tax_category: 'Leche fluida',
+      tax_rate: 0,
+      tax_net_price: 1500,
+      tax_amount: 0,
+      updated_at: '2026-06-08T10:00:00.000Z',
     };
 
     it('devuelve [] sin tocar la DB cuando la query queda vacía tras sanitizar', async () => {
@@ -137,8 +174,12 @@ describe('ProductCatalogRepository', () => {
       expect(params).toEqual(['sere* lec*', 5]);
       expect(result).toEqual([
         {
-          id: 'p1', name: 'Leche Serenísima', barcode: '779', brand: 'La Serenísima',
-          image_url: null, price: 1500,
+          id: 'p1',
+          name: 'Leche Serenísima',
+          barcode: '779',
+          brand: 'La Serenísima',
+          image_url: null,
+          price: 1500,
           tax: { category: 'Leche fluida', rate: 0, net_price: 1500, tax_amount: 0 },
         },
       ]);

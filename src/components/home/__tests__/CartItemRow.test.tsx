@@ -47,7 +47,7 @@ describe('CartItemRow Component', () => {
 
   it('renders Image when image_url is provided and loading does not fail', () => {
     const { UNSAFE_getByType, queryByTestId } = render(
-      <CartItemRow item={mockItem} isLast={false} />
+      <CartItemRow item={mockItem} isLast={false} />,
     );
 
     const { Image } = require('react-native');
@@ -61,7 +61,7 @@ describe('CartItemRow Component', () => {
       product: mockItem.product ? { ...mockItem.product, image_url: '' } : null,
     };
     const { queryByRole, getByTestId } = render(
-      <CartItemRow item={itemWithoutImage} isLast={false} />
+      <CartItemRow item={itemWithoutImage} isLast={false} />,
     );
 
     expect(getByTestId('app-icon').props.children).toBe('package');
@@ -69,29 +69,33 @@ describe('CartItemRow Component', () => {
 
   it('switches to fallback AppIcon when Image triggers onError', () => {
     const { UNSAFE_getByType, getByTestId } = render(
-      <CartItemRow item={mockItem} isLast={false} />
+      <CartItemRow item={mockItem} isLast={false} />,
     );
 
     const { Image } = require('react-native');
     const imageElement = UNSAFE_getByType(Image);
-    
+
     fireEvent(imageElement, 'error');
-    
+
     expect(getByTestId('app-icon').props.children).toBe('package');
   });
 
   it('applies styles based on isLast prop', () => {
     const { UNSAFE_root, rerender } = render(<CartItemRow item={mockItem} isLast={false} />);
-    
+
     const rootElement = UNSAFE_root.children[0];
     if (typeof rootElement !== 'string') {
-      expect(rootElement.props.style).not.toContainEqual(expect.objectContaining({ borderBottomWidth: 0 }));
+      expect(rootElement.props.style).not.toContainEqual(
+        expect.objectContaining({ borderBottomWidth: 0 }),
+      );
     }
 
     rerender(<CartItemRow item={mockItem} isLast={true} />);
     const rootElementUpdated = UNSAFE_root.children[0];
     if (typeof rootElementUpdated !== 'string') {
-      expect(rootElementUpdated.props.style).toContainEqual(expect.objectContaining({ borderBottomWidth: 0 }));
+      expect(rootElementUpdated.props.style).toContainEqual(
+        expect.objectContaining({ borderBottomWidth: 0 }),
+      );
     }
   });
 });

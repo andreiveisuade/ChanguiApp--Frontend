@@ -12,7 +12,9 @@ describe('CheckoutRepository', () => {
   });
 
   it('createPreference hace POST y devuelve init_point + preference_id', async () => {
-    mockedFetch.mockResolvedValueOnce(jsonResponse({ preference_id: 'pref-1', init_point: 'https://mp.com/init' }));
+    mockedFetch.mockResolvedValueOnce(
+      jsonResponse({ preference_id: 'pref-1', init_point: 'https://mp.com/init' }),
+    );
 
     const result = await CheckoutRepository.createPreference();
 

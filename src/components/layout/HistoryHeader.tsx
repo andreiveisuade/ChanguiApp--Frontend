@@ -11,7 +11,10 @@ interface HistoryHeaderProps {
   onProfilePress: () => void;
 }
 
-export const HistoryHeader = ({ userName, onProfilePress }: HistoryHeaderProps): React.JSX.Element => {
+export const HistoryHeader = ({
+  userName,
+  onProfilePress,
+}: HistoryHeaderProps): React.JSX.Element => {
   const { t } = useTranslation();
   const firstName = userName ? userName.trim().split(' ')[0] : '';
 

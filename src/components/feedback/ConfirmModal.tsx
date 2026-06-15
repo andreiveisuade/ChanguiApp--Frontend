@@ -29,17 +29,8 @@ export function ConfirmModal({
   const { t } = useTranslation();
 
   return (
-    <Modal
-      transparent
-      visible={visible}
-      animationType="fade"
-      onRequestClose={onCancel}
-    >
-      <Pressable
-        style={styles.backdrop}
-        onPress={onCancel}
-        accessibilityLabel={t('common.cancel')}
-      >
+    <Modal transparent visible={visible} animationType="fade" onRequestClose={onCancel}>
+      <Pressable style={styles.backdrop} onPress={onCancel} accessibilityLabel={t('common.cancel')}>
         <View style={styles.card} onStartShouldSetResponder={() => true}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>

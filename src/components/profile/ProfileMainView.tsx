@@ -82,7 +82,9 @@ export function ProfileMainView({ user, onNavigate }: ProfileMainViewProps): Rea
         />
         <SettingsCard
           title={t('profile.menu.deleteAccount', { defaultValue: 'Eliminar cuenta' })}
-          description={t('profile.menu.deleteAccountDesc', { defaultValue: 'Borrar permanentemente' })}
+          description={t('profile.menu.deleteAccountDesc', {
+            defaultValue: 'Borrar permanentemente',
+          })}
           iconName="eliminar"
           iconColor="#EF4444"
           iconBgColor="#FEF2F2"

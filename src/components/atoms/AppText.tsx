@@ -12,12 +12,7 @@ interface AppTextProps extends TextProps {
   style?: StyleProp<TextStyle>;
 }
 
-export const AppText = ({ 
-  variant = 'Body', 
-  children, 
-  style, 
-  ...props 
-}: AppTextProps) => {
+export const AppText = ({ variant = 'Body', children, style, ...props }: AppTextProps) => {
   const { fontScale } = useAccessibility();
 
   const baseStyle = styles[variant] as TextStyle;
@@ -32,10 +27,7 @@ export const AppText = ({
   };
 
   return (
-    <Text 
-      style={[baseStyle, style, scaledStyle]} 
-      {...props}
-    >
+    <Text style={[baseStyle, style, scaledStyle]} {...props}>
       {children}
     </Text>
   );

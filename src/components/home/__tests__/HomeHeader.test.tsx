@@ -25,7 +25,7 @@ describe('HomeHeader Component', () => {
 
   it('renders greeting with real first name when userName is provided', () => {
     const { getByText } = render(
-      <HomeHeader userName="John Doe" onProfilePress={mockOnProfilePress} />
+      <HomeHeader userName="John Doe" onProfilePress={mockOnProfilePress} />,
     );
 
     expect(getByText('John')).toBeTruthy();
@@ -33,9 +33,7 @@ describe('HomeHeader Component', () => {
   });
 
   it('renders greeting with empty string when userName is empty', () => {
-    const { queryByText } = render(
-      <HomeHeader userName="" onProfilePress={mockOnProfilePress} />
-    );
+    const { queryByText } = render(<HomeHeader userName="" onProfilePress={mockOnProfilePress} />);
 
     // Should not contain "John" or "Doe"
     expect(queryByText('John')).toBeNull();
@@ -43,7 +41,7 @@ describe('HomeHeader Component', () => {
 
   it('calls onProfilePress when profile icon is pressed', () => {
     const { getByRole } = render(
-      <HomeHeader userName="John Doe" onProfilePress={mockOnProfilePress} />
+      <HomeHeader userName="John Doe" onProfilePress={mockOnProfilePress} />,
     );
 
     const button = getByRole('button');

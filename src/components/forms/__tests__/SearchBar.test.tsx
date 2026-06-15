@@ -19,11 +19,7 @@ describe('SearchBar Component', () => {
 
   it('renders the search icon and placeholder', () => {
     const { getByPlaceholderText, getAllByTestId } = render(
-      <SearchBar
-        value=""
-        onChangeText={mockOnChangeText}
-        placeholder="Buscar productos"
-      />
+      <SearchBar value="" onChangeText={mockOnChangeText} placeholder="Buscar productos" />,
     );
 
     expect(getByPlaceholderText('Buscar productos')).toBeTruthy();
@@ -32,11 +28,7 @@ describe('SearchBar Component', () => {
 
   it('calls onChangeText when text changes', () => {
     const { getByPlaceholderText } = render(
-      <SearchBar
-        value=""
-        onChangeText={mockOnChangeText}
-        placeholder="Buscar"
-      />
+      <SearchBar value="" onChangeText={mockOnChangeText} placeholder="Buscar" />,
     );
 
     fireEvent.changeText(getByPlaceholderText('Buscar'), 'leche');
@@ -45,7 +37,7 @@ describe('SearchBar Component', () => {
 
   it('does not show the clear button when value is empty', () => {
     const { queryByLabelText } = render(
-      <SearchBar value="" onChangeText={mockOnChangeText} placeholder="Buscar" />
+      <SearchBar value="" onChangeText={mockOnChangeText} placeholder="Buscar" />,
     );
 
     expect(queryByLabelText('Limpiar búsqueda')).toBeNull();
@@ -53,7 +45,7 @@ describe('SearchBar Component', () => {
 
   it('shows the clear button and clears the value when pressed', () => {
     const { getByLabelText } = render(
-      <SearchBar value="leche" onChangeText={mockOnChangeText} placeholder="Buscar" />
+      <SearchBar value="leche" onChangeText={mockOnChangeText} placeholder="Buscar" />,
     );
 
     const clearButton = getByLabelText('Limpiar búsqueda');
@@ -71,7 +63,7 @@ describe('SearchBar Component', () => {
         onChangeText={mockOnChangeText}
         onSearchPress={mockOnSearchPress}
         placeholder="Buscar"
-      />
+      />,
     );
 
     fireEvent(getByPlaceholderText('Buscar'), 'submitEditing');

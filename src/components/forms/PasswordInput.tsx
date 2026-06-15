@@ -56,11 +56,7 @@ export function PasswordInput({
           onPress={() => setIsVisible((currentValue) => !currentValue)}
           style={styles.toggle}
         >
-          <AppIcon
-            color={colors.textSecondary}
-            name={isVisible ? 'ocultar' : 'ver'}
-            size={22}
-          />
+          <AppIcon color={colors.textSecondary} name={isVisible ? 'ocultar' : 'ver'} size={22} />
         </Pressable>
       </View>
       {showStrength && strengthLabels ? (

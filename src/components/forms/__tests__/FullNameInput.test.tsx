@@ -16,7 +16,7 @@ jest.mock('@/components/forms/InlineError', () => {
   const { Text } = require('react-native');
   return {
     __esModule: true,
-    default: ({ message }: any) => message ? <Text testID="inline-error">{message}</Text> : null,
+    default: ({ message }: any) => (message ? <Text testID="inline-error">{message}</Text> : null),
   };
 });
 
@@ -35,11 +35,11 @@ describe('FullNameInput Component', () => {
         label="Full Name"
         accessibilityLabel="Full Name Input"
         nameTooShortMessage="Nombre demasiado corto"
-      />
+      />,
     );
 
     expect(getByTestId('form-label').props.children).toBe('Full Name');
-    
+
     const { TextInput } = require('react-native');
     const input = UNSAFE_getByType(TextInput);
     expect(input.props.value).toBe('');
@@ -53,7 +53,7 @@ describe('FullNameInput Component', () => {
         label="Full Name"
         accessibilityLabel="Full Name Input"
         nameTooShortMessage="Nombre demasiado corto"
-      />
+      />,
     );
 
     const { TextInput } = require('react-native');
@@ -70,7 +70,7 @@ describe('FullNameInput Component', () => {
         label="Full Name"
         accessibilityLabel="Full Name Input"
         nameTooShortMessage="Nombre demasiado corto"
-      />
+      />,
     );
 
     expect(queryByTestId('inline-error')).toBeNull();
@@ -84,7 +84,7 @@ describe('FullNameInput Component', () => {
         label="Full Name"
         accessibilityLabel="Full Name Input"
         nameTooShortMessage="Nombre demasiado corto"
-      />
+      />,
     );
 
     const { TextInput } = require('react-native');
@@ -103,7 +103,7 @@ describe('FullNameInput Component', () => {
         accessibilityLabel="Full Name Input"
         nameTooShortMessage="Nombre demasiado corto"
         error="Invalid characters"
-      />
+      />,
     );
 
     expect(getByTestId('inline-error').props.children).toBe('Invalid characters');

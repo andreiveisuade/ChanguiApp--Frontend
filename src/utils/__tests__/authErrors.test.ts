@@ -25,7 +25,9 @@ describe('mapAuthError', () => {
   });
 
   it('detecta errores de Google/OAuth', () => {
-    expect(mapAuthError(new Error('Google OAuth cancelled')).message).toBe('auth.errors.googleError');
+    expect(mapAuthError(new Error('Google OAuth cancelled')).message).toBe(
+      'auth.errors.googleError',
+    );
   });
 
   it('cae en unknown para errores no reconocidos o tipos no-Error', () => {
