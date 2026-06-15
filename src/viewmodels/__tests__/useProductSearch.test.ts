@@ -80,4 +80,29 @@ describe('useProductSearch', () => {
     act(() => result.current.setQuery('l'));
     expect(result.current.results).toEqual([]);
   });
+
+  it('usa los valores por defecto cuando no recibe opciones', async () => {
+    mockedSearch.mockResolvedValue([product]);
+    const { result } = renderHook(() => useProductSearch());
+
+    act(() => result.current.setQuery('leche'));
+    await act(async () => {
+      jest.advanceTimersByTime(250);
+    });
+
+    expect(mockedSearch).toHaveBeenCalledWith('leche', 20);
+  });
+
+  it('deja los resultados vacíos y corta el loading si la búsqueda falla', async () => {
+    mockedSearch.mockRejectedValueOnce(new Error('db fail'));
+    const { result } = renderHook(() => useProductSearch({ minChars: 2, debounceMs: 250 }));
+
+    act(() => result.current.setQuery('leche'));
+    await act(async () => {
+      jest.advanceTimersByTime(250);
+    });
+
+    expect(result.current.results).toEqual([]);
+    expect(result.current.isLoading).toBe(false);
+  });
 });
