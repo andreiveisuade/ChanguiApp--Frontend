@@ -38,7 +38,7 @@ export default function ProductFoundScreen(): React.JSX.Element {
       <View style={styles.root}>
         <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
         <SafeAreaView style={styles.safeArea}>
-          <AppHeader onBack={goToScanner} />
+          <AppHeader showLogo={false} style={styles.header} onBack={goToScanner} />
           <ProductNotFound onRetry={goToScanner} />
         </SafeAreaView>
       </View>
@@ -49,7 +49,7 @@ export default function ProductFoundScreen(): React.JSX.Element {
     <View style={styles.root}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       <SafeAreaView style={styles.safeArea}>
-        <AppHeader onBack={isLoading ? undefined : goToScanner} />
+        <AppHeader showLogo={false} style={styles.header} onBack={isLoading ? undefined : goToScanner} />
 
         <SuccessMessage message={t('scanner.productFound')} />
 
@@ -120,6 +120,10 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+  },
+  header: {
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
   },
   content: {
     flex: 1,

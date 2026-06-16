@@ -79,6 +79,7 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
   return (
     <View style={styles.page}>
       <HistoryHeader userName={userName} onProfilePress={() => router.push(ROUTES.tabs.settings)} />
+      <View style={styles.divider} />
       <FlatList
         data={filtered}
         keyExtractor={(item) => String(item.id)}
@@ -160,6 +161,10 @@ const styles = StyleSheet.create({
   page: {
     backgroundColor: colors.white,
     flex: 1,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: colors.border,
   },
   content: {
     flexGrow: 1,
