@@ -46,7 +46,7 @@ export default function ScannerScreen(): React.JSX.Element {
     <View style={styles.root}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       <SafeAreaView style={styles.safeArea}>
-        <AppHeader />
+        <AppHeader showLogo={false} style={styles.header} />
 
         <View style={styles.cameraContainer}>
           <CameraView
@@ -92,6 +92,10 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+  },
+  header: {
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
   },
   permissionContainer: {
     alignItems: 'center',
