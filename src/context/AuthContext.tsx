@@ -34,12 +34,8 @@ import { AuthError, RegisterCredentials, User } from '@/types/auth';
 import { mapAuthError } from '@/utils/authErrors';
 import { authEvents } from '@/utils/authEvents';
 import { queryClient } from '@/config/queryClient';
-import {
-  doPasswordsMatch,
-  isValidEmail,
-  isValidFullName,
-  isValidPassword,
-} from '@/utils/validators';
+import { isValidEmail } from '@/utils/validators';
+import { validateRegisterCredentials } from '@/utils/authValidators';
 
 export type AuthContextValue = {
   user: User | null;
@@ -56,29 +52,6 @@ export type AuthContextValue = {
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
-
-const validateRegisterCredentials = (credentials: RegisterCredentials): AuthError | null => {
-  if (!isValidFullName(credentials.full_name)) {
-    return { message: i18n.t('auth.errors.nameTooShort'), field: 'full_name' };
-  }
-
-  if (!isValidEmail(credentials.email)) {
-    return { message: i18n.t('auth.errors.invalidEmail'), field: 'email' };
-  }
-
-  if (!isValidPassword(credentials.password)) {
-    return {
-      message: i18n.t('auth.errors.passwordTooShort'),
-      field: 'password',
-    };
-  }
-
-  if (!doPasswordsMatch(credentials.password, credentials.confirmPassword)) {
-    return { message: i18n.t('auth.errors.passwordMismatch'), field: 'confirmPassword' };
-  }
-
-  return null;
-};
 
 /**
  * Estado de sesión + ciclo de vida. Provee los primitivos que consumen los

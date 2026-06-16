@@ -53,7 +53,7 @@ npx react-native doctor
 | Patron     | MVVM + Repository                 | Separacion de responsabilidades                      |
 | Auth       | Supabase Auth + AuthContext       | Google Sign-In + email/contrasena, estado compartido |
 | Navegacion | Expo Router                       | File-based routing en `app/`                         |
-| HTTP       | `apiFetch` helper (fetch wrapper) | Auth automatico + manejo de 401                      |
+| HTTP       | axios (`httpClient` / `authClient`) | Auth automatico via interceptor + manejo de 401    |
 | i18n       | react-i18next                     | Internacionalizacion (espanol + ingles)              |
 | Scanner    | expo-camera                       | Escaneo de codigos de barras (DEV-30, pendiente)     |
 | Pagos      | Mercado Pago (WebView)            | Checkout in-app en sandbox                           |
@@ -66,23 +66,24 @@ npx react-native doctor
 src/
 ├── screens/              # View — pantallas de la app (solo renderiza UI)
 ├── viewmodels/           # ViewModel — hooks (useCart, useAuth, useScanner, etc.)
-├── repositories/         # Repository — unica capa que habla con el backend (HTTP)
+├── repositories/         # Repository — habla con backend (HTTP) o SQLite local
+├── services/             # Logica de dominio sin estado de UI (tax, errores, sync)
 ├── components/           # Componentes reutilizables (atoms en components/atoms/)
 ├── context/              # Providers de estado compartido (AuthContext)
-├── config/               # Config de servicios externos (supabase)
+├── config/               # Config externa: supabase, clients (axios), queryClient
 ├── i18n/                 # Internacionalizacion
 │   └── locales/
 │       ├── es.json       # Textos en espanol
 │       └── en.json       # Textos en ingles
 ├── navigation/           # Helpers de navegacion
 ├── types/                # Tipos de dominio + errores
-└── utils/                # Helpers (apiFetch, authEvents, theme, currency, ...)
+└── utils/                # Helpers (authEvents, currency, validators, queryError, ...)
 ```
 
 **Regla clave:** la Screen (View) NUNCA llama al Repository directamente. Siempre pasa por el ViewModel (hook).
 
 ```
-Screen → ViewModel (hook) → Repository → apiFetch → Backend API
+Screen → ViewModel (hook) → Repository → httpClient (axios) → Backend API
 ```
 
 ### Reglas de i18n
@@ -109,27 +110,38 @@ const { user, isAuthenticated, isLoading, login, logout } = useAuth();
 
 `useAuth` es un wrapper de `useAuthContext`. **El estado de sesion es unico** en toda la app (vive en `<AuthProvider>` montado en `app/_layout.tsx`). No hay duplicacion.
 
-#### `apiFetch()` — todo repository que pegue al backend autenticado lo usa
+#### `httpClient` (axios) — todo repository que pegue al backend autenticado lo usa
 
 ```ts
 // src/repositories/MyRepository.ts
-import { apiFetch } from '@/utils/apiFetch';
+import httpClient from '@/config/clients';
 
 export const MyRepository = {
   async getStuff() {
-    const response = await apiFetch('/api/stuff');
-    return response.json();
+    const { data } = await httpClient.get('/api/stuff');
+    return data;
   },
 };
 ```
 
-`apiFetch` se encarga de:
+`httpClient` es una instancia de axios (`src/config/clients.ts`) con interceptores que:
 
-- Leer el token de la sesion guardada e inyectar `Authorization: Bearer <token>`.
-- Si el backend devuelve **401**: limpia la sesion local, emite el evento `sessionExpired` (que el `AuthContext` escucha) y lanza `AuthSessionExpiredError`.
-- Si la respuesta no es OK: lanza un `Error` con el mensaje del backend.
+- Leen el token de la sesion guardada e inyectan `Authorization: Bearer <token>` en cada request.
+- Ante **401**: limpian la sesion local, emiten el evento `sessionExpired` (que el `AuthContext` escucha) y lanzan `AuthSessionExpiredError`.
+- Ante otro error: lanzan un `Error` con el mensaje del backend y el `status` como propiedad (lo lee `ErrorTranslationService`).
 
-**NO usar `fetch` directo en repositories.** Duplica logica de auth y rompe el manejo automatico de sesion expirada.
+`authClient` es una segunda instancia SIN el interceptor de sesion, para login/register (todavia no hay token).
+
+**NO usar `fetch` ni `axios` directo en repositories.** Duplica logica de auth y rompe el manejo automatico de sesion expirada.
+
+#### Convencion de repositories: objeto vs modulo de funciones
+
+Dos formas conviven a proposito:
+
+- **Objeto con default export** (`export const XRepository = { ... }`): los repos que pegan al backend por HTTP (`AuthRepository`, `CartRepository`, `CheckoutRepository`, etc.). El objeto agrupa los metodos y se mockea facil como `{ get, post }` en tests.
+- **Modulo de funciones sueltas** (`export function ...`): los repos de datos locales en SQLite (`ProductCatalogRepository`, `ListRepository`) y la conexion (`db.ts`) / cursor (`catalogSyncCursor.ts`). Son funciones puras sobre la DB local, sin estado de instancia.
+
+La distincion es semantica (HTTP remoto vs SQLite local), no un accidente; al crear un repo nuevo, seguir la forma del grupo que corresponda.
 
 #### `AuthSessionExpiredError` — distinguir errores de auth en viewmodels
 

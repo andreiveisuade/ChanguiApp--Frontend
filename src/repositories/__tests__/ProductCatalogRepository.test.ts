@@ -1,15 +1,7 @@
-jest.mock('@react-native-async-storage/async-storage', () => ({
-  __esModule: true,
-  default: { getItem: jest.fn(), setItem: jest.fn() },
-}));
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { __mockDb: mockDb } = require('expo-sqlite');
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as repo from '../ProductCatalogRepository';
 import type { CatalogApiItem } from '../ProductCatalogRepository';
-
-const mockedAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>;
 
 const apiItem = (overrides: Partial<CatalogApiItem> = {}): CatalogApiItem => ({
   id: 'p1',
@@ -125,22 +117,6 @@ describe('ProductCatalogRepository', () => {
     it('devuelve 0 si no hay fila', async () => {
       mockDb.getFirstAsync.mockResolvedValueOnce(null);
       expect(await repo.countProducts()).toBe(0);
-    });
-  });
-
-  describe('cursor de sync', () => {
-    it('getSyncedAt lee de AsyncStorage', async () => {
-      mockedAsyncStorage.getItem.mockResolvedValueOnce('2026-06-08T10:00:00.000Z');
-      expect(await repo.getSyncedAt()).toBe('2026-06-08T10:00:00.000Z');
-      expect(mockedAsyncStorage.getItem).toHaveBeenCalledWith('@changuiapp/catalog_synced_at');
-    });
-
-    it('setSyncedAt escribe en AsyncStorage', async () => {
-      await repo.setSyncedAt('2026-06-08T10:00:00.000Z');
-      expect(mockedAsyncStorage.setItem).toHaveBeenCalledWith(
-        '@changuiapp/catalog_synced_at',
-        '2026-06-08T10:00:00.000Z',
-      );
     });
   });
 

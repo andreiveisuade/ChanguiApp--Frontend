@@ -2,8 +2,8 @@ import { useState, useCallback } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import * as AuthSession from 'expo-auth-session';
 import CheckoutRepository from '@/repositories/CheckoutRepository';
-import { AuthSessionExpiredError, UserFriendlyError } from '@/types/errors';
-import { ErrorTranslationService } from '@/services/ErrorTranslationService';
+import { UserFriendlyError } from '@/types/errors';
+import { translateQueryError } from '@/utils/queryError';
 
 export type StartCheckoutResult = { preferenceId: string };
 
@@ -47,10 +47,9 @@ export const useCheckout = (): UseCheckoutReturn => {
 
       return { preferenceId: preference_id };
     } catch (err) {
-      if (err instanceof AuthSessionExpiredError) {
-        return null;
-      }
-      setError(ErrorTranslationService.translate(err));
+      // translateQueryError devuelve null ante AuthSessionExpiredError (el
+      // AuthContext maneja el redirect), evitando mostrar un error de sesión.
+      setError(translateQueryError(err));
       return null;
     } finally {
       setIsStarting(false);

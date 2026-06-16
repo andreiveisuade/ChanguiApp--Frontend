@@ -5,6 +5,12 @@ import { AuthSessionExpiredError } from '@/types/errors';
 import { User } from '@/types/auth';
 import useAuth from '@/viewmodels/useAuth';
 
+// Decisión consciente: el perfil expone el mensaje del backend tal cual (no usa
+// translateQueryError/UserFriendlyError como el resto de los viewmodels) porque
+// los errores de perfil suelen ser validaciones específicas ("el email ya está
+// en uso") más útiles que un mensaje genérico por status. Sí silencia
+// AuthSessionExpiredError de forma consistente con el resto (el AuthContext
+// maneja el redirect a login).
 export type ProfileError = {
   message: string;
 };

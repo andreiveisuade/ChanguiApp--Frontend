@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { Vibration } from 'react-native';
 import { useRouter } from 'expo-router';
 import { getProductByBarcode } from '@/repositories/ScannerRepository';
-import { ErrorTranslationService } from '@/services/ErrorTranslationService';
+import { translateQueryError } from '@/utils/queryError';
 import { UserFriendlyError } from '@/types/errors';
 
 export type UseScannerReturn = {
@@ -43,8 +43,9 @@ export const useScanner = (): UseScannerReturn => {
       });
     } catch (err) {
       // Error real (red, timeout, 5xx): mostramos el mensaje en pantalla.
-      // El usuario puede reintentar con el boton "Escanear nuevamente".
-      setErrorMessage(ErrorTranslationService.translate(err));
+      // translateQueryError silencia AuthSessionExpiredError (el AuthContext
+      // maneja el redirect). El usuario puede reintentar con "Escanear nuevamente".
+      setErrorMessage(translateQueryError(err));
     } finally {
       setLoading(false);
     }
