@@ -11,9 +11,9 @@ import { ProductCard } from '@/components/scanner/ProductCard';
 import { ProductNotFound } from '@/components/scanner/ProductNotFound';
 import { AppText } from '@/components/atoms/AppText';
 import { PriceBreakdown } from '@/components/pricing/PriceBreakdown';
+import { buildTaxLines } from '@/components/pricing/buildTaxLines';
 import useProductFound from '@/viewmodels/useProductFound';
 import { colors, radii, spacing } from '@/constants/theme';
-import { formatRate } from '@/utils/currency';
 
 export default function ProductFoundScreen(): React.JSX.Element {
   const { t } = useTranslation();
@@ -88,9 +88,7 @@ export default function ProductFoundScreen(): React.JSX.Element {
           <View style={styles.breakdownBox}>
             <PriceBreakdown
               subtotalNet={netSubtotal}
-              taxLines={[
-                { label: t('pricing.iva', { rate: formatRate(taxRate) }), amount: ivaSubtotal },
-              ]}
+              taxLines={buildTaxLines([{ rate: taxRate, amount: ivaSubtotal }], t)}
               total={subtotal}
             />
           </View>

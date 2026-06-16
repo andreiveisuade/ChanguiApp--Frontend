@@ -1,6 +1,7 @@
 import { syncCatalog } from '../catalogSync';
 import httpClient from '@/config/clients';
 import * as ProductCatalogRepository from '@/repositories/ProductCatalogRepository';
+import * as CatalogSyncCursor from '@/repositories/catalogSyncCursor';
 
 jest.mock('@/config/clients', () => ({
   __esModule: true,
@@ -12,13 +13,16 @@ jest.mock('@/config/clients', () => ({
   },
 }));
 jest.mock('@/repositories/ProductCatalogRepository', () => ({
+  upsertProducts: jest.fn(),
+}));
+jest.mock('@/repositories/catalogSyncCursor', () => ({
   getSyncedAt: jest.fn(),
   setSyncedAt: jest.fn(),
-  upsertProducts: jest.fn(),
 }));
 
 const mockedGet = httpClient.get as jest.Mock;
 const mockedRepo = jest.mocked(ProductCatalogRepository);
+const mockedCursor = jest.mocked(CatalogSyncCursor);
 const axiosResponse = <T>(data: T) => ({ data });
 
 const product = (barcode: string, updated_at: string) => ({
@@ -36,11 +40,11 @@ describe('catalogSync.syncCatalog', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockedRepo.upsertProducts.mockResolvedValue();
-    mockedRepo.setSyncedAt.mockResolvedValue();
+    mockedCursor.setSyncedAt.mockResolvedValue();
   });
 
   it('primer arranque (sin cursor): baja todo, upsertea y guarda el cursor final', async () => {
-    mockedRepo.getSyncedAt.mockResolvedValue(null);
+    mockedCursor.getSyncedAt.mockResolvedValue(null);
     mockedGet.mockResolvedValueOnce(
       axiosResponse({
         products: [product('111', '2026-06-08T10:00:00.000Z')],
@@ -58,11 +62,11 @@ describe('catalogSync.syncCatalog', () => {
       params: { limit: 500, offset: 0 },
     });
     expect(mockedRepo.upsertProducts).toHaveBeenCalledTimes(1);
-    expect(mockedRepo.setSyncedAt).toHaveBeenCalledWith('2026-06-08T10:00:00.000Z');
+    expect(mockedCursor.setSyncedAt).toHaveBeenCalledWith('2026-06-08T10:00:00.000Z');
   });
 
   it('pagina mientras has_more y acumula el offset', async () => {
-    mockedRepo.getSyncedAt.mockResolvedValue(null);
+    mockedCursor.getSyncedAt.mockResolvedValue(null);
     mockedGet
       .mockResolvedValueOnce(
         axiosResponse({
@@ -90,11 +94,11 @@ describe('catalogSync.syncCatalog', () => {
     expect(mockedGet).toHaveBeenCalledTimes(2);
     expect(mockedGet.mock.calls[0][1].params.offset).toBe(0);
     expect(mockedGet.mock.calls[1][1].params.offset).toBe(2);
-    expect(mockedRepo.setSyncedAt).toHaveBeenCalledWith('2026-06-08T10:00:00.000Z');
+    expect(mockedCursor.setSyncedAt).toHaveBeenCalledWith('2026-06-08T10:00:00.000Z');
   });
 
   it('con cursor previo manda updated_since y no reescribe el cursor si no hay cambios', async () => {
-    mockedRepo.getSyncedAt.mockResolvedValue('2026-06-07T00:00:00.000Z');
+    mockedCursor.getSyncedAt.mockResolvedValue('2026-06-07T00:00:00.000Z');
     mockedGet.mockResolvedValueOnce(
       axiosResponse({ products: [], count: 0, has_more: false, next_cursor: null }),
     );
@@ -106,6 +110,6 @@ describe('catalogSync.syncCatalog', () => {
       params: { limit: 500, offset: 0, updated_since: '2026-06-07T00:00:00.000Z' },
     });
     expect(mockedRepo.upsertProducts).not.toHaveBeenCalled();
-    expect(mockedRepo.setSyncedAt).not.toHaveBeenCalled();
+    expect(mockedCursor.setSyncedAt).not.toHaveBeenCalled();
   });
 });

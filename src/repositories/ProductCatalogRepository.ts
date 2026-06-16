@@ -1,16 +1,14 @@
 /**
- * Cache local del catálogo de productos en SQLite (expo-sqlite).
+ * Acceso al cache local del catálogo de productos en SQLite (expo-sqlite).
  *
- * El escaneo resuelve por barcode contra esta DB local en vez de pegarle a
- * Supabase en cada scan. Se sincroniza de forma incremental al abrir la app
- * (ver services/catalogSync). El cursor del último sync se guarda en
- * AsyncStorage (STORAGE_KEYS.catalogSyncedAt).
+ * El escaneo y el buscador resuelven contra esta DB local en vez de pegarle a
+ * Supabase. La conexión y el esquema viven en repositories/db; el cursor del
+ * último sync, en repositories/catalogSyncCursor. La sincronización incremental
+ * la orquesta services/catalogSync.
  */
 
-import * as SQLite from 'expo-sqlite';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { STORAGE_KEYS } from '@/constants/storage';
 import { Product } from '@/types/domain';
+import { getDb } from '@/repositories/db';
 
 /** Producto tal como lo devuelve GET /api/products (Product + updated_at). */
 export type CatalogApiItem = Product & { updated_at: string };
@@ -27,68 +25,6 @@ interface ProductRow {
   tax_net_price: number | null;
   tax_amount: number | null;
   updated_at: string;
-}
-
-const DB_NAME = 'changuiapp.db';
-
-let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
-
-/**
- * Conexión singleton a la DB local. Exportada para que otros repos (ej. listas)
- * reusen la misma conexión en vez de abrir changuiapp.db por separado.
- *
- * Crea la tabla `products` y el índice full-text `products_fts` (FTS5). Usamos
- * una tabla FTS standalone (no external-content) porque upsertProducts hace
- * INSERT OR REPLACE, que cambia el rowid implícito de `products` en cada
- * re-upsert y desincronizaría un content_rowid. La unión se hace por `barcode`,
- * que sí es estable. El tokenizer ignora acentos: "serenisima" matchea
- * "Serenísima".
- */
-export async function getDb(): Promise<SQLite.SQLiteDatabase> {
-  if (!dbPromise) {
-    dbPromise = SQLite.openDatabaseAsync(DB_NAME).then(async (db) => {
-      await db.execAsync(`
-        CREATE TABLE IF NOT EXISTS products (
-          barcode TEXT PRIMARY KEY NOT NULL,
-          id TEXT NOT NULL,
-          name TEXT NOT NULL,
-          brand TEXT,
-          image_url TEXT,
-          price REAL NOT NULL,
-          tax_category TEXT,
-          tax_rate REAL,
-          tax_net_price REAL,
-          tax_amount REAL,
-          updated_at TEXT NOT NULL
-        );
-        CREATE VIRTUAL TABLE IF NOT EXISTS products_fts USING fts5(
-          barcode UNINDEXED,
-          name,
-          brand,
-          tokenize = 'unicode61 remove_diacritics 2'
-        );
-      `);
-      await backfillFtsIfEmpty(db);
-      return db;
-    });
-  }
-  return dbPromise;
-}
-
-/**
- * Puebla el índice FTS desde `products` cuando está vacío pero ya hay catálogo
- * sincronizado (devices que bajaron el catálogo antes de existir la FTS).
- * Idempotente: en arranques posteriores la FTS ya tiene filas y no hace nada.
- */
-async function backfillFtsIfEmpty(db: SQLite.SQLiteDatabase): Promise<void> {
-  const fts = await db.getFirstAsync<{ n: number }>(`SELECT COUNT(*) AS n FROM products_fts`);
-  if ((fts?.n ?? 0) > 0) return;
-  const prod = await db.getFirstAsync<{ n: number }>(`SELECT COUNT(*) AS n FROM products`);
-  if ((prod?.n ?? 0) === 0) return;
-  await db.execAsync(`
-    INSERT INTO products_fts (barcode, name, brand)
-    SELECT barcode, name, COALESCE(brand, '') FROM products;
-  `);
 }
 
 function rowToProduct(row: ProductRow): Product {
@@ -203,13 +139,4 @@ export async function countProducts(): Promise<number> {
   const db = await getDb();
   const row = await db.getFirstAsync<{ n: number }>(`SELECT COUNT(*) AS n FROM products`);
   return row?.n ?? 0;
-}
-
-/** Cursor del último sync (updated_at máximo sincronizado). null si nunca se sincronizó. */
-export async function getSyncedAt(): Promise<string | null> {
-  return AsyncStorage.getItem(STORAGE_KEYS.catalogSyncedAt);
-}
-
-export async function setSyncedAt(cursor: string): Promise<void> {
-  await AsyncStorage.setItem(STORAGE_KEYS.catalogSyncedAt, cursor);
 }
