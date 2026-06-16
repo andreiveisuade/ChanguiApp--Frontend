@@ -1,16 +1,10 @@
-import {
-  CartWithItems,
-  CartItemWithProduct,
-  TaxBreakdown,
-  TaxLine,
-  TaxSummary,
-} from '@/types/domain';
+import { CartWithItems, CartItemWithProduct, TaxBreakdown, TaxSummary } from '@/types/domain';
 import httpClient from '@/config/clients';
-
-const EMPTY_SUMMARY: TaxSummary = { subtotal_net: 0, taxes: [], total: 0 };
-const DEFAULT_TAX_RATE = 21;
-
-const round2 = (n: number) => Math.round(n * 100) / 100;
+import {
+  buildSummaryFromItems,
+  calculateItemsTotal,
+  hasSummaryValues,
+} from '@/services/TaxSummaryService';
 
 interface RawProduct {
   id: string;
@@ -72,53 +66,6 @@ function mapRawItem(item: RawCartItem): CartItemWithProduct {
           tax: rawProduct.tax,
         }
       : null,
-  };
-}
-
-function calculateItemsTotal(items: CartItemWithProduct[]): number {
-  return items.reduce((sum, item) => sum + item.unit_price * item.quantity, 0);
-}
-
-function hasSummaryValues(summary: TaxSummary | undefined): summary is TaxSummary {
-  if (!summary) return false;
-
-  return (
-    summary.subtotal_net > 0 ||
-    summary.total > 0 ||
-    summary.taxes.some((tax) => tax.base > 0 || tax.amount > 0)
-  );
-}
-
-function buildSummaryFromItems(items: CartItemWithProduct[], total: number): TaxSummary {
-  if (items.length === 0 || total <= 0) return EMPTY_SUMMARY;
-
-  const groupedTaxes = new Map<number, TaxLine>();
-  let subtotalNet = 0;
-
-  items.forEach((item) => {
-    const lineTotal = item.unit_price * item.quantity;
-    const productTax = item.product?.tax;
-    const rate = productTax?.rate ?? DEFAULT_TAX_RATE;
-    const netAmount = productTax
-      ? productTax.net_price * item.quantity
-      : lineTotal / (1 + rate / 100);
-    const taxAmount = productTax ? productTax.tax_amount * item.quantity : lineTotal - netAmount;
-    const current = groupedTaxes.get(rate) ?? { rate, label: `IVA ${rate}%`, base: 0, amount: 0 };
-
-    current.base += netAmount;
-    current.amount += taxAmount;
-    groupedTaxes.set(rate, current);
-    subtotalNet += netAmount;
-  });
-
-  return {
-    subtotal_net: round2(subtotalNet),
-    taxes: Array.from(groupedTaxes.values()).map((tax) => ({
-      ...tax,
-      base: round2(tax.base),
-      amount: round2(tax.amount),
-    })),
-    total: round2(total),
   };
 }
 

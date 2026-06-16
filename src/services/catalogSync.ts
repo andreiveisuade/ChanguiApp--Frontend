@@ -9,6 +9,7 @@
 import httpClient from '@/config/clients';
 import * as ProductCatalogRepository from '@/repositories/ProductCatalogRepository';
 import type { CatalogApiItem } from '@/repositories/ProductCatalogRepository';
+import { getSyncedAt, setSyncedAt } from '@/repositories/catalogSyncCursor';
 
 const PAGE_LIMIT = 500;
 
@@ -25,7 +26,7 @@ interface CatalogPage {
  * upsertearon en esta corrida.
  */
 export async function syncCatalog(): Promise<{ synced: number }> {
-  const since = await ProductCatalogRepository.getSyncedAt();
+  const since = await getSyncedAt();
   let offset = 0;
   let synced = 0;
   let maxCursor = since;
@@ -53,7 +54,7 @@ export async function syncCatalog(): Promise<{ synced: number }> {
   }
 
   if (maxCursor && maxCursor !== since) {
-    await ProductCatalogRepository.setSyncedAt(maxCursor);
+    await setSyncedAt(maxCursor);
   }
 
   return { synced };
