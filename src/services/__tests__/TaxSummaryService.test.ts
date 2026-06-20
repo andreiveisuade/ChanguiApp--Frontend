@@ -80,8 +80,16 @@ describe('TaxSummaryService', () => {
 
     it('agrupa por alícuota con tasas mixtas', () => {
       const t21: TaxBreakdown = { category: 'general', rate: 21, net_price: 100, tax_amount: 21 };
-      const t105: TaxBreakdown = { category: 'basico', rate: 10.5, net_price: 100, tax_amount: 10.5 };
-      const summary = buildSummaryFromItems([makeItem(121, 1, t21), makeItem(110.5, 1, t105)], 231.5);
+      const t105: TaxBreakdown = {
+        category: 'basico',
+        rate: 10.5,
+        net_price: 100,
+        tax_amount: 10.5,
+      };
+      const summary = buildSummaryFromItems(
+        [makeItem(121, 1, t21), makeItem(110.5, 1, t105)],
+        231.5,
+      );
       expect(summary.taxes).toHaveLength(2);
       expect(summary.taxes.map((t) => t.label)).toEqual(
         expect.arrayContaining(['IVA 21%', 'IVA 10.5%']),

@@ -57,7 +57,9 @@ describe('useListDetail', () => {
   });
 
   it('no carga ítems cuando no hay listId', async () => {
-    const { result } = renderHook(() => useListDetail(undefined), { wrapper: createQueryWrapper() });
+    const { result } = renderHook(() => useListDetail(undefined), {
+      wrapper: createQueryWrapper(),
+    });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     expect(repo.getListItems).not.toHaveBeenCalled();
@@ -87,7 +89,9 @@ describe('useListDetail', () => {
   });
 
   it('addProduct no hace nada sin listId', async () => {
-    const { result } = renderHook(() => useListDetail(undefined), { wrapper: createQueryWrapper() });
+    const { result } = renderHook(() => useListDetail(undefined), {
+      wrapper: createQueryWrapper(),
+    });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {

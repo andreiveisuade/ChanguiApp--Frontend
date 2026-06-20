@@ -53,7 +53,9 @@ describe('usePurchaseDetail', () => {
   });
 
   it('carga el detalle al montar y apaga el loading', async () => {
-    const { result } = renderHook(() => usePurchaseDetail('pur1'), { wrapper: createQueryWrapper() });
+    const { result } = renderHook(() => usePurchaseDetail('pur1'), {
+      wrapper: createQueryWrapper(),
+    });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -64,7 +66,9 @@ describe('usePurchaseDetail', () => {
 
   it('error en la carga: traduce y expone el error', async () => {
     mockedGetById.mockRejectedValueOnce(new Error('Request failed with status 404'));
-    const { result } = renderHook(() => usePurchaseDetail('pur1'), { wrapper: createQueryWrapper() });
+    const { result } = renderHook(() => usePurchaseDetail('pur1'), {
+      wrapper: createQueryWrapper(),
+    });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -75,7 +79,9 @@ describe('usePurchaseDetail', () => {
 
   it('sesión expirada en la carga: no expone error al usuario', async () => {
     mockedGetById.mockRejectedValueOnce(new AuthSessionExpiredError());
-    const { result } = renderHook(() => usePurchaseDetail('pur1'), { wrapper: createQueryWrapper() });
+    const { result } = renderHook(() => usePurchaseDetail('pur1'), {
+      wrapper: createQueryWrapper(),
+    });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -84,7 +90,9 @@ describe('usePurchaseDetail', () => {
   });
 
   it('sin id: no pega al repo y apaga el loading', async () => {
-    const { result } = renderHook(() => usePurchaseDetail(undefined), { wrapper: createQueryWrapper() });
+    const { result } = renderHook(() => usePurchaseDetail(undefined), {
+      wrapper: createQueryWrapper(),
+    });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -93,7 +101,9 @@ describe('usePurchaseDetail', () => {
   });
 
   it('refresh vuelve a pedir el detalle', async () => {
-    const { result } = renderHook(() => usePurchaseDetail('pur1'), { wrapper: createQueryWrapper() });
+    const { result } = renderHook(() => usePurchaseDetail('pur1'), {
+      wrapper: createQueryWrapper(),
+    });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     await act(async () => {

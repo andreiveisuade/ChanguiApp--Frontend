@@ -45,8 +45,15 @@ export const useProductFound = (): UseProductFoundReturn => {
   const [errorMessage, setErrorMessage] = useState<UserFriendlyError | null>(null);
 
   const addMutation = useMutation({
-    mutationFn: ({ productId, qty, unitPrice }: { productId: string; qty: number; unitPrice: number }) =>
-      CartRepository.addItem(productId, qty, unitPrice),
+    mutationFn: ({
+      productId,
+      qty,
+      unitPrice,
+    }: {
+      productId: string;
+      qty: number;
+      unitPrice: number;
+    }) => CartRepository.addItem(productId, qty, unitPrice),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cart'] }),
   });
 

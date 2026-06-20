@@ -47,16 +47,16 @@ npx react-native doctor
 
 ## Stack
 
-| Capa       | Tecnologia                        | Descripcion                                          |
-| ---------- | --------------------------------- | ---------------------------------------------------- |
-| Framework  | React Native + Expo               | App movil multiplataforma (Android + iOS)            |
-| Patron     | MVVM + Repository                 | Separacion de responsabilidades                      |
-| Auth       | Supabase Auth + AuthContext       | Google Sign-In + email/contrasena, estado compartido |
-| Navegacion | Expo Router                       | File-based routing en `app/`                         |
-| HTTP       | axios (`httpClient` / `authClient`) | Auth automatico via interceptor + manejo de 401    |
-| i18n       | react-i18next                     | Internacionalizacion (espanol + ingles)              |
-| Scanner    | expo-camera                       | Escaneo de codigos de barras (DEV-30, pendiente)     |
-| Pagos      | Mercado Pago (WebView)            | Checkout in-app en sandbox                           |
+| Capa       | Tecnologia                          | Descripcion                                          |
+| ---------- | ----------------------------------- | ---------------------------------------------------- |
+| Framework  | React Native + Expo                 | App movil multiplataforma (Android + iOS)            |
+| Patron     | MVVM + Repository                   | Separacion de responsabilidades                      |
+| Auth       | Supabase Auth + AuthContext         | Google Sign-In + email/contrasena, estado compartido |
+| Navegacion | Expo Router                         | File-based routing en `app/`                         |
+| HTTP       | axios (`httpClient` / `authClient`) | Auth automatico via interceptor + manejo de 401      |
+| i18n       | react-i18next                       | Internacionalizacion (espanol + ingles)              |
+| Scanner    | expo-camera                         | Escaneo de codigos de barras (DEV-30, pendiente)     |
+| Pagos      | Mercado Pago (WebView)              | Checkout in-app en sandbox                           |
 
 ---
 
