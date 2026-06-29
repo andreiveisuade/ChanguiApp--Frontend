@@ -19,12 +19,16 @@ export default function CartScreen(): React.JSX.Element {
   const router = useRouter();
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { items, summary, isLoading, error, refresh, updateQuantity, removeItem } = useCart();
+  const { items, summary, isLoading, error, refresh, updateQuantity, removeItem, flushPending } =
+    useCart();
   const { startCheckout, isStarting, error: checkoutError, clearError } = useCheckout();
 
   const userName = user?.full_name || t('home.defaultUser');
 
   const handlePay = async () => {
+    // Asegura que los cambios de cantidad en debounce lleguen al backend antes de
+    // crear la preferencia de pago, para que el checkout cobre las cantidades reales.
+    await flushPending();
     const result = await startCheckout();
     if (result) {
       router.push({
