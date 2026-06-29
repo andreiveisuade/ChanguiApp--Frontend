@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, Modal, StyleSheet, View } from 'react-native';
-import { colors, radii, spacing } from '@/constants/theme';
+import { colors } from '@/constants/theme';
 
 type LoadingOverlayProps = {
   visible: boolean;
@@ -14,9 +14,7 @@ export function LoadingOverlay({ visible }: LoadingOverlayProps): React.JSX.Elem
   return (
     <Modal transparent visible={visible}>
       <View style={styles.backdrop}>
-        <View style={styles.card}>
-          <ActivityIndicator color={colors.primary} size="large" />
-        </View>
+        <ActivityIndicator color={colors.primary} size="large" />
       </View>
     </Modal>
   );
@@ -28,11 +26,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.overlay,
     flex: 1,
     justifyContent: 'center',
-  },
-  card: {
-    backgroundColor: colors.white,
-    borderRadius: radii.lg,
-    padding: spacing.xl,
   },
 });
 
