@@ -7,15 +7,17 @@ import { colors, iconSize, radii, spacing } from '@/constants/theme';
 import { formatARS } from '@/utils/currency';
 
 interface CartItemProps {
+  id: string;
   name: string;
   price: number;
   quantity: number;
   imageUrl: string | null;
-  onUpdateQuantity: (quantity: number) => void;
-  onDelete: () => void;
+  onUpdateQuantity: (id: string, quantity: number) => void;
+  onDelete: (id: string) => void;
 }
 
-export function CartItem({
+function CartItemComponent({
+  id,
   name,
   price,
   quantity,
@@ -53,13 +55,13 @@ export function CartItem({
       <View style={styles.actionsContainer}>
         <QuantitySelector
           value={quantity}
-          onIncrement={() => onUpdateQuantity(quantity + 1)}
-          onDecrement={() => onUpdateQuantity(quantity - 1)}
+          onIncrement={() => onUpdateQuantity(id, quantity + 1)}
+          onDecrement={() => onUpdateQuantity(id, quantity - 1)}
           min={1}
         />
 
         <Pressable
-          onPress={onDelete}
+          onPress={() => onDelete(id)}
           style={styles.deleteButton}
           accessibilityRole="button"
           accessibilityLabel="Eliminar producto del carrito"
@@ -70,6 +72,10 @@ export function CartItem({
     </View>
   );
 }
+
+// memo: con callbacks estables (useCart) e ítems inmutables por referencia, tocar
+// el +/- de un ítem no repinta los demás.
+export const CartItem = React.memo(CartItemComponent);
 
 const styles = StyleSheet.create({
   container: {
