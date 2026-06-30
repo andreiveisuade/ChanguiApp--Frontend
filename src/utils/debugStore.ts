@@ -5,11 +5,18 @@
  */
 export type LogLevel = 'log' | 'error';
 
+// De dónde salió la llamada, para que el overlay muestre A DÓNDE pega la app:
+// backend HTTP, SQLite local, cache de react-query (no salió a ningún lado) o
+// un log/warn de consola.
+export type LogSource = 'http' | 'sqlite' | 'cache' | 'console';
+
 export type LogEntry = {
   id: number;
   time: string;
   level: LogLevel;
+  source: LogSource;
   message: string;
+  durationMs?: number;
 };
 
 const MAX_LOGS = 80;
@@ -33,13 +40,20 @@ const notify = (): void => {
   });
 };
 
-const append = (level: LogLevel, message: string): void => {
+const append = (
+  level: LogLevel,
+  source: LogSource,
+  message: string,
+  durationMs?: number,
+): void => {
   seq += 1;
   const entry: LogEntry = {
     id: seq,
     time: new Date().toLocaleTimeString(),
     level,
+    source,
     message,
+    durationMs,
   };
   logs = [entry, ...logs].slice(0, MAX_LOGS);
   notify();
@@ -71,6 +85,14 @@ export const debugStore = {
 };
 
 export const logger = {
-  log: (message: string): void => append('log', message),
-  error: (message: string): void => append('error', message),
+  // Logs de consola (console.log/warn/error capturados): source 'console'.
+  log: (message: string): void => append('log', 'console', message),
+  error: (message: string): void => append('error', 'console', message),
+  // Llamada estructurada con su origen (http/sqlite/cache) y latencia opcional.
+  call: (params: {
+    source: LogSource;
+    message: string;
+    level?: LogLevel;
+    durationMs?: number;
+  }): void => append(params.level ?? 'log', params.source, params.message, params.durationMs),
 };

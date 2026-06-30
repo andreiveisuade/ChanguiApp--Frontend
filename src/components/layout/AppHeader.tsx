@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ChanguiAppLogo from '@/../assets/logos/changuiapp-logo.svg';
 import { AppIcon } from '@/components/atoms/AppIcon';
@@ -7,13 +7,15 @@ import { colors, fonts, fontSize, iconSize, spacing, touchTarget } from '@/const
 
 type AppHeaderProps = {
   onBack?: () => void;
+  showLogo?: boolean;
+  style?: ViewStyle;
 };
 
-export function AppHeader({ onBack }: AppHeaderProps): React.JSX.Element {
+export function AppHeader({ onBack, showLogo = true, style }: AppHeaderProps): React.JSX.Element {
   const { t } = useTranslation();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {onBack ? (
         <Pressable
           accessibilityHint={t('forgotPassword.back')}
@@ -25,7 +27,9 @@ export function AppHeader({ onBack }: AppHeaderProps): React.JSX.Element {
         </Pressable>
       ) : null}
       <View style={styles.brand}>
-        <ChanguiAppLogo accessible={false} fill={colors.primary} height={28} width={27} />
+        {showLogo ? (
+          <ChanguiAppLogo accessible={false} fill={colors.primary} height={28} width={27} />
+        ) : null}
         <Text style={styles.title}>{t('app_name')}</Text>
       </View>
     </View>

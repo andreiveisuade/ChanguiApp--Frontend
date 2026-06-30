@@ -36,6 +36,7 @@ describe('CartItem Component', () => {
   it('renders name and price correctly', () => {
     const { getByText } = render(
       <CartItem
+        id="item-1"
         name="Product ABC"
         price={150}
         quantity={2}
@@ -52,6 +53,7 @@ describe('CartItem Component', () => {
   it('renders Image component if imageUrl is provided', () => {
     const { UNSAFE_getByType, queryAllByTestId } = render(
       <CartItem
+        id="item-1"
         name="Product ABC"
         price={150}
         quantity={2}
@@ -73,6 +75,7 @@ describe('CartItem Component', () => {
   it('calls onUpdateQuantity with incremented value when QuantitySelector signals increment', () => {
     const { getByTestId } = render(
       <CartItem
+        id="item-1"
         name="Product ABC"
         price={150}
         quantity={2}
@@ -84,12 +87,13 @@ describe('CartItem Component', () => {
 
     const incButton = getByTestId('btn-inc');
     fireEvent.press(incButton);
-    expect(mockOnUpdateQuantity).toHaveBeenCalledWith(3);
+    expect(mockOnUpdateQuantity).toHaveBeenCalledWith('item-1', 3);
   });
 
   it('calls onUpdateQuantity with decremented value when QuantitySelector signals decrement', () => {
     const { getByTestId } = render(
       <CartItem
+        id="item-1"
         name="Product ABC"
         price={150}
         quantity={2}
@@ -101,12 +105,13 @@ describe('CartItem Component', () => {
 
     const decButton = getByTestId('btn-dec');
     fireEvent.press(decButton);
-    expect(mockOnUpdateQuantity).toHaveBeenCalledWith(1);
+    expect(mockOnUpdateQuantity).toHaveBeenCalledWith('item-1', 1);
   });
 
   it('calls onDelete when the delete button is pressed', () => {
     const { getByLabelText } = render(
       <CartItem
+        id="item-1"
         name="Product ABC"
         price={150}
         quantity={2}
@@ -118,6 +123,6 @@ describe('CartItem Component', () => {
 
     const deleteButton = getByLabelText('Eliminar producto del carrito');
     fireEvent.press(deleteButton);
-    expect(mockOnDelete).toHaveBeenCalledTimes(1);
+    expect(mockOnDelete).toHaveBeenCalledWith('item-1');
   });
 });

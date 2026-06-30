@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -22,6 +22,10 @@ import { ROUTES } from '@/constants/routes';
 import { Purchase } from '@/types/domain';
 import { formatARS } from '@/utils/currency';
 
+// Componente estable (fuera del render) para que la FlatList no lo recree en
+// cada tecla del buscador.
+const Separator = (): React.JSX.Element => <View style={styles.separator} />;
+
 export function PurchaseHistoryScreen(): React.JSX.Element {
   const { t } = useTranslation();
   const router = useRouter();
@@ -41,9 +45,21 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
 
   const userName = profile?.full_name || t('home.defaultUser');
 
-  const goToDetail = (purchase: Purchase): void => {
-    router.push({ pathname: ROUTES.purchaseDetail, params: { id: String(purchase.id) } });
-  };
+  // useCallback: identidad estable para que renderItem y PurchaseCard (memo) no
+  // se recreen/repinten en cada tecla del buscador.
+  const goToDetail = useCallback(
+    (purchase: Purchase): void => {
+      router.push({ pathname: ROUTES.purchaseDetail, params: { id: String(purchase.id) } });
+    },
+    [router],
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: Purchase }): React.JSX.Element => (
+      <PurchaseCard purchase={item} onPress={goToDetail} />
+    ),
+    [goToDetail],
+  );
 
   const renderEmpty = (): React.JSX.Element | null => {
     if (isLoading) {
@@ -79,6 +95,7 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
   return (
     <View style={styles.page}>
       <HistoryHeader userName={userName} onProfilePress={() => router.push(ROUTES.tabs.settings)} />
+      <View style={styles.divider} />
       <FlatList
         data={filtered}
         keyExtractor={(item) => String(item.id)}
@@ -148,8 +165,8 @@ export function PurchaseHistoryScreen(): React.JSX.Element {
             </View>
           </View>
         }
-        renderItem={({ item }) => <PurchaseCard purchase={item} onPress={() => goToDetail(item)} />}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        renderItem={renderItem}
+        ItemSeparatorComponent={Separator}
         ListEmptyComponent={renderEmpty}
       />
     </View>
@@ -160,6 +177,10 @@ const styles = StyleSheet.create({
   page: {
     backgroundColor: colors.white,
     flex: 1,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: colors.border,
   },
   content: {
     flexGrow: 1,

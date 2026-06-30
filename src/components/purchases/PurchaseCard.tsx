@@ -10,7 +10,7 @@ import { formatPurchaseDate } from '@/utils/date';
 
 interface PurchaseCardProps {
   purchase: Purchase;
-  onPress: () => void;
+  onPress: (purchase: Purchase) => void;
 }
 
 const STATUS_COLORS: Record<PaymentStatus, { bg: string; fg: string }> = {
@@ -19,14 +19,14 @@ const STATUS_COLORS: Record<PaymentStatus, { bg: string; fg: string }> = {
   failed: { bg: colors.errorSurface, fg: colors.error },
 };
 
-export function PurchaseCard({ purchase, onPress }: PurchaseCardProps): React.JSX.Element {
+function PurchaseCardComponent({ purchase, onPress }: PurchaseCardProps): React.JSX.Element {
   const { t } = useTranslation();
   const storeName = purchase.store_name ?? t('historyScreen.unknownStore');
   const statusColor = STATUS_COLORS[purchase.status];
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => onPress(purchase)}
       accessibilityLabel={`${storeName} — ${formatARS(purchase.total)}`}
       accessibilityRole="button"
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
@@ -51,6 +51,10 @@ export function PurchaseCard({ purchase, onPress }: PurchaseCardProps): React.JS
     </Pressable>
   );
 }
+
+// memo: con onPress estable (el padre pasa un handler único) y purchases
+// inmutables, tipear en el buscador no repinta las tarjetas ya renderizadas.
+export const PurchaseCard = React.memo(PurchaseCardComponent);
 
 const styles = StyleSheet.create({
   card: {
