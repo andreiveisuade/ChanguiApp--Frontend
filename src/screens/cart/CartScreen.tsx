@@ -19,12 +19,31 @@ export default function CartScreen(): React.JSX.Element {
   const router = useRouter();
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { items, summary, isLoading, error, refresh, updateQuantity, removeItem } = useCart();
+  const {
+    items,
+    summary,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh,
+    updateQuantity,
+    removeItem,
+    flushPending,
+  } = useCart();
   const { startCheckout, isStarting, error: checkoutError, clearError } = useCheckout();
 
   const userName = user?.full_name || t('home.defaultUser');
 
   const handlePay = async () => {
+    // Asegura que los cambios de cantidad en debounce lleguen al backend antes de
+    // crear la preferencia de pago, para que el checkout cobre las cantidades reales.
+    // Si algún envío pendiente falla, no arrancamos el checkout (el error ya se
+    // muestra) para no cobrar sobre un carrito inconsistente.
+    try {
+      await flushPending();
+    } catch {
+      return;
+    }
     const result = await startCheckout();
     if (result) {
       router.push({
@@ -56,7 +75,7 @@ export default function CartScreen(): React.JSX.Element {
         contentContainerStyle={styles.content}
         refreshControl={
           <RefreshControl
-            refreshing={isLoading}
+            refreshing={isRefreshing}
             onRefresh={refresh}
             colors={[colors.primary]}
             tintColor={colors.primary}

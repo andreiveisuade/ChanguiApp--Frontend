@@ -58,6 +58,13 @@ const translated: UserFriendlyError = {
   code: 'UNKNOWN',
 };
 
+// Cada test parte de un carrito recién cargado.
+const renderLoadedCart = async () => {
+  const utils = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
+  await waitFor(() => expect(utils.result.current.isLoading).toBe(false));
+  return utils;
+};
+
 describe('useCart', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -68,9 +75,7 @@ describe('useCart', () => {
   });
 
   it('carga el carrito al montar y apaga el loading', async () => {
-    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
-
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    const { result } = await renderLoadedCart();
 
     expect(result.current.cart).toEqual(cartData.cart);
     expect(result.current.items).toEqual(cartData.items);
@@ -100,8 +105,7 @@ describe('useCart', () => {
   });
 
   it('refresh vuelve a pedir el carrito', async () => {
-    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    const { result } = await renderLoadedCart();
 
     await act(async () => {
       await result.current.refresh();
@@ -110,62 +114,93 @@ describe('useCart', () => {
     expect(mockedGetCart).toHaveBeenCalledTimes(2);
   });
 
-  it('updateQuantity actualiza y refresca el carrito', async () => {
-    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
+  it('updateQuantity actualiza el carrito al instante sin pegarle al backend', async () => {
+    const { result } = await renderLoadedCart();
 
     await act(async () => {
       await result.current.updateQuantity('i1', 5);
     });
 
-    expect(mockedUpdateQty).toHaveBeenCalledWith('i1', 5);
-    expect(mockedGetCart).toHaveBeenCalledTimes(2);
+    // Actualización optimista: cantidad y total ya reflejan el cambio.
+    expect(result.current.items[0].quantity).toBe(5);
+    expect(result.current.total).toBe(5000);
+    // El PUT está en debounce: todavía no se llamó al backend.
+    expect(mockedUpdateQty).not.toHaveBeenCalled();
     expect(result.current.error).toBeNull();
   });
 
-  it('updateQuantity con error: traduce y no deja loading colgado', async () => {
-    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
-    mockedUpdateQty.mockRejectedValueOnce(new Error('Request failed with status 400'));
+  it('una ráfaga de toques coalesce en un único PUT con la cantidad final', async () => {
+    const { result } = await renderLoadedCart();
+
+    await act(async () => {
+      await result.current.updateQuantity('i1', 3);
+      await result.current.updateQuantity('i1', 4);
+      await result.current.updateQuantity('i1', 6);
+    });
+
+    await act(async () => {
+      await result.current.flushPending();
+    });
+
+    expect(mockedUpdateQty).toHaveBeenCalledTimes(1);
+    expect(mockedUpdateQty).toHaveBeenCalledWith('i1', 6);
+    // No se refetchea el carrito en cada toque (era el origen de la latencia).
+    expect(mockedGetCart).toHaveBeenCalledTimes(1);
+  });
+
+  it('el debounce dispara el PUT solo, sin flush manual', async () => {
+    const { result } = await renderLoadedCart();
 
     await act(async () => {
       await result.current.updateQuantity('i1', 5);
     });
 
-    await waitFor(() => expect(result.current.error).toEqual(translated));
-    expect(result.current.isLoading).toBe(false);
+    await waitFor(() => expect(mockedUpdateQty).toHaveBeenCalledWith('i1', 5));
+    expect(mockedUpdateQty).toHaveBeenCalledTimes(1);
   });
 
-  it('removeItem elimina y refresca el carrito', async () => {
-    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
+  it('updateQuantity con error: traduce el error al hacer flush', async () => {
+    mockedUpdateQty.mockRejectedValueOnce(new Error('Request failed with status 400'));
+    const { result } = await renderLoadedCart();
+
+    await act(async () => {
+      await result.current.updateQuantity('i1', 5);
+      // flushPending rechaza si un envío falla, para que el pago pueda abortar.
+      await expect(result.current.flushPending()).rejects.toThrow();
+    });
+
+    await waitFor(() => expect(result.current.error).toEqual(translated));
+  });
+
+  it('removeItem elimina del carrito al instante y borra en el backend', async () => {
+    const { result } = await renderLoadedCart();
 
     await act(async () => {
       await result.current.removeItem('i1');
     });
 
     expect(mockedDeleteItem).toHaveBeenCalledWith('i1');
-    expect(mockedGetCart).toHaveBeenCalledTimes(2);
+    expect(result.current.items).toHaveLength(0);
+    // En el camino feliz no se refetchea: alcanza con la baja optimista.
+    expect(mockedGetCart).toHaveBeenCalledTimes(1);
   });
 
-  it('removeItem con error: traduce y corta el loading', async () => {
-    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
+  it('removeItem con error: traduce y revierte pidiendo el carrito', async () => {
     mockedDeleteItem.mockRejectedValueOnce(new Error('Request failed with status 500'));
+    const { result } = await renderLoadedCart();
 
     await act(async () => {
       await result.current.removeItem('i1');
     });
 
     await waitFor(() => expect(result.current.error).toEqual(translated));
-    expect(result.current.isLoading).toBe(false);
+    expect(mockedGetCart).toHaveBeenCalledTimes(2);
   });
 
   it('refresh limpia un error de mutación previo', async () => {
-    const { result } = renderHook(() => useCart(), { wrapper: createQueryWrapper() });
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
-
     mockedDeleteItem.mockRejectedValueOnce(new Error('Request failed with status 500'));
+    const { result } = await renderLoadedCart();
+
     await act(async () => {
       await result.current.removeItem('i1');
     });
