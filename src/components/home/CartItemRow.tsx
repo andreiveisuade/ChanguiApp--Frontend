@@ -12,7 +12,7 @@ interface CartItemRowProps {
   isLast?: boolean;
 }
 
-export const CartItemRow = ({ item, isLast = false }: CartItemRowProps) => {
+const CartItemRowComponent = ({ item, isLast = false }: CartItemRowProps) => {
   const { t } = useTranslation();
   const [imageError, setImageError] = useState(false);
 
@@ -43,6 +43,10 @@ export const CartItemRow = ({ item, isLast = false }: CartItemRowProps) => {
     </View>
   );
 };
+
+// memo: la lista de Home repinta cada fila al actualizar el carrito; con ítems
+// inmutables por referencia, solo se repinta el que cambió.
+export const CartItemRow = React.memo(CartItemRowComponent);
 
 const styles = StyleSheet.create({
   row: {

@@ -34,9 +34,13 @@ export const authClient = axios.create({
 const trace = (config?: InternalAxiosRequestConfig): string => {
   const method = (config?.method ?? 'get').toUpperCase();
   const url = config?.url ?? '?';
+  return `${method} ${url}`;
+};
+
+// Latencia de la request (ms) a partir del timestamp guardado en el interceptor.
+const elapsedMs = (config?: InternalAxiosRequestConfig): number | undefined => {
   const start = config?.metadata?.start;
-  const elapsed = start != null ? ` (${Date.now() - start}ms)` : '';
-  return `${method} ${url}${elapsed}`;
+  return start != null ? Date.now() - start : undefined;
 };
 
 httpClient.interceptors.request.use(
@@ -57,19 +61,29 @@ httpClient.interceptors.request.use(
 // overlay: así cualquier fallo de red es observable sin instrumentar cada hook.
 httpClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    logger.log(`[HTTP ${response.status}] ${trace(response.config)}`);
+    logger.call({
+      source: 'http',
+      message: `${response.status} ${trace(response.config)}`,
+      durationMs: elapsedMs(response.config),
+    });
     return response;
   },
   async (error: AxiosError) => {
     const where = trace(error.config);
+    const durationMs = elapsedMs(error.config);
 
     if (!error.response) {
-      logger.error(`[HTTP red caída] ${where}`);
+      logger.call({ source: 'http', level: 'error', message: `red caída ${where}`, durationMs });
       throw new NetworkError();
     }
 
     if (error.response.status === 401) {
-      logger.error(`[HTTP 401] ${where} — sesión expirada`);
+      logger.call({
+        source: 'http',
+        level: 'error',
+        message: `401 ${where} — sesión expirada`,
+        durationMs,
+      });
       await AuthRepository.clearSession();
       authEvents.emitSessionExpired();
       throw new AuthSessionExpiredError();
@@ -89,7 +103,12 @@ httpClient.interceptors.response.use(
           ? 'Hubo un error en el servidor. Reintentá más tarde.'
           : `Request failed with status ${status}`;
     const message = data?.message ?? data?.error ?? fallback;
-    logger.error(`[HTTP ${status}] ${where} — ${message}`);
+    logger.call({
+      source: 'http',
+      level: 'error',
+      message: `${status} ${where} — ${message}`,
+      durationMs,
+    });
     throw new ApiError(status, message, data?.code);
   },
 );

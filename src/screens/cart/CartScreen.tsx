@@ -100,12 +100,13 @@ export default function CartScreen(): React.JSX.Element {
             {items.map((item) => (
               <CartItem
                 key={item.id}
+                id={item.id}
                 name={item.product?.name ?? t('home.fallbackProductName')}
                 price={item.unit_price}
                 quantity={item.quantity}
                 imageUrl={item.product?.image_url ?? null}
-                onUpdateQuantity={(quantity) => updateQuantity(item.id, quantity)}
-                onDelete={() => removeItem(item.id)}
+                onUpdateQuantity={updateQuantity}
+                onDelete={removeItem}
               />
             ))}
 

@@ -52,11 +52,11 @@ jest.mock('@/components/cart/CartHeader', () => {
 jest.mock('@/components/cart/CartItem', () => {
   const { Pressable, Text, View } = require('react-native');
   return {
-    CartItem: ({ name, onUpdateQuantity, onDelete }: any) => (
+    CartItem: ({ id, name, onUpdateQuantity, onDelete }: any) => (
       <View testID={`cart-item-${name}`}>
         <Text>{name}</Text>
-        <Pressable testID={`update-${name}`} onPress={() => onUpdateQuantity(5)} />
-        <Pressable testID={`delete-${name}`} onPress={onDelete} />
+        <Pressable testID={`update-${name}`} onPress={() => onUpdateQuantity(id, 5)} />
+        <Pressable testID={`delete-${name}`} onPress={() => onDelete(id)} />
       </View>
     ),
   };
