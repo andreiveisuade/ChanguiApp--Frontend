@@ -18,6 +18,9 @@ import { formatARS } from '@/utils/currency';
 import { useProductSearch } from '@/viewmodels/useProductSearch';
 
 const MIN_CHARS = 2;
+// Tope generoso de caracteres: ningún nombre de producto del catálogo se acerca,
+// pero evita que se pueda tipear una cadena descomunal en el buscador.
+const MAX_CHARS = 50;
 
 interface ProductSearchInputProps {
   onSelect: (product: Product) => void;
@@ -44,6 +47,7 @@ export function ProductSearchInput({ onSelect }: ProductSearchInputProps): React
       <SearchBar
         value={query}
         onChangeText={setQuery}
+        maxLength={MAX_CHARS}
         placeholder={t('lists.searchPlaceholder')}
         accessibilityLabel={t('lists.searchPlaceholder')}
       />

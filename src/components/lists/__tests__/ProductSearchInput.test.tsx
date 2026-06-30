@@ -14,12 +14,13 @@ jest.mock('@/viewmodels/useProductSearch', () => ({ useProductSearch: jest.fn() 
 jest.mock('@/components/forms/SearchBar', () => {
   const { TextInput } = require('react-native');
   return {
-    SearchBar: ({ value, onChangeText, accessibilityLabel, placeholder }: any) => (
+    SearchBar: ({ value, onChangeText, accessibilityLabel, placeholder, maxLength }: any) => (
       <TextInput
         value={value}
         onChangeText={onChangeText}
         accessibilityLabel={accessibilityLabel}
         placeholder={placeholder}
+        maxLength={maxLength}
       />
     ),
   };
@@ -64,6 +65,11 @@ describe('ProductSearchInput', () => {
   it('renderiza el buscador con su placeholder', () => {
     const { getByLabelText } = render(<ProductSearchInput onSelect={jest.fn()} />);
     expect(getByLabelText('lists.searchPlaceholder')).toBeTruthy();
+  });
+
+  it('limita la longitud del texto de búsqueda a un tope razonable', () => {
+    const { getByLabelText } = render(<ProductSearchInput onSelect={jest.fn()} />);
+    expect(getByLabelText('lists.searchPlaceholder').props.maxLength).toBe(50);
   });
 
   it('muestra los resultados con nombre, marca y precio', () => {
