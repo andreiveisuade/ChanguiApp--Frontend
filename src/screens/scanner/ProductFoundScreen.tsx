@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import AppHeader from '@/components/layout/AppHeader';
@@ -53,7 +53,11 @@ export default function ProductFoundScreen(): React.JSX.Element {
 
         <SuccessMessage message={t('scanner.productFound')} />
 
-        <View style={styles.content}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+        >
           {errorMessage ? (
             <ErrorMessage
               message={errorMessage}
@@ -107,7 +111,7 @@ export default function ProductFoundScreen(): React.JSX.Element {
               disabled={isLoading}
             />
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -125,9 +129,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
   },
-  content: {
+  scroll: {
     flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
     padding: spacing.xl,
+    paddingBottom: spacing.xxl,
   },
   quantityLabel: {
     color: colors.textPrimary,
