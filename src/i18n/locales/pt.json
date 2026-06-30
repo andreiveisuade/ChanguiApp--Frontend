@@ -49,8 +49,7 @@
     "updatedNow": "Atualizado agora",
     "subtotal": "Subtotal",
     "checkout": "Ir para o pagamento",
-    "checkoutHint": "Pague seu carrinho com Mercado Pago",
-    "greeting": "Olá, {{name}}"
+    "checkoutHint": "Pague seu carrinho com Mercado Pago"
   },
   "checkout": {
     "confirmingTitle": "Confirmando seu pagamento",
@@ -266,8 +265,6 @@
     "quantityValue": "Quantidade: {{value}}"
   },
   "historyScreen": {
-    "title": "Histórico",
-    "greeting": "Suas compras, {{name}}",
     "totalSpent": "Total gasto",
     "completed": "Compras concluídas",
     "searchPlaceholder": "Buscar por loja ou número do pedido",

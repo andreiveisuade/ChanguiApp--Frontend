@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, StyleSheet, View } from 'react-native';
+import { ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import AppHeader from '@/components/layout/AppHeader';
@@ -38,7 +38,7 @@ export default function ProductFoundScreen(): React.JSX.Element {
       <View style={styles.root}>
         <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
         <SafeAreaView style={styles.safeArea}>
-          <AppHeader onBack={goToScanner} />
+          <AppHeader showLogo={false} style={styles.header} onBack={goToScanner} />
           <ProductNotFound onRetry={goToScanner} />
         </SafeAreaView>
       </View>
@@ -49,11 +49,15 @@ export default function ProductFoundScreen(): React.JSX.Element {
     <View style={styles.root}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       <SafeAreaView style={styles.safeArea}>
-        <AppHeader onBack={isLoading ? undefined : goToScanner} />
+        <AppHeader showLogo={false} style={styles.header} onBack={isLoading ? undefined : goToScanner} />
 
         <SuccessMessage message={t('scanner.productFound')} />
 
-        <View style={styles.content}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+        >
           {errorMessage ? (
             <ErrorMessage
               message={errorMessage}
@@ -107,7 +111,7 @@ export default function ProductFoundScreen(): React.JSX.Element {
               disabled={isLoading}
             />
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -121,9 +125,17 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
-  content: {
+  header: {
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+  },
+  scroll: {
     flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
     padding: spacing.xl,
+    paddingBottom: spacing.xxl,
   },
   quantityLabel: {
     color: colors.textPrimary,

@@ -122,6 +122,7 @@ const summary: TaxSummary = { subtotal_net: 1652.9, taxes: [], total: 2000 };
 const updateQuantity = jest.fn();
 const removeItem = jest.fn();
 const refresh = jest.fn();
+const flushPending = jest.fn().mockResolvedValue(undefined);
 const startCheckout = jest.fn();
 const clearError = jest.fn();
 
@@ -131,10 +132,12 @@ const cartState = (overrides: Partial<UseCartReturn> = {}): UseCartReturn => ({
   total: 2000,
   summary,
   isLoading: false,
+  isRefreshing: false,
   error: null,
   refresh,
   updateQuantity,
   removeItem,
+  flushPending,
   ...overrides,
 });
 
@@ -226,6 +229,30 @@ describe('CartScreen', () => {
       pathname: ROUTES.checkout.confirmation,
       params: { preferenceId: 'pref-1' },
     });
+  });
+
+  it('al pagar vacía los cambios pendientes antes de iniciar el checkout', async () => {
+    startCheckout.mockResolvedValueOnce({ preferenceId: 'pref-1' });
+    const { getByTestId } = render(<CartScreen />);
+
+    fireEvent.press(getByTestId('pay-button'));
+
+    await waitFor(() => expect(startCheckout).toHaveBeenCalledTimes(1));
+    expect(flushPending).toHaveBeenCalledTimes(1);
+    expect(flushPending.mock.invocationCallOrder[0]).toBeLessThan(
+      startCheckout.mock.invocationCallOrder[0],
+    );
+  });
+
+  it('si falla el flush de pendientes no inicia el checkout', async () => {
+    flushPending.mockRejectedValueOnce(new Error('flush failed'));
+    const { getByTestId } = render(<CartScreen />);
+
+    fireEvent.press(getByTestId('pay-button'));
+
+    await waitFor(() => expect(flushPending).toHaveBeenCalledTimes(1));
+    expect(startCheckout).not.toHaveBeenCalled();
+    expect(mockPush).not.toHaveBeenCalled();
   });
 
   it('si startCheckout devuelve null no navega', async () => {

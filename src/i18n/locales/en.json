@@ -66,8 +66,7 @@
     "updatedNow": "Updated just now",
     "subtotal": "Subtotal",
     "checkout": "Checkout",
-    "checkoutHint": "Pay for your cart with Mercado Pago",
-    "greeting": "Hello, {{name}}"
+    "checkoutHint": "Pay for your cart with Mercado Pago"
   },
   "auth": {
     "login": {
@@ -265,8 +264,6 @@
     "quantityValue": "Quantity: {{value}}"
   },
   "historyScreen": {
-    "title": "History",
-    "greeting": "Your purchases, {{name}}",
     "totalSpent": "Total spent",
     "completed": "Completed purchases",
     "searchPlaceholder": "Search by store or order number",
