@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, StatusBar, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import AppHeader from '@/components/layout/AppHeader';
 import SuccessMessage from '@/components/feedback/SuccessMessage';
@@ -17,6 +17,7 @@ import { colors, radii, spacing } from '@/constants/theme';
 
 export default function ProductFoundScreen(): React.JSX.Element {
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const {
     product,
     quantity,
@@ -48,14 +49,20 @@ export default function ProductFoundScreen(): React.JSX.Element {
   return (
     <View style={styles.root}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
-      <SafeAreaView style={styles.safeArea}>
+      {/* El borde inferior lo maneja el ScrollView (paddingBottom + inset) para
+          que el contenido pueda scrollear hasta el fondo sin que el botón quede
+          tapado por la barra de navegación, sea cual sea el modelo. */}
+      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
         <AppHeader showLogo={false} style={styles.header} onBack={isLoading ? undefined : goToScanner} />
 
         <SuccessMessage message={t('scanner.productFound')} />
 
         <ScrollView
           style={styles.scroll}
-          contentContainerStyle={styles.contentContainer}
+          contentContainerStyle={[
+            styles.contentContainer,
+            { paddingBottom: spacing.xxl + insets.bottom },
+          ]}
           showsVerticalScrollIndicator={false}
         >
           {errorMessage ? (
@@ -135,7 +142,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
     padding: spacing.xl,
-    paddingBottom: spacing.xxl,
   },
   quantityLabel: {
     color: colors.textPrimary,
