@@ -27,6 +27,7 @@ export type UseCartReturn = {
   total: number;
   summary: TaxSummary;
   isLoading: boolean;
+  isRefreshing: boolean;
   error: UserFriendlyError | null;
   refresh: () => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
@@ -49,6 +50,9 @@ export const useCart = (): UseCartReturn => {
   // en cada toque ni perder los valores entre renders.
   const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
   const pendingRef = useRef<Map<string, number>>(new Map());
+  // PUT en vuelo por ítem: encadenar sobre él garantiza que las cantidades lleguen
+  // al backend en orden y un envío viejo no pise al más reciente del mismo ítem.
+  const inFlightRef = useRef<Map<string, Promise<void>>>(new Map());
   const [mutationError, setMutationError] = useState<unknown>(null);
 
   // Recalcula total + desglose localmente para que el precio se vea en tiempo real
@@ -66,18 +70,30 @@ export const useCart = (): UseCartReturn => {
     });
   };
 
-  // Envía al backend la última cantidad pendiente de un ítem. Ante error, revierte
-  // pidiendo el estado real del servidor.
-  const flushItem = async (itemId: string): Promise<void> => {
-    const quantity = pendingRef.current.get(itemId);
-    if (quantity === undefined) return;
-    pendingRef.current.delete(itemId);
-    try {
-      await CartRepository.updateItemQuantity(itemId, quantity);
-    } catch (err) {
-      setMutationError(err);
-      await queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY });
-    }
+  // Envía al backend la última cantidad pendiente de un ítem, encadenado sobre el
+  // PUT en vuelo del mismo ítem. Ante error, revierte pidiendo el estado real y
+  // relanza para que flushPending (pago) pueda abortar el checkout.
+  const flushItem = (itemId: string): Promise<void> => {
+    const prev = inFlightRef.current.get(itemId) ?? Promise.resolve();
+    const run = prev.catch(() => {}).then(async () => {
+      const quantity = pendingRef.current.get(itemId);
+      if (quantity === undefined) return;
+      pendingRef.current.delete(itemId);
+      try {
+        await CartRepository.updateItemQuantity(itemId, quantity);
+      } catch (err) {
+        setMutationError(err);
+        await queryClient.invalidateQueries({ queryKey: CART_QUERY_KEY });
+        throw err;
+      }
+    });
+    inFlightRef.current.set(itemId, run);
+    void run.catch(() => {}).then(() => {
+      if (inFlightRef.current.get(itemId) === run) {
+        inFlightRef.current.delete(itemId);
+      }
+    });
+    return run;
   };
 
   const clearTimer = (itemId: string): void => {
@@ -93,7 +109,7 @@ export const useCart = (): UseCartReturn => {
     clearTimer(itemId);
     const timer = setTimeout(() => {
       timersRef.current.delete(itemId);
-      void flushItem(itemId);
+      void flushItem(itemId).catch(() => {});
     }, DEBOUNCE_MS);
     timersRef.current.set(itemId, timer);
   };
@@ -103,11 +119,16 @@ export const useCart = (): UseCartReturn => {
   useEffect(() => {
     const timers = timersRef.current;
     const pending = pendingRef.current;
+    const inFlight = inFlightRef.current;
     return () => {
       timers.forEach((timer) => clearTimeout(timer));
       timers.clear();
       pending.forEach((quantity, itemId) => {
-        void CartRepository.updateItemQuantity(itemId, quantity).catch(() => {});
+        const prev = inFlight.get(itemId) ?? Promise.resolve();
+        void prev
+          .catch(() => {})
+          .then(() => CartRepository.updateItemQuantity(itemId, quantity))
+          .catch(() => {});
       });
       pending.clear();
     };
@@ -145,8 +166,11 @@ export const useCart = (): UseCartReturn => {
   const flushPending = async (): Promise<void> => {
     timersRef.current.forEach((timer) => clearTimeout(timer));
     timersRef.current.clear();
-    const ids = Array.from(pendingRef.current.keys());
-    await Promise.all(ids.map((id) => flushItem(id)));
+    const ids = new Set([
+      ...pendingRef.current.keys(),
+      ...inFlightRef.current.keys(),
+    ]);
+    await Promise.all(Array.from(ids).map((id) => flushItem(id)));
   };
 
   return {
@@ -154,7 +178,8 @@ export const useCart = (): UseCartReturn => {
     items: query.data?.items ?? [],
     total: query.data?.total ?? 0,
     summary: query.data?.summary ?? EMPTY_SUMMARY,
-    isLoading: query.isPending || query.isFetching,
+    isLoading: query.isPending,
+    isRefreshing: query.isFetching && !query.isPending,
     error,
     refresh,
     updateQuantity,

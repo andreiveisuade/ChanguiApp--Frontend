@@ -132,6 +132,7 @@ const cartState = (overrides: Partial<UseCartReturn> = {}): UseCartReturn => ({
   total: 2000,
   summary,
   isLoading: false,
+  isRefreshing: false,
   error: null,
   refresh,
   updateQuantity,
@@ -241,6 +242,17 @@ describe('CartScreen', () => {
     expect(flushPending.mock.invocationCallOrder[0]).toBeLessThan(
       startCheckout.mock.invocationCallOrder[0],
     );
+  });
+
+  it('si falla el flush de pendientes no inicia el checkout', async () => {
+    flushPending.mockRejectedValueOnce(new Error('flush failed'));
+    const { getByTestId } = render(<CartScreen />);
+
+    fireEvent.press(getByTestId('pay-button'));
+
+    await waitFor(() => expect(flushPending).toHaveBeenCalledTimes(1));
+    expect(startCheckout).not.toHaveBeenCalled();
+    expect(mockPush).not.toHaveBeenCalled();
   });
 
   it('si startCheckout devuelve null no navega', async () => {

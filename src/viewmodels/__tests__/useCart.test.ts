@@ -165,7 +165,8 @@ describe('useCart', () => {
 
     await act(async () => {
       await result.current.updateQuantity('i1', 5);
-      await result.current.flushPending();
+      // flushPending rechaza si un envío falla, para que el pago pueda abortar.
+      await expect(result.current.flushPending()).rejects.toThrow();
     });
 
     await waitFor(() => expect(result.current.error).toEqual(translated));
